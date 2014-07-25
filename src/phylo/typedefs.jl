@@ -75,6 +75,7 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   setRoot!(x, root)
   setRooted!(x, rooted)
   setRerootable!(x, rerootable)
+  return x
 end
 
 function setName!(x::Phylogeny, name::String)
