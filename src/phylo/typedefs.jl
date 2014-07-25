@@ -79,7 +79,7 @@ function getBranchLength(x::PhyXElement)
 end
 
 function isLeaf(x::PhyXElement)
-  return !hasChildren(x)
+  return !isRoot(x) && !isNode(x) ? true : false
 end
 
 function hasChildren(x::PhyXElement)
@@ -123,87 +123,56 @@ function isNode(x::PhyXElement)
 end
 
 
-
+## Setting information on a node...
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function setLabel!(x::PhyXElement, label::String)
   x.Label = label
 end
 
-
-## Branch length manipulation...
-
-# Returns value of branch length of the given node. 
-
-
-# Sets the value of the branch length of the given node, to the provided value.
 function setBranchLength!(x::PhyXElement, bl::Float64)
   x.BranchLength = bl
-end
-
-# Find if given node is a Leaf node, or is the root node, set a node as the root.
-
-
-
-
-
-
-
-## Functions for linking nodes and building trees.
-
-# getParent returns a reference to the parent node of the node provided to the function.
-
-
-function setParent!(x::PhyXElement, parent::PhyXElement)
-  x.Parent = parent
 end
 
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.  
 function removeParent!(x::PhyXElement)
-  x.Parent = x
+  setParent!(x, x)
 end
 
-
+function setParent!(child::PhyXElement, parent::PhyXElement)
+  child.Parent = parent
+end
 
 function addChild!(parent::PhyXElement, child::PhyXElement)
-  if !in(child, parent.Children)
-    if isdefined(child, :Parent)
-      filter!(x -> x == child, child.Parent.Children)
-    end
-    push!(parent.Children, child)
-    child.Parent = parent
-  else
-    error("The parent Node already has Child node")
+  push!(parent.Children, child)
+end
+
+function removeChild!(parent::PhyXElement, child::PhyXElement)
+  filter!(x -> !(x == child), parent.Children)
+end
+
+function graft!(parent::PhyXElement, child::PhyXElement)
+  # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
+  # Its reference is removed from the parents Children field.
+  if hasParent(child)
+    removeChild!(child.Parent, child)
   end
+  setParent!(child, parent)
+  addChild!(parent, child)
 end
 
-function removeChild!(Parent::PhyXElement, Child::PhyXElement)
-  filter!(x -> x == Child, Parent.Children)
+function graft!(parent::PhyXElement, child::PhyXElement, branchlength::Float64)
+    graft!(parent, child)
+    setBranchLength!(child, branchlength)
 end
 
-function removeChild!(Parent::PhyXElement)
-  Parent.Children = PhyXElement[]
-end
-
-
-function addSiblings!(x::PhyXElement, Siblings::PhyXElement...)
-    for i in Siblings
-      addChild!(x.Parent, i)
-    end
+function prune!(x::PhyXElement)
+  if hasParent(x)
+    # You must make sure the parent of this node from which you are pruning, does not contain a reference to it.
+    removeChild!(x.Parent, x)
+    removeParent!(x)
+    return x
+  else
+    error("Can't prune from this node, it is either a single node without parents or children, or is a root of a tree / subtree.")
+  end
 end
