@@ -1,27 +1,25 @@
-type PhyXExtension{T}
-  value::T
-end
+module Phylo
 
-type PhyXElement
-  Label::String
-  Root::Bool
-  Tip::Bool
-  Extensions::Array{PhyXExtension}
-  Parent::PhyXElement
-  Children::Array{PhyXElement}
+  ## Exported Methods and Types
+  export PhyXExtension,
+    PhyXElement,
+    PhyXTree,
+    getLabel,
+    getBranchLength,
+    isLeaf,
+    hasChildren,
+    parentIsSelf,
+    hasParent,
+    getChildren,
+    getSiblings,
+    getParent,
+    isRoot,
+    isNode,
+    setLabel!,
+    setBranchLength!,
+    graft!,
+    prune!
 
-  PhyXElement(label::String, root::Bool, tip::Bool, ext::Array{PhyXExtension, 1}) = new(label, root, tip, ext)
-end
-
-function PhyXElement(label::String, root::Bool, tip::Bool, ext::Array{PhyXExtension, 1}, parent::PhyXElement)
-  x = PhyXElement(label, root, tip, ext)
-  x.Parent = parent
-  return x
-end
-
-type PhyXTree
-  Name::String
-  Root::PhyXElement
-  Rooted::Bool
-  Rerootable::Bool
+  ## Load Package Files
+  include(Pkg.dir("Bio", "src", "phylo", "typedefs.jl"))
 end
