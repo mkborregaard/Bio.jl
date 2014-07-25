@@ -1,10 +1,10 @@
 module Phylo
 
   ## Exported Methods and Types
-  export PhyXExtension,
-    PhyXElement,
-    PhyXTree,
-    getLabel,
+  export PhyExtension,
+    PhyNode,
+    Phylogeny,
+    getName,
     getBranchLength,
     isLeaf,
     hasChildren,
@@ -15,7 +15,7 @@ module Phylo
     getParent,
     isRoot,
     isNode,
-    setLabel!,
+    setName!,
     setBranchLength!,
     graft!,
     prune!

@@ -5,22 +5,22 @@
 # Ben J. Ward, 2014.
 
 # Extension type - parametric
-type PhyXExtension{T}
+type PhyExtension{T}
   value::T
 end
 
 # Node type.
-type PhyXElement
-  Label::String
+type PhyNode
+  Name::String
   BranchLength::Float64
-  Extensions::Array{PhyXExtension, 1}
-  Children::Array{PhyXElement, 1}
-  Parent::PhyXElement
-  PhyXElement() = (x = new("", 0.0, PhyXElement[], PhyXElement[]); x.Parent = x)
+  Extensions::Array{PhyExtension, 1}
+  Children::Array{PhyNode, 1}
+  Parent::PhyNode
+  PhyNode() = (x = new("", 0.0, PhyNode[], PhyNode[]); x.Parent = x)
 end
 
 #=
-A note about the default no-argument constructor. You'll notice it incompletely initializes the instance of PhyXElement,
+A note about the default no-argument constructor. You'll notice it incompletely initializes the instance of PhyNode,
 before filling in the Parent field with a reference to itself. This means the node has no parent and so could be a root,
 it could also just be a node that has been created, perhaps in a function, but will be added to another set of nodes subsequently
 in order to build up a tree. Alternatively the user could have just popped it off the tree. I figured a self referential
@@ -30,128 +30,164 @@ say the cutting / pruning of a subtree.
 
 
 # Node constructors.
-function PhyXElement(label::String, branchlength::Float64, ext::Array{PhyXExtension, 1}, parent::PhyXElement)
-  x = PhyXElement()
-  setLabel!(x, label)
+function PhyNode(label::String, branchlength::Float64, ext::Array{PhyExtension, 1}, parent::PhyNode)
+  x = PhyNode()
+  setName!(x, label)
   setBranchLength!(x, branchlength)
   x.Extensions = ext
   setParent!(x, parent)
   return x
 end
 
-function PhyXElement(parent::PhyXElement)
-  x = PhyXElement()
+function PhyNode(parent::PhyNode)
+  x = PhyNode()
   setParent!(x, parent)
   return x
 end
 
-function PhyXElement(branchlength::Float64, parent::PhyXElement)
-  x = PhyXElement()
+function PhyNode(branchlength::Float64, parent::PhyNode)
+  x = PhyNode()
   setBranchLength!(x, branchlength)
   setParent!(x, parent)
   return x
 end
 
-function PhyXElement(label::String)
-  x = PhyXElement()
-  setLabel!(x, label)
+function PhyNode(label::String)
+  x = PhyNode()
+  setName!(x, label)
   return x
 end
 
 # Tree type.
-type PhyXTree
+type Phylogeny
   Name::String
-  Root::PhyXElement
+  Root::PhyNode
   Rooted::Bool
   Rerootable::Bool
+
+  Phylogeny() = new("", PhyNode(), false, true)
 end
 
-### Node Manipulation / methods on the PhyXElement type...
+# Phylogeny constructors...
+function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
+  x = Phylogeny()
+  setName!(x, name)
+  setRoot!(x, root)
+  setRooted!(x, rooted)
+  setRerootable!(x, rerootable)
+end
+
+function setName!(x::Phylogeny, name::String)
+  x.Name = name
+end
+
+function isRooted(x::Phylogeny)
+  return x.Rooted
+end
+
+function isRerootable(x::Phylogeny)
+  return x.Rerootable
+end
+
+function setRoot!(x::Phylogeny, y::PhyNode)
+  x.Root = y
+end
+
+function setRooted!(x::Phylogeny, rooted::Bool)
+  x.Rooted = rooted
+end
+
+function setRerootable!(x::Phylogeny, rerootable::Bool)
+  x.Rerootable = rerootable
+end
+
+
+### Node Manipulation / methods on the PhyNode type...
 
 ## Getting information from a node...
 
-function getLabel(x::PhyXElement)
-  return x.Label
+function getName(x::PhyNode)
+  return x.Name
 end
 
-function getBranchLength(x::PhyXElement)
+function getBranchLength(x::PhyNode)
   return x.BranchLength
 end
 
-function isLeaf(x::PhyXElement)
+function isLeaf(x::PhyNode)
   return !isRoot(x) && !isNode(x) ? true : false
 end
 
-function hasChildren(x::PhyXElement)
+function hasChildren(x::PhyNode)
   return length(x.Children) > 0 ? true : false
 end
 
 # Refer to the note on self referential nodes. If a node is self referential in the parent field, a warning will be printed to screen.
-function parentIsSelf(x::PhyXElement)
+function parentIsSelf(x::PhyNode)
   return x.Parent == x ? true : false
 end
 
-function hasParent(x::PhyXElement)
+function hasParent(x::PhyNode)
   return !parentIsSelf(x) ? true : false
 end
 
 # Should x.Children that is returned be a copy? x.Children is an array of
 # refs to the child nodes, so x.Children is mutable.
-function getChildren(x::PhyXElement)
+function getChildren(x::PhyNode)
   return x.Children
 end
 
-function getSiblings(x::PhyXElement)
+function getSiblings(x::PhyNode)
   if hasParent(x)
     return getChildren(x.Parent)
   end
 end
 
-function getParent(x::PhyXElement)
+function getParent(x::PhyNode)
   if parentIsSelf(x)
     println("Node does not have a parent. It is self referential.")
   end
   return x.Parent
 end
 
-function isRoot(x::PhyXElement)
+function isRoot(x::PhyNode)
   return parentIsSelf(x) && hasChildren(x) ? true : false
 end
 
-function isNode(x::PhyXElement)
+function isNode(x::PhyNode)
   return hasParent(x) && hasChildren(x) ? true : false
 end
 
 
 ## Setting information on a node...
  
-function setLabel!(x::PhyXElement, label::String)
-  x.Label = label
+function setName!(x::PhyNode, name::String)
+  x.Name = name
 end
 
-function setBranchLength!(x::PhyXElement, bl::Float64)
+function setBranchLength!(x::PhyNode, bl::Float64)
   x.BranchLength = bl
 end
 
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.  
-function removeParent!(x::PhyXElement)
+function removeParent!(x::PhyNode)
   setParent!(x, x)
 end
 
-function setParent!(child::PhyXElement, parent::PhyXElement)
+function setParent!(child::PhyNode, parent::PhyNode)
   child.Parent = parent
 end
 
-function addChild!(parent::PhyXElement, child::PhyXElement)
+function addChild!(parent::PhyNode, child::PhyNode)
   push!(parent.Children, child)
 end
 
-function removeChild!(parent::PhyXElement, child::PhyXElement)
+function removeChild!(parent::PhyNode, child::PhyNode)
   filter!(x -> !(x == child), parent.Children)
 end
 
-function graft!(parent::PhyXElement, child::PhyXElement)
+function graft!(parent::PhyNode, child::PhyNode)
   # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
   # Its reference is removed from the parents Children field.
   if hasParent(child)
@@ -161,12 +197,12 @@ function graft!(parent::PhyXElement, child::PhyXElement)
   addChild!(parent, child)
 end
 
-function graft!(parent::PhyXElement, child::PhyXElement, branchlength::Float64)
+function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
     setBranchLength!(child, branchlength)
 end
 
-function prune!(x::PhyXElement)
+function prune!(x::PhyNode)
   if hasParent(x)
     # You must make sure the parent of this node from which you are pruning, does not contain a reference to it.
     removeChild!(x.Parent, x)
