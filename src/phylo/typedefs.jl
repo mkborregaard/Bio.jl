@@ -58,50 +58,6 @@ function PhyNode(label::String)
   return x
 end
 
-# Tree type.
-type Phylogeny
-  Name::String
-  Root::PhyNode
-  Rooted::Bool
-  Rerootable::Bool
-
-  Phylogeny() = new("", PhyNode(), false, true)
-end
-
-# Phylogeny constructors...
-function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
-  x = Phylogeny()
-  setName!(x, name)
-  setRoot!(x, root)
-  setRooted!(x, rooted)
-  setRerootable!(x, rerootable)
-  return x
-end
-
-function setName!(x::Phylogeny, name::String)
-  x.Name = name
-end
-
-function isRooted(x::Phylogeny)
-  return x.Rooted
-end
-
-function isRerootable(x::Phylogeny)
-  return x.Rerootable
-end
-
-function setRoot!(x::Phylogeny, y::PhyNode)
-  x.Root = y
-end
-
-function setRooted!(x::Phylogeny, rooted::Bool)
-  x.Rooted = rooted
-end
-
-function setRerootable!(x::Phylogeny, rerootable::Bool)
-  x.Rerootable = rerootable
-end
-
 
 ### Node Manipulation / methods on the PhyNode type...
 
@@ -212,4 +168,119 @@ function prune!(x::PhyNode)
   else
     error("Can't prune from this node, it is either a single node without parents or children, or is a root of a tree / subtree.")
   end
+end
+
+# Tree type.
+type Phylogeny
+  Name::String
+  Root::PhyNode
+  Rooted::Bool
+  Rerootable::Bool
+
+  Phylogeny() = new("", PhyNode(), false, true)
+end
+
+# Phylogeny constructors...
+function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
+  x = Phylogeny()
+  setName!(x, name)
+  setRoot!(x, root)
+  setRooted!(x, rooted)
+  setRerootable!(x, rerootable)
+  return x
+end
+
+function setName!(x::Phylogeny, name::String)
+  x.Name = name
+end
+
+function isRooted(x::Phylogeny)
+  return x.Rooted
+end
+
+function isRerootable(x::Phylogeny)
+  return x.Rerootable
+end
+
+function setRoot!(x::Phylogeny, y::PhyNode)
+  x.Root = y
+end
+
+function setRooted!(x::Phylogeny, rooted::Bool)
+  x.Rooted = rooted
+end
+
+function setRerootable!(x::Phylogeny, rerootable::Bool)
+  x.Rerootable = rerootable
+end
+
+
+# Depth first search of the tree - this will return a reference to the first match it comes across in a depth first manner.
+function searchDF(Phylogeny::Phylogeny, Condition::Function)
+  stack::Stack = Stack(PhyNode)
+  push!(stack, Phylogeny.Root)
+  while length(stack) > 0
+    current::PhyNode = pop!(stack)
+    println("Looking at node $(getName(current))")
+    if Condition(current)
+      return current
+    else
+      for i in current.Children
+        push!(stack, i)
+      end
+    end
+  end
+end
+
+# Breadth first search of the tree - this will return a reference to the first match it comes across in a breadth first manner.
+function searchBF(Phylogeny::Phylogeny, Condition::Function)
+  queue::Queue = Queue(PhyNode)
+  enqueue!(queue, Phylogeny.Root)
+  while length(queue) != 0
+    current::PhyNode = dequeue!(queue)
+    println("Looking at node $(getName(current))")
+    if Condition(current)
+      return current
+    else
+      for i in current.Children
+        enqueue!(queue, i)
+      end
+    end
+  end
+end
+
+# Like searchDF, but returns all matches of a tree - so it does not terminate when one match is found, rather it will search ALL nodes in DF manner and return ALL matches.
+function searchAllDF(Phylogeny::Phylogeny, Condition::Function)
+  stack::Stack = Stack(PhyNode)
+  matches::Array{PhyNode, 1} = PhyNode[]
+  push!(stack, Phylogeny.Root)
+  while length(stack) > 0
+    current::PhyNode = pop!(stack)
+    println("Looking at node $(getName(current))")
+    if Condition(current)
+      push!(matches, current)
+    end
+    for i in current.Children
+      push!(stack, i)
+    end
+  end
+  return matches
+end
+
+function searchAllBF(Phylogeny::Phylogeny, Condition::Function)
+  queue::Queue = Queue(PhyNode)
+  matches::Array{PhyNode, 1} = PhyNode[]
+  enqueue!(queue, Phylogeny.Root)
+  while length(queue) != 0
+    current::PhyNode = dequeue!(queue)
+    println("Looking at node $(getName(current))")
+    if Condition(current)
+      push!(matches, current)
+    else
+      for i in current.Children
+        enqueue!(queue, i)
+      end
+    end
+  end
+  return matches
 end
