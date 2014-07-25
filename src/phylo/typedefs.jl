@@ -284,3 +284,27 @@ function searchAllBF(Phylogeny::Phylogeny, Condition::Function)
   end
   return matches
 end
+
+abstract TreeTraverser
+
+type TraverserDF <: TreeTraverser
+	Ahead::Stack
+	Start::PhyNode
+	Behind::Stack
+	History::Stack
+	Current::PhyNode
+	TraverserDF(tree::Phylogeny) = (x = new(Stack(PhyNode), tree.Root, Stack(PhyNode), tree.Root); for i in x.Current.Children push!(x.Stack, i)
+end
+
+function next!(x::TraverseDF)
+  push!(x.Behind, x.Current)
+  x.Current = pop!(x.Ahead)
+  for i in x.Current.Children
+  	push!(x.Ahead, i)
+  end
+end
+
+function at(x::TraverseDF)
+  return x.Current
+end
+
