@@ -19,10 +19,16 @@ module Phylo
     setBranchLength!,
     graft!,
     prune!,
-    searchBF,
-    searchDF,
-    searchAllBF,
-    searchAllDF
+    search,
+    searchAll,
+    TreeTraverser,
+    TraverserDF,
+    TraverserBF,
+    next!,
+    getCurrent,
+    upNext,
+    getHistory,
+    hasReachedEnd
 
   ## Load Package Files
   include(Pkg.dir("Bio", "src", "phylo", "typedefs.jl"))
