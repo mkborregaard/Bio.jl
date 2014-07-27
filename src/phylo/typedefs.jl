@@ -115,6 +115,15 @@ function isNode(x::PhyNode)
   return hasParent(x) && hasChildren(x) ? true : false
 end
 
+function isPreTerminal(x::PhyNode)
+  return all([isLeaf(i) for i in x.Children])
+end
+
+# A preterminal node would also return true for this function.
+function isSemiPreTerminal(x::PhyNode)
+  return any([isLeaf(i) for i in x.Children])
+end
+
 
 ## Setting information on a node...
  
@@ -215,39 +224,7 @@ function setRerootable!(x::Phylogeny, rerootable::Bool)
 end
 
 
-
-
-function search(traverser::TreeTraverser, condition::Function)
-  while true
-    println("Looking at node $(getName(getCurrent(traverser)))")
-    if condition(getCurrent(traverser))
-      return getCurrent(traverser)
-    end
-    if hasReachedEnd(traverser)
-      break
-    end
-    next!(traverser)
-  end
-end
-
-function searchAll(traverser::TreeTraverser, condition::Function)
-  matches::Array{PhyNode, 1} = PhyNode[]
-  while true
-    println("Looking at node $(getName(getCurrent(traverser)))")
-    if condition(getCurrent(traverser))
-      push!(matches, getCurrent(traverser))
-    end
-    if hasReachedEnd(traverser)
-      break
-    end
-    next!(traverser)
-  end
-  return matches
-end
-
-
-# The traverser types help a coder with traversing a tree according to a breadth first or a depth first manner. 
-# An example of their use is in the searching methods.
+### Defining tree traversers that will help a coder code methods which have a requirement for moving across a tree in some manner.
 abstract TreeTraverser
 
 type TraverserCore
@@ -257,10 +234,10 @@ type TraverserCore
   Current::PhyNode
 end
 
-type TraverserDF <: TreeTraverser
-	Ahead::Stack
-	Core::TraverserCore
-	function TraverserDF(tree::Phylogeny)
+type DepthFirstTraverser <: TreeTraverser
+  Ahead::Stack
+  Core::TraverserCore
+  function DepthFirstTraverser(tree::Phylogeny)
     x = new(Stack(PhyNode), TraverserCore(tree.Root, Stack(PhyNode), PhyNode[], tree.Root))
     for i in x.Core.Current.Children
       push!(x.Ahead, i)
@@ -269,10 +246,10 @@ type TraverserDF <: TreeTraverser
   end
 end
 
-type TraverserBF <: TreeTraverser
+type BreadthFirstTraverser <: TreeTraverser
   Ahead::Queue
   Core::TraverserCore
-  function TraverserBF(tree::Phylogeny)
+  function BreadthFirstTraverser(tree::Phylogeny)
     x = new(Queue(PhyNode), TraverserCore(tree.Root, Stack(PhyNode), PhyNode[], tree.Root))
     for i in x.Core.Current.Children
       enqueue!(x.Ahead, i)
@@ -281,17 +258,58 @@ type TraverserBF <: TreeTraverser
   end
 end
 
-function next!(x::TraverserDF)
+type Tip2RootTraverser <: TreeTraverser
+  Ahead::PhyNode
+  Core::TraverserCore
+  Tip2RootTraverser(tip::PhyNode) = new(tip.Parent, TraverserCore(tip, Stack(PhyNode), PhyNode[], tip))
+end
+
+
+function next!(x::DepthFirstTraverser)
   push!(x.Core.Behind, x.Core.Current)
   x.Core.Current = pop!(x.Ahead)
   for i in x.Core.Current.Children
-  	push!(x.Ahead, i)
+    push!(x.Ahead, i)
   end
 end
 
-function next!(x::TraverserBF)
+function next!(x::BreadthFirstTraverser)
   push!(x.Core.Behind, x.Core.Current)
   x.Core.Current = dequeue!(x.Ahead)
+  for i in x.Core.Current.Children
+    enqueue!(x.Ahead, i)
+  end
+end
+
+function next!(x::Tip2RootTraverser)
+  push!(x.Core.Behind, x.Core.Current)
+  push!(x.Core.History, x.Core.Current)
+  x.Core.Current = x.Ahead
+  x.Ahead = x.Core.Current.Parent
+end
+
+function reset!(x::TraverserCore)
+  x.Behind = Stack(PhyNode)
+  x.Current = x.Start
+  x.History = PhyNode[]
+end
+
+function reset!(x::DepthFirstTraverser)
+  reset!(x.Core)
+  x.Ahead = Stack(PhyNode)
+  for i in x.Core.Current.Children
+    push!(x.Ahead, i)
+  end
+end
+
+function reset!(x::Tip2RootTraverser)
+  reset!(x.Core)
+  x.Ahead = x.Core.Current.Parent
+end
+
+function reset!(x::BreadthFirstTraverser)
+  reset!(x.Core)
+  x.Ahead = Queue(PhyNode)
   for i in x.Core.Current.Children
     enqueue!(x.Ahead, i)
   end
@@ -312,5 +330,63 @@ end
 function hasReachedEnd(x::TreeTraverser)
   length(x.Ahead) > 0 ? false : true
 end
+
+function hasReachedEnd(x::Tip2RootTraverser)
+  isRoot(getCurrent(x)) ? true : false 
+end
+
+function search(traverser::TreeTraverser, condition::Function)
+  while true
+    if condition(getCurrent(traverser))
+      return getCurrent(traverser)
+    end
+    if hasReachedEnd(traverser)
+      break
+    end
+    next!(traverser)
+  end
+end
+
+function searchAll(traverser::TreeTraverser, condition::Function)
+  matches::Array{PhyNode, 1} = PhyNode[]
+  while true
+    if condition(getCurrent(traverser))
+      push!(matches, getCurrent(traverser))
+    end
+    if hasReachedEnd(traverser)
+      break
+    end
+    next!(traverser)
+  end
+  return matches
+end
+
+#=
+Getindex is used to get a node by name. For a large tree, repeatedly calling this may not be performance optimal.
+To address this, I provide a method to create a dictionary based index for accessing nodes without search. This is the 
+generateIndex method.
+I'm uncertain whether it is better to get index with a singe search of all the nodes - searchAll, or to do many 
+individual search()-es.
+=#
+function getindex(tree::Phylogeny, names::String...)
+  return searchAll(DepthFirstTraverser(tree), x -> in(getName(x), names))
+end
+
+function generateIndex(tree::Phylogeny, parameter::Symbol)
+  output = Dict{String, PhyNode}()
+  traverser = BreadthFirstTraverser(tree)
+  while true
+    if haskey(output, getName(getCurrent(traverser)))
+      error("You are trying to build an index dict of a tree with clades of the same name.")
+    end
+    output[getName(getCurrent(traverser))] = getCurrent(traverser)
+    if hasReachedEnd(traverser)
+      break
+    end
+    next!(traverser)
+  end
+  return output
+end
+
 
 
