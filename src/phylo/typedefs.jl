@@ -223,140 +223,82 @@ function setRerootable!(x::Phylogeny, rerootable::Bool)
   x.Rerootable = rerootable
 end
 
+abstract PhylogenyIterator
 
-### Defining tree traversers that will help a coder code methods which have a requirement for moving across a tree in some manner.
-abstract TreeTraverser
-
-type TraverserCore
-  Start::PhyNode
-  Behind::Stack
-  History::Array{PhyNode, 1}
-  Current::PhyNode
+immutable DepthFirst <: PhylogenyIterator
+    tree::Phylogeny
 end
 
-type DepthFirstTraverser <: TreeTraverser
-  Ahead::Stack
-  Core::TraverserCore
-  function DepthFirstTraverser(tree::Phylogeny)
-    x = new(Stack(PhyNode), TraverserCore(tree.Root, Stack(PhyNode), PhyNode[], tree.Root))
-    for i in x.Core.Current.Children
-      push!(x.Ahead, i)
+immutable BreadthFirst <: PhylogenyIterator
+    tree::Phylogeny
+end
+
+immutable Tip2Root <: PhylogenyIterator
+    start::PhyNode
+end
+
+function start(x::DepthFirst)
+  state = Stack(PhyNode)
+  push!(state, x.tree.Root)
+  return state
+end
+
+function start(x::BreadthFirst)
+  state = Queue(PhyNode)
+  enqueue!(state, x.tree.Root)
+  return state
+end
+
+function start(x::Tip2Root)
+  return (x.start, false)
+end
+
+function next(x::DepthFirst, state::Stack{Deque{PhyNode}})
+  current::PhyNode = pop!(state)
+  for i in current.Children
+    push!(state, i)
+  end
+  return current, state
+end
+
+function next(x::BreadthFirst, state::Queue{Deque{PhyNode}})
+  current::PhyNode = dequeue!(state)
+  for i in current.Children
+    enqueue!(state, i)
+  end
+  return current, state
+end
+
+function next(x::Tip2Root, state::(PhyNode,Bool))
+  return state[1], (state[1].Parent, isRoot(state[1]))
+end
+
+function done(x::DepthFirst, state::Stack{Deque{PhyNode}})
+  return length(state) == 0 ? true : false
+end
+
+function done(x::BreadthFirst, state::Queue{Deque{PhyNode}})
+  return length(state) == 0 ? true : false
+end
+
+function done(x::Tip2Root, state::(PhyNode,Bool))
+  return state[2] 
+end
+
+function search(it::PhylogenyIterator, condition::Function)
+  for i = it
+    if condition(i)
+      return i
     end
-    return x
   end
 end
 
-type BreadthFirstTraverser <: TreeTraverser
-  Ahead::Queue
-  Core::TraverserCore
-  function BreadthFirstTraverser(tree::Phylogeny)
-    x = new(Queue(PhyNode), TraverserCore(tree.Root, Stack(PhyNode), PhyNode[], tree.Root))
-    for i in x.Core.Current.Children
-      enqueue!(x.Ahead, i)
-    end
-    return x
-  end
-end
-
-type Tip2RootTraverser <: TreeTraverser
-  Ahead::PhyNode
-  Core::TraverserCore
-  Tip2RootTraverser(tip::PhyNode) = new(tip.Parent, TraverserCore(tip, Stack(PhyNode), PhyNode[], tip))
-end
-
-
-function next!(x::DepthFirstTraverser)
-  push!(x.Core.Behind, x.Core.Current)
-  x.Core.Current = pop!(x.Ahead)
-  for i in x.Core.Current.Children
-    push!(x.Ahead, i)
-  end
-end
-
-function next!(x::BreadthFirstTraverser)
-  push!(x.Core.Behind, x.Core.Current)
-  x.Core.Current = dequeue!(x.Ahead)
-  for i in x.Core.Current.Children
-    enqueue!(x.Ahead, i)
-  end
-end
-
-function next!(x::Tip2RootTraverser)
-  push!(x.Core.Behind, x.Core.Current)
-  push!(x.Core.History, x.Core.Current)
-  x.Core.Current = x.Ahead
-  x.Ahead = x.Core.Current.Parent
-end
-
-function reset!(x::TraverserCore)
-  x.Behind = Stack(PhyNode)
-  x.Current = x.Start
-  x.History = PhyNode[]
-end
-
-function reset!(x::DepthFirstTraverser)
-  reset!(x.Core)
-  x.Ahead = Stack(PhyNode)
-  for i in x.Core.Current.Children
-    push!(x.Ahead, i)
-  end
-end
-
-function reset!(x::Tip2RootTraverser)
-  reset!(x.Core)
-  x.Ahead = x.Core.Current.Parent
-end
-
-function reset!(x::BreadthFirstTraverser)
-  reset!(x.Core)
-  x.Ahead = Queue(PhyNode)
-  for i in x.Core.Current.Children
-    enqueue!(x.Ahead, i)
-  end
-end
-
-function getCurrent(x::TreeTraverser)
-  return x.Core.Current
-end
-
-function upNext(x::TreeTraverser)
-  return x.Ahead
-end
-
-function getHistory(x::TreeTraverser)
-  return x.Core.History
-end
-
-function hasReachedEnd(x::TreeTraverser)
-  length(x.Ahead) > 0 ? false : true
-end
-
-function hasReachedEnd(x::Tip2RootTraverser)
-  isRoot(getCurrent(x)) ? true : false 
-end
-
-function search(traverser::TreeTraverser, condition::Function)
-  while true
-    if condition(getCurrent(traverser))
-      return getCurrent(traverser)
-    end
-    if hasReachedEnd(traverser)
-      break
-    end
-    next!(traverser)
-  end
-end
-
-function searchAll(traverser::TreeTraverser, condition::Function)
+function searchAll(it::PhylogenyIterator, condition::Function)
   matches::Array{PhyNode, 1} = PhyNode[]
-  while true
-    if condition(getCurrent(traverser))
-      push!(matches, getCurrent(traverser))
+  for i = it
+    if condition(i)
+      push!(matches, i)
     end
-    if hasReachedEnd(traverser)
-      break
-    end
-    next!(traverser)
   end
   return matches
 end
@@ -372,18 +314,13 @@ function getindex(tree::Phylogeny, names::String...)
   return searchAll(DepthFirstTraverser(tree), x -> in(getName(x), names))
 end
 
-function generateIndex(tree::Phylogeny, parameter::Symbol)
+function generateIndex(tree::Phylogeny)
   output = Dict{String, PhyNode}()
-  traverser = BreadthFirstTraverser(tree)
-  while true
-    if haskey(output, getName(getCurrent(traverser)))
+  for i = BreadthFirst(tree)
+    if haskey(output, getName(i))
       error("You are trying to build an index dict of a tree with clades of the same name.")
     end
-    output[getName(getCurrent(traverser))] = getCurrent(traverser)
-    if hasReachedEnd(traverser)
-      break
-    end
-    next!(traverser)
+    output[getName(i)] = i
   end
   return output
 end
