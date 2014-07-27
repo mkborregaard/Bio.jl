@@ -14,7 +14,7 @@ Bioinformatics and Computational Biology infrastructure for [Julia](http://julia
 * Type for representing phylogeneies.
 * Manipulation of phylogenies.
 * Types for traversing phylogenies.
-* search methods for searching a tree according to a given condition and traverser type.
+* Search methods for searching a tree according to a given condition and traverser type.
 
 ## Running tests
 
