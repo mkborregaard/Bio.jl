@@ -1,5 +1,5 @@
 module Phylo
-  import DataStructures: Queue, enqueue!, dequeue!, Stack
+  import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
   ## Exported Methods and Types
   export PhyExtension,
     PhyNode,
