@@ -28,7 +28,9 @@ module Phylo
     getCurrent,
     upNext,
     getHistory,
-    hasReachedEnd
+    hasReachedEnd,
+    generateIndex
+
 
   ## Load Package Files
   include(Pkg.dir("Bio", "src", "phylo", "typedefs.jl"))
