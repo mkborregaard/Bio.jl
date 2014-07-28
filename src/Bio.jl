@@ -13,4 +13,6 @@ include("intervals/intervals.jl")
 include("tools/tools.jl")
 include(Pkg.dir("Bio", "src", "phylo", "phylo.jl"))
 
+using .Phylo
+
 end # module
