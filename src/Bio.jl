@@ -10,6 +10,6 @@ include("intervals/Intervals.jl")
 include("align/Align.jl")
 include("annotations.jl")
 include("tools/tools.jl")
-include(Pkg.dir("Bio", "src", "phylo", "phylo.jl"))
+include("phylo/Phylo.jl")
 
-end # module Bio
+end # module
