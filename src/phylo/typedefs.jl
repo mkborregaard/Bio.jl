@@ -11,12 +11,12 @@ end
 
 # Node type.
 type PhyNode
-  Name::String
-  BranchLength::Float64
-  Extensions::Array{PhyExtension, 1}
-  Children::Array{PhyNode, 1}
-  Parent::PhyNode
-  PhyNode() = (x = new("", 0.0, PhyNode[], PhyNode[]); x.Parent = x)
+  name::String
+  branchlength::Float64
+  extensions::Array{PhyExtension, 1}
+  children::Array{PhyNode, 1}
+  parent::PhyNode
+  PhyNode() = (x = new("", 0.0, PhyNode[], PhyNode[]); x.parent = x)
 end
 
 #=
@@ -32,29 +32,29 @@ is set it cannot be made #undef.
 # Node constructors.
 function PhyNode(label::String, branchlength::Float64, ext::Array{PhyExtension, 1}, parent::PhyNode)
   x = PhyNode()
-  setName!(x, label)
-  setBranchLength!(x, branchlength)
-  x.Extensions = ext
-  setParent!(x, parent)
+  setname!(x, label)
+  setbranchlength!(x, branchlength)
+  x.extensions = ext
+  setparent!(x, parent)
   return x
 end
 
 function PhyNode(parent::PhyNode)
   x = PhyNode()
-  setParent!(x, parent)
+  setparent!(x, parent)
   return x
 end
 
 function PhyNode(branchlength::Float64, parent::PhyNode)
   x = PhyNode()
-  setBranchLength!(x, branchlength)
-  setParent!(x, parent)
+  setbranchlength!(x, branchlength)
+  setparent!(x, parent)
   return x
 end
 
 function PhyNode(label::String)
   x = PhyNode()
-  setName!(x, label)
+  setname!(x, label)
   return x
 end
 
@@ -63,116 +63,124 @@ end
 
 ## Getting information from a node...
 
-function getName(x::PhyNode)
-  return x.Name
+function getname(x::PhyNode)
+  return x.name
 end
 
-function getBranchLength(x::PhyNode)
-  return x.BranchLength
+function getbranchlength(x::PhyNode)
+  return x.branchlength
 end
 
-function isLeaf(x::PhyNode)
-  return !isRoot(x) && !isNode(x) ? true : false
+function isleaf(x::PhyNode)
+  return !isroot(x) && !isnode(x) ? true : false
 end
 
-function hasChildren(x::PhyNode)
-  return length(x.Children) > 0 ? true : false
+function haschildren(x::PhyNode)
+  return length(x.children) > 0 ? true : false
 end
 
 # Refer to the note on self referential nodes. If a node is self referential in the parent field, a warning will be printed to screen.
-function parentIsSelf(x::PhyNode)
-  return x.Parent == x ? true : false
+function parentisself(x::PhyNode)
+  return x.parent == x ? true : false
 end
 
-function hasParent(x::PhyNode)
-  return !parentIsSelf(x) ? true : false
+function hasparent(x::PhyNode)
+  return !parentisself(x) ? true : false
 end
 
 # Should x.Children that is returned be a copy? x.Children is an array of
 # refs to the child nodes, so x.Children is mutable.
-function getChildren(x::PhyNode)
-  return x.Children
+function getchildren(x::PhyNode)
+  return x.children
 end
 
-function getSiblings(x::PhyNode)
-  if hasParent(x)
-    return getChildren(x.Parent)
+function getsiblings(x::PhyNode)
+  if hasparent(x)
+    return getchildren(x.parent)
   end
 end
 
-function getParent(x::PhyNode)
-  if parentIsSelf(x)
+function getparent(x::PhyNode)
+  if parentisself(x)
     println("Node does not have a parent. It is self referential.")
   end
-  return x.Parent
+  return x.parent
 end
 
-function isRoot(x::PhyNode)
-  return parentIsSelf(x) && hasChildren(x) ? true : false
+function isroot(x::PhyNode)
+  return parentisself(x) && haschildren(x) ? true : false
 end
 
-function isNode(x::PhyNode)
-  return hasParent(x) && hasChildren(x) ? true : false
+function isnode(x::PhyNode)
+  return hasparent(x) && haschildren(x) ? true : false
 end
 
-function isPreTerminal(x::PhyNode)
-  return all([isLeaf(i) for i in x.Children])
+function ispreterminal(x::PhyNode)
+  return all([isleaf(i) for i in x.children])
 end
 
 # A node returning true for isPreTerminal, would also return true for this function.
-function isSemiPreTerminal(x::PhyNode)
-  return any([isLeaf(i) for i in x.Children])
+function issemipreterminal(x::PhyNode)
+  return any([isleaf(i) for i in x.children])
+end
+
+function getdescendents(x::PhyNode)
+  return collect(DepthFirst(x))
+end
+
+function getterminaldescendents(x::PhyNode)
+  return searchall(DepthFirst(x), isleaf)
 end
 
 
 ## Setting information on a node...
  
-function setName!(x::PhyNode, name::String)
-  x.Name = name
+function setname!(x::PhyNode, name::String)
+  x.name = name
 end
 
-function setBranchLength!(x::PhyNode, bl::Float64)
-  x.BranchLength = bl
+function setbranchlength!(x::PhyNode, bl::Float64)
+  x.branchlength = bl
 end
 
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.  
-function removeParent!(x::PhyNode)
-  setParent!(x, x)
+function removeparent!(x::PhyNode)
+  setparent!(x, x)
 end
 
-function setParent!(child::PhyNode, parent::PhyNode)
-  child.Parent = parent
+function setparent!(child::PhyNode, parent::PhyNode)
+  child.parent = parent
 end
 
-function addChild!(parent::PhyNode, child::PhyNode)
-  push!(parent.Children, child)
+function addchild!(parent::PhyNode, child::PhyNode)
+  push!(parent.children, child)
 end
 
-function removeChild!(parent::PhyNode, child::PhyNode)
-  filter!(x -> !(x == child), parent.Children)
+function removechild!(parent::PhyNode, child::PhyNode)
+  filter!(x -> !(x == child), parent.children)
 end
 
 function graft!(parent::PhyNode, child::PhyNode)
   # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
   # Its reference is removed from the parents Children field.
-  if hasParent(child)
-    removeChild!(child.Parent, child)
+  if hasparent(child)
+    removechild!(child.parent, child)
   end
-  setParent!(child, parent)
-  addChild!(parent, child)
+  setparent!(child, parent)
+  addchild!(parent, child)
 end
 
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
-    setBranchLength!(child, branchlength)
+    setbranchlength!(child, branchlength)
 end
 
 function prune!(x::PhyNode)
-  if hasParent(x)
+  if hasparent(x)
     # You must make sure the parent of this node from which you are pruning, does not contain a reference to it.
-    removeChild!(x.Parent, x)
-    removeParent!(x)
+    removechild!(x.parent, x)
+    removeparent!(x)
     return x
   else
     error("Can't prune from this node, it is either a single node without parents or children, or is a root of a tree / subtree.")
@@ -181,10 +189,10 @@ end
 
 # Tree type.
 type Phylogeny
-  Name::String
-  Root::PhyNode
-  Rooted::Bool
-  Rerootable::Bool
+  name::String
+  root::PhyNode
+  rooted::Bool
+  rerootable::Bool
 
   Phylogeny() = new("", PhyNode(), false, true)
 end
@@ -192,45 +200,53 @@ end
 # Phylogeny constructors...
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   x = Phylogeny()
-  setName!(x, name)
-  setRoot!(x, root)
-  setRooted!(x, rooted)
-  setRerootable!(x, rerootable)
+  setname!(x, name)
+  setroot!(x, root)
+  setrooted!(x, rooted)
+  setrerootable!(x, rerootable)
   return x
 end
 
-function setName!(x::Phylogeny, name::String)
-  x.Name = name
+function setname!(x::Phylogeny, name::String)
+  x.name = name
 end
 
-function isRooted(x::Phylogeny)
-  return x.Rooted
+function isrooted(x::Phylogeny)
+  return x.rooted
 end
 
-function isRerootable(x::Phylogeny)
-  return x.Rerootable
+function isrerootable(x::Phylogeny)
+  return x.rerootable
 end
 
-function setRoot!(x::Phylogeny, y::PhyNode)
-  x.Root = y
+function setroot!(x::Phylogeny, y::PhyNode)
+  x.root = y
 end
 
-function setRooted!(x::Phylogeny, rooted::Bool)
-  x.Rooted = rooted
+function setrooted!(x::Phylogeny, rooted::Bool)
+  x.rooted = rooted
 end
 
-function setRerootable!(x::Phylogeny, rerootable::Bool)
-  x.Rerootable = rerootable
+function setrerootable!(x::Phylogeny, rerootable::Bool)
+  x.rerootable = rerootable
 end
 
 abstract PhylogenyIterator
 
 immutable DepthFirst <: PhylogenyIterator
-    tree::Phylogeny
+    start::PhyNode
+end
+
+function DepthFirst(x::Phylogeny)
+  DepthFirst(x.root)
 end
 
 immutable BreadthFirst <: PhylogenyIterator
-    tree::Phylogeny
+    start::PhyNode
+end
+
+function BreadthFirst(x::Phylogeny)
+  DepthFirst(x.root)
 end
 
 immutable Tip2Root <: PhylogenyIterator
@@ -239,13 +255,13 @@ end
 
 function Base.start(x::DepthFirst)
   state = Stack(PhyNode)
-  push!(state, x.tree.Root)
+  push!(state, x.start)
   return state
 end
 
 function Base.start(x::BreadthFirst)
   state = Queue(PhyNode)
-  enqueue!(state, x.tree.Root)
+  enqueue!(state, x.start)
   return state
 end
 
@@ -255,7 +271,7 @@ end
 
 function Base.next(x::DepthFirst, state::Stack{Deque{PhyNode}})
   current::PhyNode = pop!(state)
-  for i in current.Children
+  for i in current.children
     push!(state, i)
   end
   return current, state
@@ -263,14 +279,14 @@ end
 
 function Base.next(x::BreadthFirst, state::Queue{Deque{PhyNode}})
   current::PhyNode = dequeue!(state)
-  for i in current.Children
+  for i in current.children
     enqueue!(state, i)
   end
   return current, state
 end
 
 function Base.next(x::Tip2Root, state::(PhyNode,Bool))
-  return state[1], (state[1].Parent, isRoot(state[1]))
+  return state[1], (state[1].parent, isroot(state[1]))
 end
 
 function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
@@ -293,7 +309,7 @@ function search(it::PhylogenyIterator, condition::Function)
   end
 end
 
-function searchAll(it::PhylogenyIterator, condition::Function)
+function searchall(it::PhylogenyIterator, condition::Function)
   matches::Array{PhyNode, 1} = PhyNode[]
   for i = it
     if condition(i)
@@ -312,19 +328,21 @@ individual search()-es.
 =#
 
 function Base.getindex(tree::Phylogeny, names::String...)
-  return searchAll(DepthFirstTraverser(tree), x -> in(getName(x), names))
+  return searchall(DepthFirst(tree), x -> in(getname(x), names))
 end
 
-function generateIndex(tree::Phylogeny)
+function generateindex(tree::Phylogeny)
   output = Dict{String, PhyNode}()
   for i = BreadthFirst(tree)
-    if haskey(output, getName(i))
+    if haskey(output, getname(i))
       error("You are trying to build an index dict of a tree with clades of the same name.")
     end
-    output[getName(i)] = i
+    output[getname(i)] = i
   end
   return output
 end
+
+
 
 
 
