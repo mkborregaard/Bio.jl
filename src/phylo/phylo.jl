@@ -6,11 +6,13 @@ import Base: getindex, length, start, next, done
 
 import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
   ## Exported Methods and Types
-  export PhyExtension, PhyNode, Phylogeny, getName, getBranchLength,
-    isLeaf, hasChildren, parentIsSelf, hasParent, getChildren,
-    getSiblings, getParent, isRoot, isNode, setName!,
-    setBranchLength!, graft!, prune!, search, searchAll, 
-    generateIndex, DepthFirst, BreadthFirst, Tip2Root
+  export PhyNode, getname, getbranchlength, isleaf, haschildren, 
+  parentisself, hasparent, getchildren, getsiblings, getparent, 
+  isroot, isnode, setname!, setbranchlength!, ispreterminal, issemipreterminal,
+  getdescendents, getterminaldescendents, PhyExtension,  Phylogeny, 
+  isrooted, isrerootable, setroot!, setrooted!, setrerootable!,
+  graft!, prune!, search, searchall, generateindex, PhylogenyIterator, 
+  DepthFirst, BreadthFirst, Tip2Root
 
   ## Load Package Files
   include(Pkg.dir("Bio", "src", "phylo", "typedefs.jl"))
