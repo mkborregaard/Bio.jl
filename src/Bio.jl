@@ -13,4 +13,6 @@ include("intervals/intervals.jl")
 include("tools/tools.jl")
 include("phylo/phylo.jl")
 
+using .Phylo
+
 end # module
