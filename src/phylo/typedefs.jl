@@ -72,7 +72,7 @@ function getbranchlength(x::PhyNode)
 end
 
 function isleaf(x::PhyNode)
-  return !isroot(x) && !isnode(x) ? true : false
+  return hasparent(x) && !haschildren(x) ? true : false
 end
 
 function haschildren(x::PhyNode)
@@ -116,20 +116,39 @@ function isnode(x::PhyNode)
 end
 
 function ispreterminal(x::PhyNode)
+  if isleaf(x)
+    return false
+  end
   return all([isleaf(i) for i in x.children])
 end
 
 # A node returning true for isPreTerminal, would also return true for this function.
 function issemipreterminal(x::PhyNode)
-  return any([isleaf(i) for i in x.children])
+  if isleaf(x)
+    return false
+  end
+  return any([isleaf(i) for i in x.children]) && any([isleaf(i) for i in x.children])
 end
 
 function getdescendents(x::PhyNode)
-  return collect(DepthFirst(x))
+  return collect(PhyNode, DepthFirst(x))
 end
 
 function getterminaldescendents(x::PhyNode)
   return searchall(DepthFirst(x), isleaf)
+end
+
+# Test that the posanc node is ancestral to the given nodes.
+function isancestral(posanc::PhyNode, nodes::Array{PhyNode})
+  return all([in(node, getdescendents(posanc)) for node in nodes])
+end
+
+# I'm not sure this is the best way to get the MRCA of a set of nodes, but I think it's valid: As you climb a tree from any specified tip to the root.
+# if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is 
+# the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll get the answer sooner searching from tips 2 root,
+# however this would take longer 
+function getmrca(nodes::PhyNode...)
+  return search(Tip2Root(nodes[1]), x -> isancestral(x, nodes))
 end
 
 
