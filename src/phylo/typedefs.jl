@@ -147,7 +147,7 @@ end
 # if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is 
 # the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll get the answer sooner searching from tips 2 root,
 # however this would take longer 
-function getmrca(nodes::PhyNode...)
+function getmrca(nodes::Array{PhyNode})
   return search(Tip2Root(nodes[1]), x -> isancestral(x, nodes))
 end
 
