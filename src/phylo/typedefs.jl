@@ -265,12 +265,31 @@ immutable BreadthFirst <: PhylogenyIterator
 end
 
 function BreadthFirst(x::Phylogeny)
-  DepthFirst(x.root)
+  BreadthFirst(x.root)
 end
 
 immutable Tip2Root <: PhylogenyIterator
     start::PhyNode
 end
+
+
+function Base.start(x::PhyNode)
+  if parentisself(x)
+    return (1, x.children)
+  else
+    return (1, [x.children, x.parent])
+  end
+end
+
+function Base.next(x::PhyNode, state::(Int64, Array{PhyNode, 1}))
+  current::PhyNode = state[2][state[1]]
+  return current, (state[1] + 1, state[2])
+end
+
+function Base.done(x::PhyNode, state::(Int64, Array{PhyNode, 1}))
+  return state[1] > length(state[2])
+end
+
 
 function Base.start(x::DepthFirst)
   state = Stack(PhyNode)
