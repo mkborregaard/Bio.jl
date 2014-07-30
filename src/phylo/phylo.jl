@@ -16,4 +16,5 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 
   ## Load Package Files
   include(Pkg.dir("Bio", "src", "phylo", "typedefs.jl"))
+  include(Pkg.dir("Bio", "src", "phylo", "iteration.jl"))
 end
