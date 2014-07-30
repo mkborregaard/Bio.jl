@@ -12,7 +12,7 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
   getdescendents, getterminaldescendents, PhyExtension,  Phylogeny, 
   isrooted, isrerootable, setroot!, setrooted!, setrerootable!,
   graft!, prune!, search, searchall, generateindex, PhylogenyIterator, 
-  DepthFirst, BreadthFirst, Tip2Root
+  DepthFirst, BreadthFirst, Tip2Root, getmrca
 
   ## Load Package Files
   include(Pkg.dir("Bio", "src", "phylo", "typedefs.jl"))

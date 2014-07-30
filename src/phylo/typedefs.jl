@@ -127,7 +127,7 @@ function issemipreterminal(x::PhyNode)
   if isleaf(x)
     return false
   end
-  return any([isleaf(i) for i in x.children]) && any([isleaf(i) for i in x.children])
+  return any([isleaf(i) for i in x.children]) && any([!isleaf(i) for i in x.children])
 end
 
 function getdescendents(x::PhyNode)
