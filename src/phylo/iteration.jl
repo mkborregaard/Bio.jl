@@ -6,20 +6,46 @@
 
 abstract PhylogenyIterator
 
+type BreadthFirst <: PhylogenyIterator
+    start::PhyNode
+    ahead::Queue{Deque{PhyNode}}
+    visited::Array{PhyNode}
+    BreadthFirst(start::PhyNode) = new(start, Queue(PhyNode), PhyNode[])
+end
+
+function BreadthFirst(x::Phylogeny)
+  BreadthFirst(x.root)
+end
+
+function Base.start(x::BreadthFirst)
+  enqueue!(x.ahead, x.start)
+  nothing
+end
+
+function Base.next(x::BreadthFirst, Nothing)
+  current::PhyNode = dequeue!(x.ahead)
+  push!(x.visited, current)
+  for i in current.children
+    if !in(i, x.visited)
+      enqueue!(x.ahead, i)
+    end
+  end
+  return current, nothing
+end
+
+function Base.done(x::BreadthFirst, Nothing)
+  return length(x.ahead) == 0 ? true : false
+end
+
+1.0
+0.00001
+
 immutable DepthFirst <: PhylogenyIterator
     start::PhyNode
 end
 
 function DepthFirst(x::Phylogeny)
   DepthFirst(x.root)
-end
-
-immutable BreadthFirst <: PhylogenyIterator
-    start::PhyNode
-end
-
-function BreadthFirst(x::Phylogeny)
-  BreadthFirst(x.root)
 end
 
 immutable Tip2Root <: PhylogenyIterator
@@ -49,11 +75,7 @@ function Base.start(x::DepthFirst)
   return state
 end
 
-function Base.start(x::BreadthFirst)
-  state = Queue(PhyNode)
-  enqueue!(state, x.start)
-  return state
-end
+
 
 function Base.start(x::Tip2Root)
   return (x.start, false)
@@ -67,13 +89,7 @@ function Base.next(x::DepthFirst, state::Stack{Deque{PhyNode}})
   return current, state
 end
 
-function Base.next(x::BreadthFirst, state::Queue{Deque{PhyNode}})
-  current::PhyNode = dequeue!(state)
-  for i in current.children
-    enqueue!(state, i)
-  end
-  return current, state
-end
+
 
 function Base.next(x::Tip2Root, state::(PhyNode,Bool))
   return state[1], (state[1].parent, isroot(state[1]))
@@ -83,9 +99,7 @@ function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
   return length(state) == 0 ? true : false
 end
 
-function Base.done(x::BreadthFirst, state::Queue{Deque{PhyNode}})
-  return length(state) == 0 ? true : false
-end
+
 
 function Base.done(x::Tip2Root, state::(PhyNode,Bool))
   return state[2] 
