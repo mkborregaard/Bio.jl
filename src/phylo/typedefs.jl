@@ -239,9 +239,13 @@ function isrerootable(x::Phylogeny)
 end
 
 function setroot!(x::Phylogeny, y::PhyNode)
+  x.rerootable == false ? error("Phylogeny is not rerootable!")
   x.root = y
+  x.rooted = true
 end
 
+# This is probably unnessecery given setroot puts the rooted flag to true.
+# perhaps and unroot! method is more appropriate.
 function setrooted!(x::Phylogeny, rooted::Bool)
   x.rooted = rooted
 end
