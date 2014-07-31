@@ -63,6 +63,10 @@ end
 
 ## Getting information from a node...
 
+function isempty(x::PhyNode)
+  return x.name == "" && x.branchlength == 0.0 && !hasextensions(x) && !haschildren(x) && parentisself(x)
+end
+
 function getname(x::PhyNode)
   return x.name
 end
@@ -77,6 +81,10 @@ end
 
 function haschildren(x::PhyNode)
   return length(x.children) > 0
+end
+
+function hasextensions(x::PhyNode)
+  return length(x.extensions) > 0
 end
 
 # Refer to the note on self referential nodes. If a node is self referential in the parent field, a warning will be printed to screen.
@@ -228,6 +236,10 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   setrooted!(x, rooted)
   setrerootable!(x, rerootable)
   return x
+end
+
+function isempty(x::Phylogeny)
+  return isempty(x.root)
 end
 
 function setname!(x::Phylogeny, name::String)
