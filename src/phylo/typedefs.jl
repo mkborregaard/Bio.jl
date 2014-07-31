@@ -72,20 +72,20 @@ function getbranchlength(x::PhyNode)
 end
 
 function isleaf(x::PhyNode)
-  return hasparent(x) && !haschildren(x) ? true : false
+  return hasparent(x) && !haschildren(x)
 end
 
 function haschildren(x::PhyNode)
-  return length(x.children) > 0 ? true : false
+  return length(x.children) > 0
 end
 
 # Refer to the note on self referential nodes. If a node is self referential in the parent field, a warning will be printed to screen.
 function parentisself(x::PhyNode)
-  return x.parent == x ? true : false
+  return x.parent == x
 end
 
 function hasparent(x::PhyNode)
-  return !parentisself(x) ? true : false
+  return !parentisself(x)
 end
 
 # Should x.Children that is returned be a copy? x.Children is an array of
@@ -108,11 +108,11 @@ function getparent(x::PhyNode)
 end
 
 function isroot(x::PhyNode)
-  return parentisself(x) && haschildren(x) ? true : false
+  return parentisself(x) && haschildren(x)
 end
 
 function isnode(x::PhyNode)
-  return hasparent(x) && haschildren(x) ? true : false
+  return hasparent(x) && haschildren(x)
 end
 
 function ispreterminal(x::PhyNode)
