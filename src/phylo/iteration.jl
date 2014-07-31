@@ -10,7 +10,12 @@ type BreadthFirst <: PhylogenyIterator
     start::PhyNode
     ahead::Queue{Deque{PhyNode}}
     visited::Array{PhyNode}
-    BreadthFirst(start::PhyNode) = new(start, Queue(PhyNode), PhyNode[])
+    function BreadthFirst(start::PhyNode)
+      if isempty(start)
+        error("Node provided to start iteration is empty!")
+      end
+      return new(start, Queue(PhyNode), PhyNode[])
+    end
 end
 
 function BreadthFirst(x::Phylogeny)
@@ -40,6 +45,12 @@ end
 
 immutable DepthFirst <: PhylogenyIterator
     start::PhyNode
+    function DepthFirst(x::PhyNode)
+      if isempty(x)
+        error("Node provided to start iteration is empty!")
+      end
+      return new(x)
+    end
 end
 
 function DepthFirst(x::Phylogeny)
@@ -48,6 +59,12 @@ end
 
 immutable Tip2Root <: PhylogenyIterator
     start::PhyNode
+    function Tip2Root(x::PhyNode)
+      if isempty(x)
+        error("Node provided to start iteration is empty!")
+      end
+      return new(x)
+    end
 end
 
 function Base.start(x::PhyNode)
