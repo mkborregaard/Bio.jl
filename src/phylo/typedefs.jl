@@ -254,7 +254,9 @@ function isrerootable(x::Phylogeny)
 end
 
 function setroot!(x::Phylogeny, y::PhyNode)
-  x.rerootable == false ? error("Phylogeny is not rerootable!")
+  if x.rerootable == false
+    error("Phylogeny is not rerootable!")
+  end
   x.root = y
   x.rooted = true
 end
