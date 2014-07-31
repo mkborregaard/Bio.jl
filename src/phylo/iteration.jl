@@ -34,7 +34,7 @@ function Base.next(x::BreadthFirst, Nothing)
 end
 
 function Base.done(x::BreadthFirst, Nothing)
-  return length(x.ahead) == 0 ? true : false
+  return length(x.ahead) == 0
 end
 
 1.0
@@ -96,7 +96,7 @@ function Base.next(x::Tip2Root, state::(PhyNode,Bool))
 end
 
 function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
-  return length(state) == 0 ? true : false
+  return length(state) == 0
 end
 
 
