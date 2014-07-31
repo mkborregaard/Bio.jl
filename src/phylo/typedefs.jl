@@ -13,8 +13,8 @@ end
 type PhyNode
   name::String
   branchlength::Float64
-  extensions::Array{PhyExtension, 1}
-  children::Array{PhyNode, 1}
+  extensions::Vector{PhyExtension}
+  children::Vector{PhyNode}
   parent::PhyNode
   PhyNode() = (x = new("", 0.0, PhyNode[], PhyNode[]); x.parent = x)
 end
