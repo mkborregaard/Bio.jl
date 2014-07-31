@@ -42,7 +42,6 @@ function Base.done(x::BreadthFirst, Nothing)
   return length(x.ahead) == 0
 end
 
-
 immutable DepthFirst <: PhylogenyIterator
     start::PhyNode
     function DepthFirst(x::PhyNode)
@@ -90,8 +89,6 @@ function Base.start(x::DepthFirst)
   return state
 end
 
-
-
 function Base.start(x::Tip2Root)
   return (x.start, false)
 end
@@ -104,8 +101,6 @@ function Base.next(x::DepthFirst, state::Stack{Deque{PhyNode}})
   return current, state
 end
 
-
-
 function Base.next(x::Tip2Root, state::(PhyNode,Bool))
   return state[1], (state[1].parent, isroot(state[1]))
 end
@@ -113,8 +108,6 @@ end
 function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
   return length(state) == 0
 end
-
-
 
 function Base.done(x::Tip2Root, state::(PhyNode,Bool))
   return state[2] 
