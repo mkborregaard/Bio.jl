@@ -124,10 +124,8 @@ end
 
 # A node returning true for isPreTerminal, would also return true for this function.
 function issemipreterminal(x::PhyNode)
-  if isleaf(x)
-    return false
-  end
-  return any([isleaf(i) for i in x.children]) && any([!isleaf(i) for i in x.children])
+  areleaves = [isleaf(i) for i in x.children]
+  return any(areleaves) && !all(areleaves)
 end
 
 function getdescendents(x::PhyNode)
@@ -193,6 +191,12 @@ end
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
     setbranchlength!(child, branchlength)
+end
+
+function graft!(parent::PhyNode, children::PhyNode...)
+  for i in children
+    graft!(parent, i)
+  end
 end
 
 function prune!(x::PhyNode)

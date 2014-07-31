@@ -37,8 +37,6 @@ function Base.done(x::BreadthFirst, Nothing)
   return length(x.ahead) == 0
 end
 
-1.0
-0.00001
 
 immutable DepthFirst <: PhylogenyIterator
     start::PhyNode
