@@ -58,7 +58,6 @@ function PhyNode(label::String)
   return x
 end
 
-
 ### Node Manipulation / methods on the PhyNode type...
 
 ## Getting information from a node...
