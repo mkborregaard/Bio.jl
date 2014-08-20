@@ -129,31 +129,38 @@ function ispreterminal(x::PhyNode)
   return all([isleaf(i) for i in x.children])
 end
 
+
 # A node returning true for isPreTerminal, would also return true for this function.
 function issemipreterminal(x::PhyNode)
   areleaves = [isleaf(i) for i in x.children]
   return any(areleaves) && !all(areleaves)
 end
 
+
 function getdescendents(x::PhyNode)
   return collect(PhyNode, DepthFirst(x))
 end
 
+
 function getterminaldescendents(x::PhyNode)
   return searchall(DepthFirst(x), isleaf)
 end
+
 
 # Test that the posanc node is ancestral to the given nodes.
 function isancestral(posanc::PhyNode, nodes::Array{PhyNode})
   return all([in(node, getdescendents(posanc)) for node in nodes])
 end
 
+
 # I'm not sure this is the best way to get the MRCA of a set of nodes, but I think it's valid: As you climb a tree from any specified tip to the root.
 # if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is 
 # the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll get the answer sooner searching from tips 2 root,
-# however this would take longer 
+# however this would take longer.
 function getmrca(nodes::Array{PhyNode})
-  return search(Tip2Root(nodes[1]), x -> isancestral(x, nodes))
+  paths = [collect(Tip2Root(i)) for i in nodes]
+  convergence = intersect(paths...)
+  return convergence[1]
 end
 
 
@@ -163,9 +170,11 @@ function setname!(x::PhyNode, name::String)
   x.name = name
 end
 
+
 function setbranchlength!(x::PhyNode, bl::Float64)
   x.branchlength = bl
 end
+
 
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.  
@@ -173,17 +182,21 @@ function removeparent!(x::PhyNode)
   setparent!(x, x)
 end
 
+
 function setparent!(child::PhyNode, parent::PhyNode)
   child.parent = parent
 end
+
 
 function addchild!(parent::PhyNode, child::PhyNode)
   push!(parent.children, child)
 end
 
+
 function removechild!(parent::PhyNode, child::PhyNode)
   filter!(x -> !(x == child), parent.children)
 end
+
 
 function graft!(parent::PhyNode, child::PhyNode)
   # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
@@ -195,16 +208,19 @@ function graft!(parent::PhyNode, child::PhyNode)
   addchild!(parent, child)
 end
 
+
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
     setbranchlength!(child, branchlength)
 end
+
 
 function graft!(parent::PhyNode, children::PhyNode...)
   for i in children
     graft!(parent, i)
   end
 end
+
 
 function prune!(x::PhyNode)
   if hasparent(x)
@@ -217,6 +233,7 @@ function prune!(x::PhyNode)
   end
 end
 
+
 # Tree type.
 type Phylogeny
   name::String
@@ -226,6 +243,7 @@ type Phylogeny
 
   Phylogeny() = new("", PhyNode(), false, true)
 end
+
 
 # Phylogeny constructors...
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
@@ -237,39 +255,90 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   return x
 end
 
+
 function isempty(x::Phylogeny)
   return isempty(x.root)
 end
+
 
 function setname!(x::Phylogeny, name::String)
   x.name = name
 end
 
+
 function isrooted(x::Phylogeny)
   return x.rooted
 end
+
 
 function isrerootable(x::Phylogeny)
   return x.rerootable
 end
 
-function setroot!(x::Phylogeny, y::PhyNode)
-  if x.rerootable == false
+
+function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
+  # Based on how rerooting is done in BioPython - make better and more Julian if pos.
+  if tree.rerootable == false
     error("Phylogeny is not rerootable!")
   end
-  x.root = y
-  x.rooted = true
+  # Get the path from the oldroot to the new tip. 
+  outgrouppath = reverse(collect(Tip2Root(outgroup)))
+  ### NOTE! Remove the root node from this path.
+
+  # Edge case, the new outgroup specified is the current root.
+  if tree.root == outgroup || length(outgrouppath) == 0
+    error("New root is already the root!")
+  end
+  previousbranchlength = outgroup.branchlength
+  # Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
+  if newbl != 0.0
+    @assert 0.0 <= newbl <= previousbranchlength
+  end
+  # Edge case, the outgroup to be the new root is terminal, we need a new root with a branch to the outgroup.
+  if isleaf(outgroup) || newbl != 0.0
+    newroot = PhyNode("NewRoot")
+    outgroup = prune!(outgroup)
+    graft!(newroot, outgroup, newbl)
+    if length(outgrouppath) == 1
+      # There aren't any nodes between the outgroup and origional group to rearrange.
+      newparent = newroot
+    else
+      parent = splice!(outgrouppath, (length(outgrouppath) - 1))
+      
+    end
+  else
+    #default
+  end
+
+
+
+
+
+  
+    
+
+
+
+
+  oldroot = tree.root
+
+  tree.root = y
+  tree.rooted = true
 end
+
+
 
 # This is probably unnessecery given setroot puts the rooted flag to true.
 # perhaps and unroot! method is more appropriate.
-function setrooted!(x::Phylogeny, rooted::Bool)
-  x.rooted = rooted
+function unroot!(x::Phylogeny)
+  x.rooted = false
 end
 
 function setrerootable!(x::Phylogeny, rerootable::Bool)
   x.rerootable = rerootable
 end
+
+
 
 #=
 Getindex is used to get a node by name. For a large tree, repeatedly calling this may not be performance optimal.
