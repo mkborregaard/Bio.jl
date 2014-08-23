@@ -357,7 +357,7 @@ function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   end
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
-  for var = range/iterable
+  for i in outgrouppath
     #for body
   end
 
