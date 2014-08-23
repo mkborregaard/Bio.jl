@@ -207,6 +207,7 @@ end
 function addchild_unsafe!(parent::PhyNode, child::PhyNode)
   if haschild(parent, child)
     error("The child node is already a child of the parent.")
+  end
   push!(parent.children, child)
 end
 
