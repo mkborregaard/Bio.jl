@@ -195,7 +195,7 @@ end
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.  
 function removeparent_unsafe!(x::PhyNode)
-  setparent!(x, x)
+  setparent_unsafe!(x, x)
 end
 
 
