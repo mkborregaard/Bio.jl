@@ -141,6 +141,10 @@ function ispreterminal(x::PhyNode)
   return all([isleaf(i) for i in x.children])
 end
 
+function countchildren(x::PhyNode)
+  return length(x.children)
+end
+
 
 # A node returning true for isPreTerminal, would also return true for this function.
 function issemipreterminal(x::PhyNode)
@@ -169,7 +173,7 @@ end
 # if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is 
 # the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll get the answer sooner searching from tips 2 root,
 # however this would take longer.
-function getmrca(nodes::Array{PhyNode})
+function getmrca(nodes::Vector{PhyNode})
   paths = [collect(Tip2Root(i)) for i in nodes]
   convergence = intersect(paths...)
   return convergence[1]
@@ -320,7 +324,13 @@ function isintree(tree::Phylogeny, clade::PhyNode)
 end
 
 
-function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
+function root!(tree:Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = 0.0)
+  o = getmrca(outgroup)
+  root!(tree, o, newbl)
+end
+
+
+function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   # Check for errors and edge cases first as much as possible.
   # 1 - The tree is not rerootable.
   if !isrerootable(tree)
@@ -370,23 +380,33 @@ function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   for parent in outgrouppath[2:end]
     prune!(newparent)
     previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength
-    graft!(newparent, parent)
+    pruneregraft!(parent, newparent)
     newparent = parent
   end
 
+  # Now we have two sets of connected PhyNodes. One begins the with the new root and contains the
+  # nodes rearranged as per the backtracking process along outgrouppath. The other is the nodes still connected to the old root.
+  # This needs to be resolved.
 
+  # If the old root only has one child, it was bifurcating, and if so, must be removed and the branch lengths resolved,
+  # appropriately. 
+  if countchildren(tree.root) == 1
+    ingroup = getchildren(getroot(tree))[1]
+    if getbranchlength(ingroup) != 0.0
+      setbranchlength!(ingroup, getbranchlength(ingroup) + previousbranchlength)
+    else
+      setbranchlength!(ingroup, previousbranchlength)
+    end
+    pruneregraft!(ingroup, newparent)
+  else
+    # If the root has more than one child, then it needs to be kept as an internal node.
+    setbranchlength!(tree.root, previousbranchlength)
+    graft!(newparent, tree.root) 
+  end
 
+  # TODO / FUTURE IMPROVEMENT - COPYING OF OLD ROOT ATTRIBUTES OR DATA TO NEW ROOT.
 
-
-  
-    
-
-
-
-
-  oldroot = tree.root
-
-  tree.root = y
+  tree.root = newroot
   tree.rooted = true
 end
 
