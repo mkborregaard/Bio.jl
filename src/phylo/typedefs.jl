@@ -82,6 +82,10 @@ function haschildren(x::PhyNode)
   return length(x.children) > 0
 end
 
+function haschild(parent::PhyNode, child::PhyNode)
+  return in(child, parent.children)
+end
+
 function hasextensions(x::PhyNode)
   return length(x.extensions) > 0
 end
@@ -116,6 +120,14 @@ end
 
 function isroot(x::PhyNode)
   return parentisself(x) && haschildren(x)
+end
+
+function isunlinked(x::PhyNode)
+  return parentisself(x) && !haschildren(x)
+end
+
+function islinked(x::PhyNode)
+  return hasparent(x) || haschildren(x)
 end
 
 function isnode(x::PhyNode)
@@ -176,24 +188,30 @@ function setbranchlength!(x::PhyNode, bl::Float64)
 end
 
 
+# Following unsafe functions maniplulate the setting and manipulation of parental and child links.
+# They should not be used unless absolutely nessecery - the prune and graft methods ensure the
+# bidirectional links between PhyNodes are built and broken cleanly.
+
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.  
-function removeparent!(x::PhyNode)
+function removeparent_unsafe!(x::PhyNode)
   setparent!(x, x)
 end
 
 
-function setparent!(child::PhyNode, parent::PhyNode)
+function setparent_unsafe!(parent::PhyNode, child::PhyNode)
   child.parent = parent
 end
 
 
-function addchild!(parent::PhyNode, child::PhyNode)
+function addchild_unsafe!(parent::PhyNode, child::PhyNode)
+  if haschild(parent, child)
+    error("The child node is already a child of the parent.")
   push!(parent.children, child)
 end
 
 
-function removechild!(parent::PhyNode, child::PhyNode)
+function removechild_unsafe!(parent::PhyNode, child::PhyNode)
   filter!(x -> !(x == child), parent.children)
 end
 
@@ -202,10 +220,10 @@ function graft!(parent::PhyNode, child::PhyNode)
   # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
   # Its reference is removed from the parents Children field.
   if hasparent(child)
-    removechild!(child.parent, child)
+    removechild_unsafe!(child.parent, child)
   end
-  setparent!(child, parent)
-  addchild!(parent, child)
+  setparent_unsafe!(child, parent)
+  addchild_unsafe!(parent, child)
 end
 
 
@@ -225,13 +243,28 @@ end
 function prune!(x::PhyNode)
   if hasparent(x)
     # You must make sure the parent of this node from which you are pruning, does not contain a reference to it.
-    removechild!(x.parent, x)
-    removeparent!(x)
+    removechild_unsafe!(x.parent, x)
+    removeparent_unsafe!(x)
     return x
   else
     error("Can't prune from this node, it is either a single node without parents or children, or is a root of a tree / subtree.")
   end
 end
+
+
+function pruneregraft!(prune::PhyNode, graftto::PhyNode)
+  x = prune!(prune)
+  graft!(graftto, x)
+end
+
+
+function pruneregraft!(prune::PhyNode, graftto::PhyNode, branchlength::Float64)
+  x = prune!(prune)
+  graft!(graftto, x, branchlength)
+end
+
+
+
 
 
 # Tree type.
@@ -275,39 +308,57 @@ function isrerootable(x::Phylogeny)
   return x.rerootable
 end
 
+function getroot(x::Phylogeny)
+  return x.root
+end
+
 
 function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
-  # Based on how rerooting is done in BioPython - make better and more Julian if pos.
-  if tree.rerootable == false
+  # Check for errors and edge cases first as much as possible.
+  # 1 - The tree is not rerootable.
+  if !isrerootable(tree)
     error("Phylogeny is not rerootable!")
   end
-  # Get the path from the oldroot to the new tip. 
-  outgrouppath = reverse(collect(Tip2Root(outgroup)))
-  ### NOTE! Remove the root node from this path.
-
-  # Edge case, the new outgroup specified is the current root.
-  if tree.root == outgroup || length(outgrouppath) == 0
+  # 2 - The specified outgroup is already the root.
+  if isroot(outgroup)
     error("New root is already the root!")
   end
-  previousbranchlength = outgroup.branchlength
-  # Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
+  # 3- Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
   if newbl != 0.0
     @assert 0.0 <= newbl <= previousbranchlength
   end
-  # Edge case, the outgroup to be the new root is terminal, we need a new root with a branch to the outgroup.
+
+  # Get the old branchlength from the outgroup.
+  previousbranchlength = getbranchlength(outgroup)
+  
+  # Get the path from the outgroup to the root, excluding the root. 
+  outgrouppath = collect(Tip2Root(outgroup))[1:end - 1]
+  
+  # Edge case, the outgroup to be the new root is terminal or the new branch length is not nothing, 
+  # we need a new root with a branch to the outgroup.
   if isleaf(outgroup) || newbl != 0.0
     newroot = PhyNode("NewRoot")
-    outgroup = prune!(outgroup)
-    graft!(newroot, outgroup, newbl)
+    prunegraft!(outgroup, newroot, newbl)
     if length(outgrouppath) == 1
       # There aren't any nodes between the outgroup and origional group to rearrange.
       newparent = newroot
     else
-      parent = splice!(outgrouppath, (length(outgrouppath) - 1))
-      
+      parent = outgrouppath[end - 1]
+      setbranchlength(parent, previousbranchlength - getbranchlength(outgroup)) 
+      previousbranchlength = getbranchlength(parent)
+      prunegraft!(parent, newroot)
+      newparent = parent
     end
   else
-    #default
+    # Use the provided outgroup as a a trifurcating root if the node is not a leaf / newbl is 0.0.
+    newroot = outgroup
+    setbranchlength(newroot, 0.0)
+    newparent = newroot
+  end
+
+  # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
+  for var = range/iterable
+    #for body
   end
 
 
