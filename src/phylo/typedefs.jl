@@ -284,7 +284,7 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   x = Phylogeny()
   setname!(x, name)
   x.root = root
-  setrooted!(x, rooted)
+  x.rooted = rooted
   setrerootable!(x, rerootable)
   return x
 end
