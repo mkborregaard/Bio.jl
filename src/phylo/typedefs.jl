@@ -219,9 +219,9 @@ end
 
 function graft!(parent::PhyNode, child::PhyNode)
   # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
-  # Its reference is removed from the parents Children field.
+  # its reference is removed from the parents Children field.
   if hasparent(child)
-    removechild_unsafe!(child.parent, child)
+    error("This node is already attached to a parent.")
   end
   setparent_unsafe!(parent, child)
   addchild_unsafe!(parent, child)
@@ -355,21 +355,23 @@ function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
       newparent = newroot
     else
       parent = outgrouppath[end - 1]
-      setbranchlength(parent, previousbranchlength - getbranchlength(outgroup)) 
+      setbranchlength!(parent, previousbranchlength - getbranchlength(outgroup)) 
       previousbranchlength = getbranchlength(parent)
       prunegraft!(parent, newroot)
       newparent = parent
     end
   else
     # Use the provided outgroup as a a trifurcating root if the node is not a leaf / newbl is 0.0.
-    newroot = outgroup
-    setbranchlength(newroot, 0.0)
-    newparent = newroot
+    newroot = newparent = outgroup
+    setbranchlength!(newroot, 0.0)
   end
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
-  for parent in outgrouppath
-    #for body
+  for parent in outgrouppath[2:end]
+    prune!(newparent)
+    previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength
+    graft!(newparent, parent)
+    newparent = parent
   end
 
 
