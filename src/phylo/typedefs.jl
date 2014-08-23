@@ -283,7 +283,7 @@ end
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   x = Phylogeny()
   setname!(x, name)
-  setroot!(x, root)
+  x.root = root
   setrooted!(x, rooted)
   setrerootable!(x, rerootable)
   return x
@@ -309,8 +309,13 @@ function isrerootable(x::Phylogeny)
   return x.rerootable
 end
 
+
 function getroot(x::Phylogeny)
   return x.root
+end
+
+function isintree(tree::Phylogeny, clade::PhyNode)
+  search()
 end
 
 
@@ -328,6 +333,7 @@ function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   if newbl != 0.0
     @assert 0.0 <= newbl <= previousbranchlength
   end
+  # TODO - Check that the proposed outgroup is indeed part of the tree.
 
   # Get the old branchlength from the outgroup.
   previousbranchlength = getbranchlength(outgroup)
