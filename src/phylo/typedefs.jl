@@ -223,7 +223,7 @@ function graft!(parent::PhyNode, child::PhyNode)
   if hasparent(child)
     removechild_unsafe!(child.parent, child)
   end
-  setparent_unsafe!(child, parent)
+  setparent_unsafe!(parent, child)
   addchild_unsafe!(parent, child)
 end
 
@@ -315,7 +315,8 @@ function getroot(x::Phylogeny)
 end
 
 function isintree(tree::Phylogeny, clade::PhyNode)
-  search()
+  s = search(BreadthFirst(tree), x -> x == clade)
+  return typeof(s) == PhyNode
 end
 
 
@@ -329,11 +330,14 @@ function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   if isroot(outgroup)
     error("New root is already the root!")
   end
-  # 3- Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
+  # 3 - Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
   if newbl != 0.0
     @assert 0.0 <= newbl <= previousbranchlength
   end
-  # TODO - Check that the proposed outgroup is indeed part of the tree.
+  # 4 - Check that the proposed outgroup is indeed part of the tree.
+  if !isintree(tree, outgroup)
+    error("The specified outgroup is not part of the phylogeny.")
+  end
 
   # Get the old branchlength from the outgroup.
   previousbranchlength = getbranchlength(outgroup)
@@ -364,7 +368,7 @@ function setroot!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   end
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
-  for i in outgrouppath
+  for parent in outgrouppath
     #for body
   end
 
