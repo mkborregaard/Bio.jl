@@ -9,10 +9,10 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
   export PhyNode, getname, getbranchlength, isleaf, haschildren,
   parentisself, hasparent, getchildren, getsiblings, getparent,
   isroot, isnode, setname!, setbranchlength!, ispreterminal, issemipreterminal,
-  getdescendents, getterminaldescendents, PhyExtension, Phylogeny,
-  isrooted, isrerootable, setroot!, setrooted!, setrerootable!,
+  getdescendents, getterminaldescendents, countchildren, PhyExtension,  Phylogeny,
+  isrooted, isrerootable, root!, setrerootable!,
   graft!, prune!, prunegraft!, search, searchall, generateindex, PhylogenyIterator,
-  DepthFirst, BreadthFirst, Tip2Root, getmrca, hasextensions
+  DepthFirst, BreadthFirst, Tip2Root, getmrca, hasextensions, getroot
 
   ## Load Package Files
   include("typedefs.jl")
