@@ -15,4 +15,6 @@ Bio.graft!(g, d, e)
 Bio.graft!(h, f, g)
 Bio.graft!(i, a, h)
 
-TestTree = Bio.Phylogeny("TestTree", i, false, true)
+tree = Bio.Phylogeny("TestTree", i, false, true)
+
+outgroup = g
