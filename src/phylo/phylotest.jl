@@ -1,13 +1,13 @@
 # Testscript for Bio.jl phylo.
 
-a = Bio.PhyNode("A.", 0.5)
-b = Bio.PhyNode("B.")
-c = Bio.PhyNode("C.")
-d = Bio.PhyNode("D.")
-e = Bio.PhyNode("E.")
-f = Bio.PhyNode("F.")
-g = Bio.PhyNode("G.")
-h = Bio.PhyNode("H.")
+a = Bio.PhyNode("A.", 0.1)
+b = Bio.PhyNode("B.", 0.2)
+c = Bio.PhyNode("C.", 0.3)
+d = Bio.PhyNode("D.", 0.4)
+e = Bio.PhyNode("E.", 0.5)
+f = Bio.PhyNode("F.", 0.6)
+g = Bio.PhyNode("G.", 0.7)
+h = Bio.PhyNode("H.", 0.8)
 i = Bio.PhyNode("I.")
 
 Bio.graft!(f, b, c)
