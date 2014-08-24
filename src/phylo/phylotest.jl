@@ -1,6 +1,6 @@
 # Testscript for Bio.jl phylo.
 
-a = Bio.PhyNode("A.")
+a = Bio.PhyNode("A.", 0.5)
 b = Bio.PhyNode("B.")
 c = Bio.PhyNode("C.")
 d = Bio.PhyNode("D.")

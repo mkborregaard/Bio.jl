@@ -35,7 +35,7 @@ function PhyNode(label::String, branchlength::Float64, ext::Vector{PhyExtension}
   setname!(x, label)
   setbranchlength!(x, branchlength)
   x.extensions = ext
-  setparent!(x, parent)
+  x.parent = parent
   return x
 end
 
@@ -57,6 +57,14 @@ function PhyNode(label::String)
   setname!(x, label)
   return x
 end
+
+function PhyNode(label::String, branchlength::Float64)
+  x = PhyNode()
+  setname!(x, label)
+  setbranchlength!(x, branchlength)
+  return x
+end
+
 
 ### Node Manipulation / methods on the PhyNode type...
 
