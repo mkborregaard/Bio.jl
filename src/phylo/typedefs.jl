@@ -381,7 +381,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   else
     # Use the provided outgroup as a a trifurcating root if the node is not a leaf / newbl is 0.0.
     newroot = newparent = outgroup
-    setbranchlength!(newroot, 0.0)
+    setbranchlength!(newroot, getbranchlength(getroot(tree)))
   end
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
@@ -400,11 +400,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   # appropriately. 
   if countchildren(tree.root) == 1
     ingroup = getchildren(getroot(tree))[1]
-    if getbranchlength(ingroup) != 0.0
-      setbranchlength!(ingroup, getbranchlength(ingroup) + previousbranchlength)
-    else
-      setbranchlength!(ingroup, previousbranchlength)
-    end
+    setbranchlength!(ingroup, getbranchlength(ingroup) + previousbranchlength)
     pruneregraft!(ingroup, newparent)
   else
     # If the root has more than one child, then it needs to be kept as an internal node.
