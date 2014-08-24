@@ -18,3 +18,5 @@ Bio.graft!(i, a, h)
 tree = Bio.Phylogeny("TestTree", i, false, true)
 
 outgroup = g
+
+Bio.root!(tree, g)

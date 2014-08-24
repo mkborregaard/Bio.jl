@@ -349,33 +349,28 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
     error("New root is already the root!")
   end
   # 3 - Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
-  if newbl != 0.0
-    @assert 0.0 <= newbl <= previousbranchlength
-  end
+  previousbranchlength = getbranchlength(outgroup)
+  @assert 0.0 <= newbl <= previousbranchlength
   # 4 - Check that the proposed outgroup is indeed part of the tree.
   if !isintree(tree, outgroup)
     error("The specified outgroup is not part of the phylogeny.")
   end
 
-  # Get the old branchlength from the outgroup.
-  previousbranchlength = getbranchlength(outgroup)
-  
   # Get the path from the outgroup to the root, excluding the root. 
-  outgrouppath = collect(Tip2Root(outgroup))[1:end - 1]
+  outgrouppath = collect(Tip2Root(outgroup))[2:end - 1]
   
   # Edge case, the outgroup to be the new root is terminal or the new branch length is not nothing, 
   # we need a new root with a branch to the outgroup.
   if isleaf(outgroup) || newbl != 0.0
-    newroot = PhyNode("NewRoot")
-    prunegraft!(outgroup, newroot, newbl)
-    if length(outgrouppath) == 1
+    newroot = PhyNode("NewRoot", getbranchlength(getroot(tree)))
+    pruneregraft!(outgroup, newroot, newbl)
+    if length(outgrouppath) == 0
       # There aren't any nodes between the outgroup and origional group to rearrange.
       newparent = newroot
     else
-      parent = outgrouppath[end - 1]
-      setbranchlength!(parent, previousbranchlength - getbranchlength(outgroup)) 
-      previousbranchlength = getbranchlength(parent)
-      prunegraft!(parent, newroot)
+      parent = splice!(outgrouppath, 1)
+      previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength - getbranchlength(outgroup)
+      pruneregraft!(parent, newroot)
       newparent = parent
     end
   else
@@ -385,7 +380,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   end
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
-  for parent in outgrouppath[2:end]
+  for parent in outgrouppath
     prune!(newparent)
     previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength
     pruneregraft!(parent, newparent)
