@@ -324,7 +324,7 @@ function isintree(tree::Phylogeny, clade::PhyNode)
 end
 
 
-function root!(tree:Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = 0.0)
+function root!(tree::Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = 0.0)
   o = getmrca(outgroup)
   root!(tree, o, newbl)
 end
