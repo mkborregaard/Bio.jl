@@ -30,7 +30,7 @@ is set it cannot be made #undef.
  =#
 
 # Node constructors.
-function PhyNode(label::String, branchlength::Float64, ext::Array{PhyExtension, 1}, parent::PhyNode)
+function PhyNode(label::String, branchlength::Float64, ext::Vector{PhyExtension}, parent::PhyNode)
   x = PhyNode()
   setname!(x, label)
   setbranchlength!(x, branchlength)
@@ -92,7 +92,7 @@ end
 
 # Refer to the note on self referential nodes. If a node is self referential in the parent field, a warning will be printed to screen.
 function parentisself(x::PhyNode)
-  return x.parent == x
+  return x.parent === x
 end
 
 function hasparent(x::PhyNode)
@@ -217,7 +217,7 @@ end
 
 
 function removechild_unsafe!(parent::PhyNode, child::PhyNode)
-  filter!(x -> !(x == child), parent.children)
+  filter!(x -> !(x === child), parent.children)
 end
 
 
@@ -319,7 +319,7 @@ function getroot(x::Phylogeny)
 end
 
 function isintree(tree::Phylogeny, clade::PhyNode)
-  s = search(BreadthFirst(tree), x -> x == clade)
+  s = search(BreadthFirst(tree), x -> x === clade)
   return typeof(s) == PhyNode
 end
 
