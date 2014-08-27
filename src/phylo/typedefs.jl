@@ -460,5 +460,9 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   end
 end
 
+function distancebetween(tree::Bio.Phylogeny, n1::Bio.PhyNode, n2::Bio.PhyNode)
+  p = Bio.pathbetween(tree, n1, n2) # Not nessecery to check n1 and n2 is in tree as pathbetween, on which this function depends, does the check.
+  return sum(Bio.getbranchlength, p)
+end
 
 
