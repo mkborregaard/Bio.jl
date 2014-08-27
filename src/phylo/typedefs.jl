@@ -451,9 +451,9 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   if !isintree(tree, n1) || !isintree(tree, n2)
     error("One of the nodes is not present in the tree.")
   else
-    p1 = collect(Tip2Root(n1))
-    p2 = collect(Tip2Root(n2))
-    inter = intersect(p1, p2)
+    p1::Vector{PhyNode} = collect(Tip2Root(n1))
+    p2::Vector{PhyNode} = collect(Tip2Root(n2))
+    inter::Vector{PhyNode} = intersect(p1, p2)
     filter!((x) -> !in(x, inter), p1)
     filter!((x) -> !in(x, inter), p2)
     return [p1, inter[1], reverse(p2)]
