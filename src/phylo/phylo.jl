@@ -12,7 +12,7 @@ isroot, isnode, setname!, setbranchlength!, ispreterminal, issemipreterminal,
 getdescendents, getterminaldescendents, countchildren, isintree, PhyExtension,  Phylogeny, 
 isrooted, isrerootable, root!, setrerootable!,
 graft!, prune!, pruneregraft!, search, searchall, generateindex, PhylogenyIterator, 
-DepthFirst, BreadthFirst, Tip2Root, getmrca, hasextensions, getroot 
+DepthFirst, BreadthFirst, Tip2Root, getmrca, hasextensions, getroot, pathbetween 
 
 ## Load Package Files
 include("typedefs.jl")
