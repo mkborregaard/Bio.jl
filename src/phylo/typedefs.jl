@@ -1,4 +1,4 @@
-#=================================================================================# 
+#=================================================================================#
 # Recurvive extendible type for representation of phylogenetic trees in in Julia. #
 #=================================================================================#
 
@@ -178,7 +178,7 @@ end
 
 
 # I'm not sure this is the best way to get the MRCA of a set of nodes, but I think it's valid: As you climb a tree from any specified tip to the root.
-# if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is 
+# if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is
 # the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll get the answer sooner searching from tips 2 root,
 # however this would take longer.
 function getmrca(nodes::Vector{PhyNode})
@@ -190,7 +190,7 @@ end
 
 
 ## Setting information on a node...
- 
+
 function setname!(x::PhyNode, name::String)
   x.name = name
 end
@@ -206,7 +206,7 @@ end
 # bidirectional links between PhyNodes are built and broken cleanly.
 
 # Removing a parent makes a node self referential in the Parent field like a root node.
-# Avoids possible pesky #undef fields.  
+# Avoids possible pesky #undef fields.
 function removeparent_unsafe!(x::PhyNode)
   setparent_unsafe!(x, x)
 end
@@ -277,8 +277,12 @@ function pruneregraft!(prune::PhyNode, graftto::PhyNode, branchlength::Float64)
   graft!(graftto, x, branchlength)
 end
 
-
-
+function isequal(x::PhyNode, y::PhyNode)
+  bl = x.branchlength == y.branchlength
+  n = x.name == y.name
+  exts = x.extensions == y.extensions
+  return all([bl, n, exts])
+end
 
 
 # Tree type.
@@ -357,10 +361,10 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
     error("The specified outgroup is not part of the phylogeny.")
   end
 
-  # Get the path from the outgroup to the root, excluding the root. 
+  # Get the path from the outgroup to the root, excluding the root.
   outgrouppath = collect(Tip2Root(outgroup))[2:end - 1]
-  
-  # Edge case, the outgroup to be the new root is terminal or the new branch length is not nothing, 
+
+  # Edge case, the outgroup to be the new root is terminal or the new branch length is not nothing,
   # we need a new root with a branch to the outgroup.
   if isleaf(outgroup) || newbl != 0.0
     newroot = PhyNode("NewRoot", getbranchlength(getroot(tree)))
@@ -393,7 +397,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   # This needs to be resolved.
 
   # If the old root only has one child, it was bifurcating, and if so, must be removed and the branch lengths resolved,
-  # appropriately. 
+  # appropriately.
   if countchildren(tree.root) == 1
     ingroup = getchildren(getroot(tree))[1]
     setbranchlength!(ingroup, getbranchlength(ingroup) + previousbranchlength)
@@ -401,7 +405,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   else
     # If the root has more than one child, then it needs to be kept as an internal node.
     setbranchlength!(tree.root, previousbranchlength)
-    graft!(newparent, tree.root) 
+    graft!(newparent, tree.root)
   end
 
   # TODO / FUTURE IMPROVEMENT - COPYING OF OLD ROOT ATTRIBUTES OR DATA TO NEW ROOT.
@@ -426,9 +430,9 @@ end
 
 #=
 Getindex is used to get a node by name. For a large tree, repeatedly calling this may not be performance optimal.
-To address this, I provide a method to create a dictionary based index for accessing nodes without search. This is the 
+To address this, I provide a method to create a dictionary based index for accessing nodes without search. This is the
 generateIndex method.
-I'm uncertain whether it is better to get index with a singe search of all the nodes - searchAll, or to do many 
+I'm uncertain whether it is better to get index with a singe search of all the nodes - searchAll, or to do many
 individual search()-es.
 =#
 
