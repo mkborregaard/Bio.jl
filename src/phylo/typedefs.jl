@@ -343,7 +343,7 @@ function root!(tree::Phylogeny)
   leaves = getterminals(tree)
   for leaf in leaves
     root!(tree, leaf)
-    newmaximum = 
+    newmaximum = 0
 end
 
 
