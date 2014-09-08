@@ -340,7 +340,10 @@ function root!(tree::Phylogeny)
   # Roots a tree at the midpoint of the two most distant taxa.
   # Find the longest pairwise distance.
   maxdist = 0.0
-  tips = 0
+  leaves = getterminals(tree)
+  for leaf in leaves
+    root!(tree, leaf)
+    newmaximum = 
 end
 
 
@@ -473,8 +476,13 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
-function distancebetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
+function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   p = pathbetween(tree, n1, n2) # Not nessecery to check n1 and n2 is in tree as pathbetween, on which this function depends, does the check.
+  return sum(getbranchlength, p)
+end
+
+function distance(tree::Phylogeny, n1::PhyNode)
+  p = Tip2Root(n1)
   return sum(getbranchlength, p)
 end
 
