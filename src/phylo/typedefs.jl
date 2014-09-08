@@ -344,6 +344,7 @@ function root!(tree::Phylogeny)
   for leaf in leaves
     root!(tree, leaf)
     newmaximum = 0
+  end
 end
 
 
