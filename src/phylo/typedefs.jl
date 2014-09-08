@@ -336,6 +336,13 @@ function isintree(tree::Phylogeny, clade::PhyNode)
   return typeof(s) == PhyNode
 end
 
+function root!(tree::Phylogeny)
+  # Roots a tree at the midpoint of the two most distant taxa.
+  # Find the longest pairwise distance.
+  maxdist = 0.0
+  tips = 0
+end
+
 
 function root!(tree::Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = 0.0)
   o = getmrca(outgroup)
@@ -426,6 +433,9 @@ function setrerootable!(x::Phylogeny, rerootable::Bool)
   x.rerootable = rerootable
 end
 
+function getterminals(x::Phylogeny)
+  return getterminaldescendents(x.root)
+end
 
 
 #=
@@ -464,9 +474,9 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   end
 end
 
-function distancebetween(tree::Bio.Phylogeny, n1::Bio.PhyNode, n2::Bio.PhyNode)
-  p = Bio.pathbetween(tree, n1, n2) # Not nessecery to check n1 and n2 is in tree as pathbetween, on which this function depends, does the check.
-  return sum(Bio.getbranchlength, p)
+function distancebetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
+  p = pathbetween(tree, n1, n2) # Not nessecery to check n1 and n2 is in tree as pathbetween, on which this function depends, does the check.
+  return sum(getbranchlength, p)
 end
 
 
