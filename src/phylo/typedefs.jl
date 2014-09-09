@@ -496,7 +496,7 @@ function distance(tree::Phylogeny, unitbl::Bool = false)
   depths = Dict()
   function updatedepths(node, currentdepth)
     depths[node] = currentdepth
-    for child in node.Children
+    for child in node.children
       newdepth = currentdepth + depthof(child)
       updatedepths(child, newdepth)
     end
