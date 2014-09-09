@@ -341,6 +341,8 @@ function root!(tree::Phylogeny)
   # Find the longest pairwise distance.
   maxdist = 0.0
   leaves = getterminals(tree)
+  leaf1 = PhyNode() 
+  leaf2 = 0.0
   for leaf in leaves
     root!(tree, leaf)
     distances = collect(distance(tree))
@@ -364,12 +366,11 @@ function root!(tree::Phylogeny)
     if remainder < 0
       outleaf = leaf
       outgrouplength = -remainder
-      break
-    else
-      error("Somehow failed to find the midpoint!")
+      root!(tree, outleaf, newbl=outgrouplength)
+      return nothing
     end
   end
-  root!(tree, outleaf, newbl=outgrouplength)
+  error("Somehow failed to find the midpoint!")
 end
 
 
