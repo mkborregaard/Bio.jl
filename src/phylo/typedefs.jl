@@ -343,8 +343,33 @@ function root!(tree::Phylogeny)
   leaves = getterminals(tree)
   for leaf in leaves
     root!(tree, leaf)
-    newmaximum = 0
+    distances = collect(distance(tree))
+    values = Float64[i[2] for i in distances]
+    newmaximum = maximum(values)
+    maxind = newmaximum .== values
+    if newmaximum > maxdist
+      leaf1 = leaf
+      leaf2 = distances[maxind][1][1]
+      maxdist = distances[maxind][1][2]
+    end
   end
+  root!(tree, leaf1)
+  # Remainder is the depth to go from the ingroup tip to the outgroup tip.
+  remainder = 0.5 * (maxdist - (getbranchlength(tree.root)))
+  @assert remainder >= 0.0
+  # After finding the largest pairwise distance, identify the midpoint and reroot there.
+  # Need to walk the path to the outgroup tip until al the root depth is acounted for.
+  for leaf in reverse(collect(Tip2Root(leaf2))[1:end-1])
+    remainder -= getbranchlength(leaf)
+    if remainder < 0
+      outleaf = leaf
+      outgrouplength = -remainder
+      break
+    else
+      error("Somehow failed to find the midpoint!")
+    end
+  end
+  root!(tree, outleaf, newbl=outgrouplength)
 end
 
 
@@ -504,6 +529,7 @@ function distance(tree::Phylogeny, unitbl::Bool = false)
   updatedepths(tree.root, getbranchlength(tree.root))
   return depths
 end
+
 
 
 
