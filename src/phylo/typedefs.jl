@@ -487,4 +487,28 @@ function distance(tree::Phylogeny, n1::PhyNode)
   return sum(getbranchlength, p)
 end
 
+function distance(tree::Phylogeny, unitbl::Bool = false)
+  if unitbl
+    depthof = x -> 1
+  else
+    depthof = x -> getbranchlength(x)
+  end
+  depths = Dict()
+  function updatedepths(node, currentdepth)
+    depths[node] = currentdepth
+    for child in node.Children
+      newdepth = currentdepth + depthof(child)
+      updatedepths(child, newdepth)
+    end
+  end
+  updatedepths(tree.root, getbranchlength(tree.root))
+  return depths
+end
+
+
+
+
+
+
+
 
