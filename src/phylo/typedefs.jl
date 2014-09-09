@@ -422,7 +422,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
   for parent in outgrouppath
-    prune!(newparent)
+    #prune!(newparent)
     previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength
     pruneregraft!(parent, newparent)
     newparent = parent
