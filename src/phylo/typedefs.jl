@@ -366,7 +366,7 @@ function root!(tree::Phylogeny)
     if remainder < 0
       outleaf = leaf
       outgrouplength = -remainder
-      root!(tree, outleaf, newbl=outgrouplength)
+      root!(tree, outleaf, outgrouplength)
       return nothing
     end
   end
