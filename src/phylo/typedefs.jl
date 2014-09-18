@@ -271,16 +271,29 @@ function pruneregraft!(prune::PhyNode, graftto::PhyNode)
   graft!(graftto, x)
 end
 
-
 function pruneregraft!(prune::PhyNode, graftto::PhyNode, branchlength::Float64)
   x = prune!(prune)
   graft!(graftto, x, branchlength)
 end
 
 function delete!(x::PhyNode)
-  x = prune!(x)
-  graft!(getparent(x), getchildren(x))
+  deleted = prune!(x)
+  graft!(getparent(deleted), getchildren(deleted))
 end
+
+function detach!(x::PhyNode)
+  detached = prune!(x)
+  return Phylogeny("", detached)
+end
+
+function detach!(x::PhyNode, name::String, rooted::Bool, rerootable::Bool)
+  detached = prunt!(x)
+  return Phylogeny(name, detached, rooted, rerootable)
+end
+
+
+
+
 
 
 function isequal(x::PhyNode, y::PhyNode)
@@ -312,6 +325,12 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   return x
 end
 
+function Phylogeny(root::PhyNode)
+  x = Phylogeny()
+  x.root = root
+  return x
+end 
+
 
 function isempty(x::Phylogeny)
   return isempty(x.root)
@@ -341,6 +360,12 @@ function isintree(tree::Phylogeny, clade::PhyNode)
   s = search(BreadthFirst(tree), x -> x === clade)
   return typeof(s) == PhyNode
 end
+
+function findmidpoint(tree::Phylogeny)
+  distances = distance(tree)
+  
+end
+
 
 function root!(tree::Phylogeny)
   # Roots a tree at the midpoint of the two most distant taxa.
@@ -379,12 +404,10 @@ function root!(tree::Phylogeny)
   error("Somehow failed to find the midpoint!")
 end
 
-
 function root!(tree::Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = 0.0)
   o = getmrca(outgroup)
   root!(tree, o, newbl)
 end
-
 
 function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
   # Check for errors and edge cases first as much as possible.
