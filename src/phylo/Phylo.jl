@@ -1,3 +1,4 @@
+
 module Phylo
 
 using Base.Intrinsics
@@ -27,7 +28,7 @@ export
   PhylogenyIterator, DepthFirst, BreadthFirst, Tip2Root,
   getmrca, hasextensions, getroot, pathbetween
 
-## Load Package Files
 include("typedefs.jl")
 include("iteration.jl")
-end
+
+end # module Phylo
