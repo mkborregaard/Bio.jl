@@ -16,7 +16,7 @@ type PhyNode
   extensions::Vector{PhyExtension}
   children::Vector{PhyNode}
   parent::PhyNode
-  PhyNode() = (x = new("", 0.0, PhyNode[], PhyNode[]); x.parent = x)
+  PhyNode() = (x = new("", -1.0, PhyNode[], PhyNode[]); x.parent = x)
 end
 
 #=
@@ -71,7 +71,7 @@ end
 ## Getting information from a node...
 
 function isempty(x::PhyNode)
-  return x.name == "" && x.branchlength == 0.0 && !hasextensions(x) && !haschildren(x) && parentisself(x)
+  return x.name == "" && x.branchlength == -1.0 && !hasextensions(x) && !haschildren(x) && parentisself(x)
 end
 
 function getname(x::PhyNode)
@@ -287,7 +287,7 @@ function detach!(x::PhyNode)
 end
 
 function detach!(x::PhyNode, name::String, rooted::Bool, rerootable::Bool)
-  detached = prunt!(x)
+  detached = prune!(x)
   return Phylogeny(name, detached, rooted, rerootable)
 end
 
@@ -361,55 +361,52 @@ function isintree(tree::Phylogeny, clade::PhyNode)
   return typeof(s) == PhyNode
 end
 
-function findmidpoint(tree::Phylogeny)
+function getmaxindict(dictionary::Dict, op::Function)
+  keyvalpairs = collect(dictionary)
+  values = [i[2] for i in keyvalpairs]
+  matches = maximum(values) .== values
+  return keyvalpairs[matches][1]
+end
+
+function furthestfromroot(tree::Phylogeny)
   distances = distance(tree)
-  
+  return getmaxindict(distances, x -> maximum(x) .== x)
 end
 
-
-function root!(tree::Phylogeny)
-  # Roots a tree at the midpoint of the two most distant taxa.
-  # Find the longest pairwise distance.
-  maxdist = 0.0
-  leaves = getterminals(tree)
-  leaf1 = PhyNode() 
-  leaf2 = 0.0
-  for leaf in leaves
-    root!(tree, leaf)
-    distances = collect(distance(tree))
-    values = Float64[i[2] for i in distances]
-    newmaximum = maximum(values)
-    maxind = newmaximum .== values
-    if newmaximum > maxdist
-      leaf1 = leaf
-      leaf2 = distances[maxind][1][1]
-      maxdist = distances[maxind][1][2]
-    end
-  end
-  root!(tree, leaf1)
-  # Remainder is the depth to go from the ingroup tip to the outgroup tip.
-  remainder = 0.5 * (maxdist - (getbranchlength(tree.root)))
-  @assert remainder >= 0.0
-  # After finding the largest pairwise distance, identify the midpoint and reroot there.
-  # Need to walk the path to the outgroup tip until al the root depth is acounted for.
-  for leaf in reverse(collect(Tip2Root(leaf2))[1:end-1])
-    remainder -= getbranchlength(leaf)
-    if remainder < 0
-      outleaf = leaf
-      outgrouplength = -remainder
-      root!(tree, outleaf, outgrouplength)
-      return nothing
-    end
-  end
-  error("Somehow failed to find the midpoint!")
+function furthestleaf(tree::Phylogeny, node::PhyNode)
+  distances = {i => distance(tree, node, i) for i in getterminaldescendents(getroot(tree))}
+  return getmaxindict(distances)
 end
 
-function root!(tree::Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = 0.0)
+function findmidpoint(tree::Phylogeny)
+  furthestfromroot, ffrdist = furthestfromroot(tree)
+  furthestfromleaf, ffldist = furthestleaf(tree, furthestfromroot)
+  outgroup = furthestfromroot
+  middistance = ffldist / 2.0
+  cdist = 0.0
+  current = furthestfromroot
+  while true
+    cdist += getbranchlength(current)
+    if cdist > middistance
+      break
+    else
+      current = getparent(current)
+    end
+  end
+  return current
+end
+
+function root!(tree::Phylogeny, newbl::Float64 = -1.0)
+  midpoint = findmidpoint(tree)
+  root!(tree, midpoint, newbl)
+end
+
+function root!(tree::Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = -1.0)
   o = getmrca(outgroup)
   root!(tree, o, newbl)
 end
 
-function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = 0.0)
+function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = -1.0)
   # Check for errors and edge cases first as much as possible.
   # 1 - The tree is not rerootable.
   if !isrerootable(tree)
@@ -532,33 +529,50 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
+# Get the distances between nodes in a given phylogenetic tree.
+# In BioJulia/Phylo, unknown branchlengths are represented by the value -1.0. 
+# In distance calculations if a branchlength is unknown then the value is taken as the machine epsilon.
+
+function distanceof(x::PhyNode)
+  bl = getbranchlength(x)
+  return bl == -1.0 ? eps() : bl
+end
+
 function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   p = pathbetween(tree, n1, n2) # Not nessecery to check n1 and n2 is in tree as pathbetween, on which this function depends, does the check.
-  return sum(getbranchlength, p)
+  return length(p) == 1 ? 0.0 : sum(distanceof, p)
 end
 
-function distance(tree::Phylogeny, n1::PhyNode)
-  p = Tip2Root(n1)
-  return sum(getbranchlength, p)
+function depth(tree::Phylogeny, n1::Phynode, n2::PhyNode)
+  p = pathbetween(tree, n1, n2)
+  return length(p) == 1 ? 0 : length(p) - 1
 end
 
-function distance(tree::Phylogeny, unitbl::Bool = false)
-  if unitbl
-    depthof = x -> 1
-  else
-    depthof = x -> getbranchlength(x)
+function distance(tree::Phylogeny)
+  distances = Dict()
+  function updatedistances(node, currentdist)
+    distances[node] = currentdist
+    for child in getchildren(node)
+      newdist = currentdist + distanceof(child)
+      updatedistances(child, newdist)
+    end
   end
+  updatedistances(getroot(tree), distanceof(getroot(tree)))
+  return distances
+end
+
+function depth(tree::Phylogeny)
   depths = Dict()
   function updatedepths(node, currentdepth)
     depths[node] = currentdepth
-    for child in node.children
-      newdepth = currentdepth + depthof(child)
-      updatedepths(child, newdepth)
+    for child in getchildren(node)
+      updatedepths(child, currentdepth + 1)
     end
   end
-  updatedepths(tree.root, getbranchlength(tree.root))
+  updatedepths(getroot(tree), 0)
   return depths
 end
+
 
 
 
