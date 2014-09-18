@@ -11,10 +11,10 @@ function testphylo()
   h = Bio.PhyNode("H.", 0.8)
   i = Bio.PhyNode("I.")
 
-  Bio.graft!(f, b, c)
-  Bio.graft!(g, d, e)
-  Bio.graft!(h, f, g)
-  Bio.graft!(i, a, h)
+  Bio.graft!(f, [b, c])
+  Bio.graft!(g, [d, e])
+  Bio.graft!(h, [f, g])
+  Bio.graft!(i, [a, h])
 
   tree = Bio.Phylogeny("TestTree", i, false, true)
   return tree
