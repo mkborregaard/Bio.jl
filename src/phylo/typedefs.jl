@@ -247,7 +247,7 @@ function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
 end
 
 
-function graft!(parent::PhyNode, children::PhyNode...)
+function graft!(parent::PhyNode, children::Vector{PhyNode})
   for i in children
     graft!(parent, i)
   end
@@ -276,6 +276,12 @@ function pruneregraft!(prune::PhyNode, graftto::PhyNode, branchlength::Float64)
   x = prune!(prune)
   graft!(graftto, x, branchlength)
 end
+
+function delete!(x::PhyNode)
+  x = prune!(x)
+  graft!(getparent(x), getchildren(x))
+end
+
 
 function isequal(x::PhyNode, y::PhyNode)
   bl = x.branchlength == y.branchlength
