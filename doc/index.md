@@ -1,3 +1,4 @@
+<<<<<<< 87a7a490b6aca574587c0f1fe7dd1fce97082308
 ---
 order: 0
 title: Introduction
@@ -14,3 +15,14 @@ greater:
 Pkg.add("Bio")
 ```
 
+=======
+BioJulia provides biological tools for the [Julia language](http://julialang.org).
+
+Some interesting features of BioJulia include:
+
+- It is fast. Really fast.
+
+## Submodules
+
+- [Phylo](phylo.html) - tools for phylogenetics.
+>>>>>>> made a start with documentation

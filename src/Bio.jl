@@ -12,6 +12,4 @@ include("annotations.jl")
 include("tools/tools.jl")
 include("phylo/Phylo.jl")
 
-using .Phylo
-
 end

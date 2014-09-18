@@ -1,6 +1,9 @@
 
 module Phylo
 
+using Docile
+@docstrings {"../../doc/phylo.md"}
+
 using Base.Intrinsics
 
 import Base: getindex, length, start, next, done, isempty
