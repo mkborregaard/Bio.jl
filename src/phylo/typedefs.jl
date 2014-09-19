@@ -562,7 +562,7 @@ I'm uncertain whether it is better to  index with a singe search of all the node
 individual search()-es.
 =#
 
-function Base.index(tree::Phylogeny, names::String...)
+function Base.getindex(tree::Phylogeny, names::String...)
   return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
 
