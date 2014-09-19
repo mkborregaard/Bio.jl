@@ -107,6 +107,8 @@ function makenodefromns(SubString::String, Depth::Int)
     return childrenNodes
 end
 
+
+
 function parsenewicknode(NewickString, Depth)
   NewickString == "" ? error("Input NewickString is devoid of characters.") : nothing
   search(NewickString, '(') == 0 ? return makeNodesFromNS(NewickString, Depth) : nothing
@@ -166,7 +168,7 @@ function parsenewick(newickstring::String, rooted::Bool, rerootable::Bool)
     newickstring = newickstring[cutoff:length(newickstring)]
   end
   finalsemi::Int = rsearchindex(newickstring, ":")
-  root::PhyNode = PhyNode(name = treename, branchlength = -1.0)
+  root::PhyNode = PhyNode()
   buildrecursively(newickstring, 1, finalsemi, root)
   return Phylogeny(treename, root, rooted, rerootable)
 end
@@ -188,19 +190,86 @@ function readnewick(file::String)
 end
 
 
+type Tokenizer
+  dict::Dict{String, Regex}
+  tokenizer::Regex
+  function Tokenizer(x::Array{(ASCIIString, Regex), 1})
+    dictvalues = [i[2] for i in x]
+    stringvalues = String[i.pattern for i in dictvalues]
+    combinedstring = join(stringvalues, "|")
+    finalstring = "($combinedstring)"
+    return new([i => j for (i, j) in x], Regex(finalstring))
+  end
+end
+
+function tokenizestring(s::String, t::Tokenizer)
+  return matchall(t.tokenizer, s)
+end
+
+function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
+  if name(node) != "" && !(valuesareconf || commentsareconf) && !confisknown(node)
+    confidence!(node, parsecondfidence(name(node)))
+    if confisknown(node)
+      name!(node, "")
+    end 
+  end
+  if hasparent(node)
+    
+  end
+end
+
+function parsecondfidence(text::String)
+  try
+    return float(text)
+  catch
+    return -1.0
+  end
+end
+
+
+function parsenewick(newickstring::String, commentsarebl = false)
+  definition = [ ("open paren", r"\("), ("close paren", r"\)"), ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"),
+  ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"), ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"),
+  ("quoted node label", r"\'(\\.|[^\'])*\'"), ("semicolon", r"\;"), ("newline", r"\n")]
+  tokenizer = Tokenizer(definition)
+  tokens = tokenizestring(strip(newickstring), tokenizer)
+  root = PhyNode("Root")
+  current = root
+  @assert root === current
+  enteringbl = false
+  leftpcount = 0
+  rightpcount = 0
+  for token in tokens
+    if beginswith(token, "\'")
+      # This is a quoted label, characters need to be added to the clade name.
+      name!(current, name(current) * token[2:end])
+    elseif beginswith(token, "[")
+      # This is a comment.
+      # TODO produce a comment type for PhyExtentions and add it to the current clade.
+      if commentsarebl
+        # TODO produce a numeric support value type for PhyExtentions and add it to current clade.
+      end
+    elseif token == "("
+      # The start of a new clade. It is a child of the current clade.
+      newclade = PhyNode()
+      graft!(current, newclade)
+      current = newclade
+      enteringbl = false
+      leftpcount += 1
+    elseif token == ","
+      # If the current clade is the root, it means the external parentheses are missing. 
+      if current === root
+        root = PhyNode("Root")
+        prune!(current)
+        graft!(root, current)
+      end
+      # Start a new child clade at the same level as the current clade. i.e. a sibling.
 
 
 
+  end
 
-
-
-
-
-
-
-
-
-
+end
 
 
 

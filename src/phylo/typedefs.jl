@@ -28,74 +28,42 @@ A node can have:
 type PhyNode
   name::String
   branchlength::Float64
+  confidence::Float64
   extensions::Vector{PhyExtension}
   children::Vector{PhyNode}
   parent::PhyNode
-  PhyNode() = (x = new("", -1.0, PhyNode[], PhyNode[]); x.parent = x)
+
+  PhyNode(name = "", branchlength = -1.0, confidence = -1.0, children = PhyNode[], extensions = PhyExtension[]) = (x = new(name, branchlength, confidence, extensions, children); x.parent = x)
 end
 
-#=
-A note about the default no-argument constructor. You'll notice it incompletely initializes the instance of PhyNode,
-before filling in the Parent field with a reference to itself. This means the node has no parent and so could be a root,
-it could also just be a node that has been created, perhaps in a function, but will be added to another  of nodes subsequently
-in order to build up a tree. Alternatively the user could have just popped it off the tree. I figured a self referential
-node would be the best way to do this rather than have #undef values lurking. It also allows removal of a parent from a node for something like
-say the cutting / pruning of a subtree, since you simply need to  the parent field to point to itself, whereas to my knowlege, once a var in Julia
-is  it cannot be made #undef.
- =#
-
-function PhyNode(name::String = "", branchlength::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[])
-  x = PhyNode()
-  name!(x, name)
-  branchlength!(x, branchlength)
-  x.extensions = ext
-  x.parent = parent || x
-  return x
-end
-
-function PhyNode(parent::PhyNode)
-  x = PhyNode()
-  parent!(x, parent)
-  x.parent = x
-  return x
-end
-
-function PhyNode(name::String = "", branchlength::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], parent::PhyNode)
-  x = PhyNode()
-  name!(x, name)
-  branchlength!(x, branchlength)
-  parent!(x, parent)
-  return x
-end
-
-@doc """ {
-  :section => "PhyNode",
-  :parameters => {
-    (:name,
-     "The name of the node (optional). Defaults to an empty string, indicating the node has no name."),
-    (:branchlength,
-     "The branch length of the node from its parent (optional). Defaults to `-1.0`, indicating an unknown branch length."),
-    (:ext,
-     "An array of zero or more PhyExtensions (optional). Defaults to an empty array, i.e. `[]`, indicating there are no extensions."),
-    (:parent,
-     "The parent node (optional). Defaults to a self-reference, indicating the node has no parent.")},
-  :returns => (PhyNode)
-} ->
-function PhyNode(name::String = "",
-                 branchlength::Float64 = -1.0,
-                 ext::Vector{PhyExtension} = [],
-                 parent::PhyNode = nothing)
-  x = PhyNode()
-  name!(x, label)
-  branchlength!(x, branchlength)
-  x.extensions = ext
-  x.parent = parent
+# Node constructor.
+function PhyNode(parent::PhyNode, name = "", branchlength = -1.0, confidence = -1.0, children = PhyNode[], extensions = PhyExtension[])
+  x = PhyNode(name, branchlength, children, extensions)
+  graft!(parent, x)
   return x
 end
 
 ### Node Manipulation / methods on the PhyNode type...
 
-## ting information from a node...
+function blisknown(x::PhyNode)
+  return !x.branchlength == -1.0
+end
+
+function confisknown(x::PhyNode)
+  return !x.confidence == -1.0
+end
+
+function confidence(x::PhyNode)
+  return x.confidence
+end
+
+function confidence!(x::PhyNode, conf::Float64)
+  x.confidence = conf
+end
+
+function confidence!(x::PhyNode, conf::Nothing)
+  x.confidence = -1.0
+end
 
 @doc """
 Test whether a node is empty.
@@ -414,6 +382,10 @@ function setbranchlength!(x::PhyNode, bl::Float64)
   x.branchlength = bl
 end
 
+function branchlength!(x::PhyNode, bl::Nothing)
+  x.branchlength = -1.0
+end
+
 
 # Following unsafe functions maniplulate the ting and manipulation of parental and child links.
 # They should not be used unless absolutely nessecery - the prune and graft methods ensure the
@@ -434,33 +406,11 @@ function removeparent_unsafe!(x::PhyNode)
   parent_unsafe!(x, x)
 end
 
-
-@doc """
-Set the parent of a node.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to set as parent."),
-    (:child, "The PhyNode to set the parent of.")
-  },
-  :returns => (Bool)
-} ->
-function setparent_unsafe!(parent::PhyNode, child::PhyNode)
+function parent_unsafe!(parent::PhyNode, child::PhyNode)
   child.parent = parent
 end
 
-@doc """
-Add a node to the `children` array of another node.
 
-**Warning:** this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use `graft!()`, which does ensure the two-way link is built.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to add a child to."),
-    (:child, "The PhyNode to add as a child.")
-  },
-  :returns => (Bool)
-} ->
 function addchild_unsafe!(parent::PhyNode, child::PhyNode)
   if haschild(parent, child)
     error("The child node is already a child of the parent.")
@@ -468,32 +418,11 @@ function addchild_unsafe!(parent::PhyNode, child::PhyNode)
   push!(parent.children, child)
 end
 
-@doc """
-Remove a node from the `children` array of another node.
 
-**Warning:** this method is considered unsafe because it does not destroy any two-way link between parent and child. If you want to remove a child from a node, you should use `prune!()`, which does ensure the two-way link is destroyed.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to remove a child from."),
-    (:child, "The PhyNode to remove from its parent.")
-  },
-  :returns => (Bool)
-} ->
 function removechild_unsafe!(parent::PhyNode, child::PhyNode)
   filter!(x -> !(x === child), parent.children)
 end
 
-@doc """
-Graft a node onto another node, create a parent-child relationship between them.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to add a child to."),
-    (:child, "The PhyNode to add as a child.")
-  },
-  :returns => (Bool)
-} ->
 function graft!(parent::PhyNode, child::PhyNode)
   # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
   # its reference is removed from the parents Children field.
@@ -504,17 +433,7 @@ function graft!(parent::PhyNode, child::PhyNode)
   addchild_unsafe!(parent, child)
 end
 
-@doc """
-Graft a node onto another node, create a parent-child relationship between them, and associatiing a branch length with the relationship.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to add a child to."),
-    (:child, "The PhyNode to add as a child."),
-    (:branchlength, "The branch length between parent and child.")
-  },
-  :returns => (Bool)
-} ->
+
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
     branchlength!(child, branchlength)
