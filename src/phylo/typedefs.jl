@@ -55,7 +55,7 @@ function PhyNode(parent::PhyNode)
   return x
 end
 
-function PhyNode(parent::PhyNode, name::String = "", branchlength::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[])
+function PhyNode(name::String = "", branchlength::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], parent::PhyNode)
   x = PhyNode()
   name!(x, name)
   branchlength!(x, branchlength)
@@ -589,9 +589,7 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
-
 # Get the distances between nodes in a given phylogenetic tree.
-# In BioJulia/Phylo, unknown branchlengths are represented by the value -1.0.
 # In distance calculations if a branchlength is unknown then the value is taken as the machine epsilon.
 
 function distanceof(x::PhyNode)
