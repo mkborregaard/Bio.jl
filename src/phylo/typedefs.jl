@@ -39,53 +39,25 @@ say the cutting / pruning of a subtree, since you simply need to  the parent fie
 is  it cannot be made #undef.
  =#
 
-@doc """
-Create a PhyNode.
-
-PhyNodes represent nodes in a phylogenetic tree. All arguments are optional when creating PhyNodes:
-
-```julia
-one = PhyNode()
-two = PhyNode(name = "two",
-              branchlength = 1.0,
-              parent = one)
-```
-
-""" {
-  :parameters => {
-    (:name,
-     "The name of the node (optional). Defaults to an empty string, indicating the node has no name."),
-    (:branchlength,
-     "The branch length of the node from its parent (optional). Defaults to `-1.0`, indicating an unknown branch length."),
-    (:ext,
-     "An array of zero or more PhyExtensions (optional). Defaults to an empty array, i.e. `[]`, indicating there are no extensions."),
-    (:parent,
-     "The parent node (optional). Defaults to a self-reference, indicating the node has no parent.")},
-  :returns => (PhyNode)
-} ->
-function PhyNode(name::String = "",
-                 branchlength::Float64 = -1.0,
-                 ext::Vector{PhyExtension} = [],
-                 parent::PhyNode = nothing)
+function PhyNode(name::String = "", branchlength::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[])
   x = PhyNode()
-  name!(x, label)
+  name!(x, name)
   branchlength!(x, branchlength)
   x.extensions = ext
-<<<<<<< HEAD
   x.parent = parent || x
-=======
-  x.parent = parent
   return x
 end
 
 function PhyNode(parent::PhyNode)
   x = PhyNode()
   parent!(x, parent)
+  x.parent = x
   return x
 end
 
-function PhyNode(branchlength::Float64, parent::PhyNode)
+function PhyNode(name::String = "", branchlength::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], parent::PhyNode)
   x = PhyNode()
+  name!(x, name)
   branchlength!(x, branchlength)
   parent!(x, parent)
   return x
@@ -101,7 +73,8 @@ function PhyNode(label::String, branchlength::Float64)
   x = PhyNode()
   name!(x, label)
   branchlength!(x, branchlength)
->>>>>>> Removed the "get" and "set" from functions as per #25
+  x.extensions = ext
+  x.parent = parent
   return x
 end
 
@@ -616,13 +589,9 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
-<<<<<<< HEAD
+
 # Get the distances between nodes in a given phylogenetic tree.
 # In BioJulia/Phylo, unknown branchlengths are represented by the value -1.0.
-=======
-#  the distances between nodes in a given phylogenetic tree.
-# In BioJulia/Phylo, unknown branchlengths are represented by the value -1.0.
->>>>>>> Removed the "get" and "set" from functions as per #25
 # In distance calculations if a branchlength is unknown then the value is taken as the machine epsilon.
 
 function distanceof(x::PhyNode)
