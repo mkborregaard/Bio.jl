@@ -602,7 +602,7 @@ function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return length(p) == 1 ? 0.0 : sum(distanceof, p)
 end
 
-function depth(tree::Phylogeny, n1::Phynode, n2::PhyNode)
+function depth(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   p = pathbetween(tree, n1, n2)
   return length(p) == 1 ? 0 : length(p) - 1
 end
