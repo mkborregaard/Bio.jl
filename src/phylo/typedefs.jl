@@ -434,6 +434,17 @@ function graft!(parent::PhyNode, child::PhyNode)
 end
 
 
+@doc """
+Graft a node onto another node, create a parent-child relationship between them, and associatiing a branch length with the relationship.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:parent, "The PhyNode to add a child to."),
+    (:child, "The PhyNode to add as a child."),
+    (:branchlength, "The branch length between parent and child.")
+  },
+  :returns => (Bool)
+} ->
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
     branchlength!(child, branchlength)
