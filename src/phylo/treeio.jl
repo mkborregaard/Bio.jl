@@ -3,7 +3,7 @@
 # Recusrsiveley builds tree structure from PhyloXML format.
 function buildrecursively(xmlclade::XMLElement, extensionsArray)
   label::String = ""
-  node::PhyNode = PhyNode(name = label, branchlength = (bl == nothing ? -1.0 : float(bl)), ext = PhyXExtension[parsephyloxml(xmlclade, i) for i in extensionsArray])
+  node::PhyNode = PhyNode(name = label, branchlength = (bl == nothing ? -1.0 : float(bl)), ext = PhyExtension[parsephylo(xmlclade, i) for i in extensionsArray])
   xmlchildren::Array{XMLElement, 1} = get_elements_by_tagname(xmlclade, "clade")
   for n in xmlchildren
     graft!(node, buildrecursively(n, extensionsArray))
@@ -43,11 +43,10 @@ end
 
 
 
-
 # Build up the tree from a newick string by recursive descent.
-function buildRecursively(newick::String, from::Int, to::Int, parent::PhyNode)
+function buildrecursively(newick::String, from::Int, to::Int, parent::PhyNode)
   if newick[from] != '\('
-    setLabel!(parent, newick[from:to])
+    name!(parent, newick[from:to])
   else
     bracketCounter::Int = 0
     colonMarker::Int = 0
@@ -62,7 +61,7 @@ function buildRecursively(newick::String, from::Int, to::Int, parent::PhyNode)
         colonMarker = i
       end
       if (bracketCounter == 0) || (bracketCounter == 1 && token == ',')
-        addChild!(parent, buildRecursively(newick, positionMarker + 1, colonMarker, PhyNode("", false, float(newick[(colonMarker + 1):(i - 1)]), PhyXExtension[], parent)))
+        addChild!(parent, buildrecursively(newick, positionMarker + 1, colonMarker, PhyNode("", false, float(newick[(colonMarker + 1):(i - 1)]), PhyExtension[], parent)))
         positionMarker = i
       end
     end
@@ -71,7 +70,7 @@ end
 
 
 
-function makeNodeFromNS(SubString::String, Depth::Int)
+function makenodefromns(SubString::String, Depth::Int)
     if search(SubString, '(') == 0
       error(string("Tree is not well formed, location: ", SubString))
     end
@@ -108,7 +107,7 @@ function makeNodeFromNS(SubString::String, Depth::Int)
     return childrenNodes
 end
 
-function parseNewickNode(NewickString, Depth)
+function parsenewicknode(NewickString, Depth)
   NewickString == "" ? error("Input NewickString is devoid of characters.") : nothing
   search(NewickString, '(') == 0 ? return makeNodesFromNS(NewickString, Depth) : nothing
 
@@ -157,23 +156,23 @@ end
 
 
 
-function parseNewick(newickString::String, rooted::Bool, rerootable::Bool)
-  newickString = replace(newickString, r"(\r|\n|\s)", "")
+function parsenewick(newickstring::String, rooted::Bool, rerootable::Bool)
+  newickstring = replace(newickstring, r"(\r|\n|\s)", "")
   treename = ""
-  if ismatch(r"^[^\(]+\(", newickString)
-    cutoff = length(match(r"^[^\(]+\(", newickString).match)
-    treeName = chop(match(r"^[^\(]+\(", newickString).match)
-    treeName = treeName[length(treeName)] == ' ' ? treeName[1:length(treeName)-1] : treeName
-    newickString = newickString[cutoff:length(newickString)]
+  if ismatch(r"^[^\(]+\(", newickstring)
+    cutoff = length(match(r"^[^\(]+\(", newickstring).match)
+    treename = chop(match(r"^[^\(]+\(", newickstring).match)
+    treename = treename[length(treename)] == ' ' ? treename[1:length(treename)-1] : treename
+    newickstring = newickstring[cutoff:length(newickstring)]
   end
-  x::Int = rsearchindex(newickString, ":")
-  root:: PhyNode = PhyNode("", true, 0.0, PhyXExtension[])
-  buildRecursively(newickString, 1, x, root)
-  return PhyXTree(treename, root, rooted, rerootable)
+  finalsemi::Int = rsearchindex(newickstring, ":")
+  root::PhyNode = PhyNode(name = treename, branchlength = -1.0)
+  buildrecursively(newickstring, 1, finalsemi, root)
+  return Phylogeny(treename, root, rooted, rerootable)
 end
 
 
-function readNewick(file::String)
+function readnewick(file::String)
   instream = open(expanduser(file))
   instring = readall(instream)
   close(instream)
@@ -181,9 +180,9 @@ function readNewick(file::String)
   newickstrings = [replace(i, r"(\r|\n|\s)", "") for i in newickstrings]
   newickstrings = newickstrings[bool([length(t) > 0 for t in newickstrings])]
   if length(newickstrings) > 1
-    return [parseNewick(i) for i in newickstrings]
+    return [parsenewick(i) for i in newickstrings]
   else
-    return parseNewick(newickstrings[1])
+    return parsenewick(newickstrings[1])
   end
   error("No phylogenies detected in the file.")
 end
