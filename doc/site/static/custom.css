@@ -71,3 +71,11 @@ p > code {
   margin: 2px;
   border-radius: 2px;
 }
+
+.sections li {
+  list-style: none;
+}
+.sections a {
+  text-decoration: none;
+  font-family: monospace;
+}

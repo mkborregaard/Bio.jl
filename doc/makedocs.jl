@@ -1,4 +1,4 @@
-using Lexicon, Bio
+using Docile, Docile.Interface, Lexicon, Bio
 
-save("index.html", Bio)
-save("phylo.html", Bio.Phylo)
+save_sectioned("site/index.html", Bio)
+save_sectioned("site/phylo.html", Bio.Phylo)
