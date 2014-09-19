@@ -32,11 +32,11 @@ end
 #=
 A note about the default no-argument constructor. You'll notice it incompletely initializes the instance of PhyNode,
 before filling in the Parent field with a reference to itself. This means the node has no parent and so could be a root,
-it could also just be a node that has been created, perhaps in a function, but will be added to another set of nodes subsequently
+it could also just be a node that has been created, perhaps in a function, but will be added to another  of nodes subsequently
 in order to build up a tree. Alternatively the user could have just popped it off the tree. I figured a self referential
 node would be the best way to do this rather than have #undef values lurking. It also allows removal of a parent from a node for something like
-say the cutting / pruning of a subtree, since you simply need to set the parent field to point to itself, whereas to my knowlege, once a var in Julia
-is set it cannot be made #undef.
+say the cutting / pruning of a subtree, since you simply need to  the parent field to point to itself, whereas to my knowlege, once a var in Julia
+is  it cannot be made #undef.
  =#
 
 @doc """
@@ -68,16 +68,46 @@ function PhyNode(name::String = "",
                  ext::Vector{PhyExtension} = [],
                  parent::PhyNode = nothing)
   x = PhyNode()
-  setname!(x, label)
-  setbranchlength!(x, branchlength)
+  name!(x, label)
+  branchlength!(x, branchlength)
   x.extensions = ext
+<<<<<<< HEAD
   x.parent = parent || x
+=======
+  x.parent = parent
+  return x
+end
+
+function PhyNode(parent::PhyNode)
+  x = PhyNode()
+  parent!(x, parent)
+  return x
+end
+
+function PhyNode(branchlength::Float64, parent::PhyNode)
+  x = PhyNode()
+  branchlength!(x, branchlength)
+  parent!(x, parent)
+  return x
+end
+
+function PhyNode(label::String)
+  x = PhyNode()
+  name!(x, label)
+  return x
+end
+
+function PhyNode(label::String, branchlength::Float64)
+  x = PhyNode()
+  name!(x, label)
+  branchlength!(x, branchlength)
+>>>>>>> Removed the "get" and "set" from functions as per #25
   return x
 end
 
 ### Node Manipulation / methods on the PhyNode type...
 
-## Getting information from a node...
+## ting information from a node...
 
 @doc """
 Test whether a node is empty.
@@ -160,17 +190,17 @@ end
 
 # Should x.Children that is returned be a copy? x.Children is an array of
 # refs to the child nodes, so x.Children is mutable.
-function getchildren(x::PhyNode)
+function children(x::PhyNode)
   return x.children
 end
 
-function getsiblings(x::PhyNode)
+function siblings(x::PhyNode)
   if hasparent(x)
-    return getchildren(x.parent)
+    return children(x.parent)
   end
 end
 
-function getparent(x::PhyNode)
+function parent(x::PhyNode)
   if parentisself(x)
     println("Node does not have a parent. It is self referential.")
   end
@@ -212,27 +242,27 @@ function issemipreterminal(x::PhyNode)
 end
 
 
-function getdescendents(x::PhyNode)
+function descendents(x::PhyNode)
   return collect(PhyNode, DepthFirst(x))
 end
 
 
-function getterminaldescendents(x::PhyNode)
+function terminaldescendents(x::PhyNode)
   return searchall(DepthFirst(x), isleaf)
 end
 
 
 # Test that the posanc node is ancestral to the given nodes.
 function isancestral(posanc::PhyNode, nodes::Array{PhyNode})
-  return all([in(node, getdescendents(posanc)) for node in nodes])
+  return all([in(node, descendents(posanc)) for node in nodes])
 end
 
 
-# I'm not sure this is the best way to get the MRCA of a set of nodes, but I think it's valid: As you climb a tree from any specified tip to the root.
+# I'm not sure this is the best way to  the MRCA of a  of nodes, but I think it's valid: As you climb a tree from any specified tip to the root.
 # if you keep checking the terminal descendents as you climb - the first node you hit that has all specified nodes as terminal descendents is
-# the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll get the answer sooner searching from tips 2 root,
+# the MRCA. I found it dificult to choose the best way as if you want the mrca of 2 fairly related nodes, you'll  the answer sooner searching from tips 2 root,
 # however this would take longer.
-function getmrca(nodes::Vector{PhyNode})
+function mrca(nodes::Vector{PhyNode})
   paths = [collect(Tip2Root(i)) for i in nodes]
   convergence = intersect(paths...)
   return convergence[1]
@@ -240,30 +270,30 @@ end
 
 
 
-## Setting information on a node...
+## ting information on a node...
 
-function setname!(x::PhyNode, name::String)
+function name!(x::PhyNode, name::String)
   x.name = name
 end
 
 
-function setbranchlength!(x::PhyNode, bl::Float64)
+function branchlength!(x::PhyNode, bl::Float64)
   x.branchlength = bl
 end
 
 
-# Following unsafe functions maniplulate the setting and manipulation of parental and child links.
+# Following unsafe functions maniplulate the ting and manipulation of parental and child links.
 # They should not be used unless absolutely nessecery - the prune and graft methods ensure the
 # bidirectional links between PhyNodes are built and broken cleanly.
 
 # Removing a parent makes a node self referential in the Parent field like a root node.
 # Avoids possible pesky #undef fields.
 function removeparent_unsafe!(x::PhyNode)
-  setparent_unsafe!(x, x)
+  parent_unsafe!(x, x)
 end
 
 
-function setparent_unsafe!(parent::PhyNode, child::PhyNode)
+function parent_unsafe!(parent::PhyNode, child::PhyNode)
   child.parent = parent
 end
 
@@ -287,14 +317,14 @@ function graft!(parent::PhyNode, child::PhyNode)
   if hasparent(child)
     error("This node is already attached to a parent.")
   end
-  setparent_unsafe!(parent, child)
+  parent_unsafe!(parent, child)
   addchild_unsafe!(parent, child)
 end
 
 
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
-    setbranchlength!(child, branchlength)
+    branchlength!(child, branchlength)
 end
 
 
@@ -329,7 +359,7 @@ end
 
 function delete!(x::PhyNode)
   deleted = prune!(x)
-  graft!(getparent(deleted), getchildren(deleted))
+  graft!(parent(deleted), children(deleted))
 end
 
 function detach!(x::PhyNode)
@@ -341,10 +371,6 @@ function detach!(x::PhyNode, name::String, rooted::Bool, rerootable::Bool)
   detached = prune!(x)
   return Phylogeny(name, detached, rooted, rerootable)
 end
-
-
-
-
 
 
 function isequal(x::PhyNode, y::PhyNode)
@@ -379,10 +405,10 @@ end
 # Phylogeny constructors...
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   x = Phylogeny()
-  setname!(x, name)
+  name!(x, name)
   x.root = root
   x.rooted = rooted
-  setrerootable!(x, rerootable)
+  rerootable!(x, rerootable)
   return x
 end
 
@@ -398,7 +424,7 @@ function isempty(x::Phylogeny)
 end
 
 
-function setname!(x::Phylogeny, name::String)
+function name!(x::Phylogeny, name::String)
   x.name = name
 end
 
@@ -413,7 +439,7 @@ function isrerootable(x::Phylogeny)
 end
 
 
-function getroot(x::Phylogeny)
+function root(x::Phylogeny)
   return x.root
 end
 
@@ -422,7 +448,7 @@ function isintree(tree::Phylogeny, clade::PhyNode)
   return typeof(s) == PhyNode
 end
 
-function getmaxindict(dictionary::Dict, op::Function)
+function maxindict(dictionary::Dict, op::Function)
   keyvalpairs = collect(dictionary)
   values = [i[2] for i in keyvalpairs]
   matches = maximum(values) .== values
@@ -431,12 +457,12 @@ end
 
 function furthestfromroot(tree::Phylogeny)
   distances = distance(tree)
-  return getmaxindict(distances, x -> maximum(x) .== x)
+  return maxindict(distances, x -> maximum(x) .== x)
 end
 
 function furthestleaf(tree::Phylogeny, node::PhyNode)
-  distances = {i => distance(tree, node, i) for i in getterminaldescendents(getroot(tree))}
-  return getmaxindict(distances)
+  distances = {i => distance(tree, node, i) for i in terminaldescendents(root(tree))}
+  return maxindict(distances)
 end
 
 function findmidpoint(tree::Phylogeny)
@@ -447,11 +473,11 @@ function findmidpoint(tree::Phylogeny)
   cdist = 0.0
   current = furthestfromroot
   while true
-    cdist += getbranchlength(current)
+    cdist += branchlength(current)
     if cdist > middistance
       break
     else
-      current = getparent(current)
+      current = parent(current)
     end
   end
   return current
@@ -463,7 +489,7 @@ function root!(tree::Phylogeny, newbl::Float64 = -1.0)
 end
 
 function root!(tree::Phylogeny, outgroup::Vector{PhyNode}, newbl::Float64 = -1.0)
-  o = getmrca(outgroup)
+  o = mrca(outgroup)
   root!(tree, o, newbl)
 end
 
@@ -478,34 +504,34 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = -1.0)
     error("New root is already the root!")
   end
   # 3 - Check the new branch length for the outgroup is between 0.0 and the old previous branchlength.
-  previousbranchlength = getbranchlength(outgroup)
+  previousbranchlength = branchlength(outgroup)
   @assert 0.0 <= newbl <= previousbranchlength
   # 4 - Check that the proposed outgroup is indeed part of the tree.
   if !isintree(tree, outgroup)
     error("The specified outgroup is not part of the phylogeny.")
   end
 
-  # Get the path from the outgroup to the root, excluding the root.
+  #  the path from the outgroup to the root, excluding the root.
   outgrouppath = collect(Tip2Root(outgroup))[2:end - 1]
 
   # Edge case, the outgroup to be the new root is terminal or the new branch length is not nothing,
   # we need a new root with a branch to the outgroup.
   if isleaf(outgroup) || newbl != 0.0
-    newroot = PhyNode("NewRoot", getbranchlength(getroot(tree)))
+    newroot = PhyNode("NewRoot", branchlength(root(tree)))
     pruneregraft!(outgroup, newroot, newbl)
     if length(outgrouppath) == 0
       # There aren't any nodes between the outgroup and origional group to rearrange.
       newparent = newroot
     else
       parent = splice!(outgrouppath, 1)
-      previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength - getbranchlength(outgroup)
+      previousbranchlength, parent.branchlength = parent.branchlength, previousbranchlength - branchlength(outgroup)
       pruneregraft!(parent, newroot)
       newparent = parent
     end
   else
     # Use the provided outgroup as a a trifurcating root if the node is not a leaf / newbl is 0.0.
     newroot = newparent = outgroup
-    setbranchlength!(newroot, getbranchlength(getroot(tree)))
+    branchlength!(newroot, branchlength(root(tree)))
   end
 
   # Now we trace the outgroup lineage back, reattaching the subclades under the new root!
@@ -516,19 +542,19 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = -1.0)
     newparent = parent
   end
 
-  # Now we have two sets of connected PhyNodes. One begins the with the new root and contains the
+  # Now we have two s of connected PhyNodes. One begins the with the new root and contains the
   # nodes rearranged as per the backtracking process along outgrouppath. The other is the nodes still connected to the old root.
   # This needs to be resolved.
 
   # If the old root only has one child, it was bifurcating, and if so, must be removed and the branch lengths resolved,
   # appropriately.
   if countchildren(tree.root) == 1
-    ingroup = getchildren(getroot(tree))[1]
-    setbranchlength!(ingroup, getbranchlength(ingroup) + previousbranchlength)
+    ingroup = children(root(tree))[1]
+    branchlength!(ingroup, branchlength(ingroup) + previousbranchlength)
     pruneregraft!(ingroup, newparent)
   else
     # If the root has more than one child, then it needs to be kept as an internal node.
-    setbranchlength!(tree.root, previousbranchlength)
+    branchlength!(tree.root, previousbranchlength)
     graft!(newparent, tree.root)
   end
 
@@ -540,40 +566,40 @@ end
 
 
 
-# This is probably unnessecery given setroot puts the rooted flag to true.
+# This is probably unnessecery given root puts the rooted flag to true.
 # perhaps and unroot! method is more appropriate.
 function unroot!(x::Phylogeny)
   x.rooted = false
 end
 
-function setrerootable!(x::Phylogeny, rerootable::Bool)
+function rerootable!(x::Phylogeny, rerootable::Bool)
   x.rerootable = rerootable
 end
 
-function getterminals(x::Phylogeny)
-  return getterminaldescendents(x.root)
+function terminals(x::Phylogeny)
+  return terminaldescendents(x.root)
 end
 
 
 #=
-Getindex is used to get a node by name. For a large tree, repeatedly calling this may not be performance optimal.
+index is used to  a node by name. For a large tree, repeatedly calling this may not be performance optimal.
 To address this, I provide a method to create a dictionary based index for accessing nodes without search. This is the
 generateIndex method.
-I'm uncertain whether it is better to get index with a singe search of all the nodes - searchAll, or to do many
+I'm uncertain whether it is better to  index with a singe search of all the nodes - searchAll, or to do many
 individual search()-es.
 =#
 
-function Base.getindex(tree::Phylogeny, names::String...)
-  return searchall(DepthFirst(tree), x -> in(getname(x), names))
+function Base.index(tree::Phylogeny, names::String...)
+  return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
 
 function generateindex(tree::Phylogeny)
   output = Dict{String, PhyNode}()
   for i = BreadthFirst(tree)
-    if haskey(output, getname(i))
+    if haskey(output, name(i))
       error("You are trying to build an index dict of a tree with clades of the same name.")
     end
-    output[getname(i)] = i
+    output[name(i)] = i
   end
   return output
 end
@@ -590,12 +616,17 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
+<<<<<<< HEAD
 # Get the distances between nodes in a given phylogenetic tree.
 # In BioJulia/Phylo, unknown branchlengths are represented by the value -1.0.
+=======
+#  the distances between nodes in a given phylogenetic tree.
+# In BioJulia/Phylo, unknown branchlengths are represented by the value -1.0.
+>>>>>>> Removed the "get" and "set" from functions as per #25
 # In distance calculations if a branchlength is unknown then the value is taken as the machine epsilon.
 
 function distanceof(x::PhyNode)
-  bl = getbranchlength(x)
+  bl = branchlength(x)
   return bl == -1.0 ? eps() : bl
 end
 
@@ -613,12 +644,12 @@ function distance(tree::Phylogeny)
   distances = Dict()
   function updatedistances(node, currentdist)
     distances[node] = currentdist
-    for child in getchildren(node)
+    for child in children(node)
       newdist = currentdist + distanceof(child)
       updatedistances(child, newdist)
     end
   end
-  updatedistances(getroot(tree), distanceof(getroot(tree)))
+  updatedistances(root(tree), distanceof(root(tree)))
   return distances
 end
 
@@ -626,10 +657,10 @@ function depth(tree::Phylogeny)
   depths = Dict()
   function updatedepths(node, currentdepth)
     depths[node] = currentdepth
-    for child in getchildren(node)
+    for child in children(node)
       updatedepths(child, currentdepth + 1)
     end
   end
-  updatedepths(getroot(tree), 0)
+  updatedepths(root(tree), 0)
   return depths
 end
