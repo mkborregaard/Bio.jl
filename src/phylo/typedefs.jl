@@ -73,6 +73,9 @@ function PhyNode(name::String = "",
   if parent != nothing
     graft!(parent, x)
   end
+  for child in children
+    graft!(x, child)
+  end
   return x
 end
 
