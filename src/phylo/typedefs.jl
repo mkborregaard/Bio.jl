@@ -33,7 +33,7 @@ type PhyNode
   children::Vector{PhyNode}
   parent::PhyNode
 
-  PhyNode() = (x = new("", -1.0, -1.0, PhyExtensions[], PhyNode[]); x.parent = x)
+  PhyNode() = (x = new("", -1.0, -1.0, PhyExtension[], PhyNode[]); x.parent = x)
 end
 
 @doc """
