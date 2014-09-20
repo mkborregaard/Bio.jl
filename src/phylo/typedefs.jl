@@ -33,14 +33,15 @@ type PhyNode
   children::Vector{PhyNode}
   parent::PhyNode
 
-  PhyNode(name = "", branchlength = -1.0, confidence = -1.0, children = PhyNode[], extensions = PhyExtension[]) = (x = new(name, branchlength, confidence, extensions, children); x.parent = x)
-end
-
-# Node constructor.
-function PhyNode(parent::PhyNode, name = "", branchlength = -1.0, confidence = -1.0, children = PhyNode[], extensions = PhyExtension[])
-  x = PhyNode(name, branchlength, children, extensions)
-  graft!(parent, x)
-  return x
+  function PhyNode(name = "", branchlength = -1.0, confidence = -1.0, children = PhyNode[], extensions = PhyExtension[], parent = nothing)
+    x = new(name, branchlength, confidence, extensions, children)
+    if parent == nothing
+      x.parent = x
+    else
+      graft!(parent, x)
+    end
+    return x
+  end
 end
 
 ### Node Manipulation / methods on the PhyNode type...
