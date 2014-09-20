@@ -46,7 +46,7 @@ type PhyNode
       x.parent = x
     end
     for child in children
-    graft!(x, child)
+      graft!(x, child)
     end
     return x
   end
@@ -89,7 +89,7 @@ function PhyNode(name::String = "",
   confidence!(x, confidence)
   x.extensions = ext
   if parent != nothing
-    graft!(parent, x)
+    parent_unsafe!(x, x)
   end
   for child in children
     graft!(x, child)
