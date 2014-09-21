@@ -358,7 +358,7 @@ Get the terminal nodes of a phylogeny.
 function terminals(x::Phylogeny)
   return terminaldescendents(x.root)
 end
-#=
+
 @doc """
 Get one or more nodes by name.
 """ {
@@ -372,7 +372,7 @@ Get one or more nodes by name.
 function getindex(tree::Phylogeny, names::String...)
   return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
-=#
+
 @doc """
 Get one nodes by name.
 """ {
@@ -444,7 +444,7 @@ Find the distance between two nodes in a tree.
 } ->
 function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   p = pathbetween(tree, n1, n2)
-  a = mrca(tree, n1, n2)
+  a = mrca(n1, n2)
   filter!((x) -> !x === a, p)
   return sum(distanceof, p)
 end
