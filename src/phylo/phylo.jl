@@ -31,7 +31,8 @@ export
   PhylogenyIterator, DepthFirst, BreadthFirst, Tip2Root,
   getmrca, hasextensions, getroot, pathbetween
 
-include("typedefs.jl")
+include("nodes.jl")
+include("phylogeny.jl")
 include("iteration.jl")
 
 end # module Phylo
