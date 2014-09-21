@@ -381,10 +381,10 @@ Get one nodes by name.
     (:tree, "The Phylogeny to search."),
     (:names, "The name of the nodes to get.")
   },
-  :returns => (Bool)
+  :returns => (PhyNode)
 } ->
 function getindex(tree::Phylogeny, name::String)
-  return search(DepthFirst(tree), x -> (name(x) == name))
+  return search(DepthFirst(tree), x -> name(x) == name)
 end
 
 @doc """
