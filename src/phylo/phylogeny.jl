@@ -419,25 +419,6 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
 end
 
 @doc """
-Find the distance of a node from its parent. This is different from branch length, because it handles the situation where branch length is unknown. It is only used when the distances between nodes are calculated.
-
-The method is necessary because unknown branch lengths are represented as -1.0.
-If all branch lengths are unknown, the tree is a cladogram, and it is still useful to be able to compare relative distances. If individual branch lengths are unknown, they should not affect the calculation of path distances. To satisfy both of these cases, we use machine epsilon as the minimal distance.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
-    (:tree, "The Phylogeny to search in."),
-    (:n1, "The first node."),
-    (:n2, "The second node.")
-  },
-  :returns => (Int)
-} ->
-function distanceof(x::PhyNode)
-  bl = branchlength(x)
-  return bl == -1.0 ? eps() : bl
-end
-
-@doc """
 Find the distance between two nodes in a tree.
 """ {
   :section => "Phylogeny",

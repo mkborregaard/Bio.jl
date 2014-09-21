@@ -33,7 +33,7 @@ type PhyNode
   children::Vector{PhyNode}
   parent::PhyNode
 
-  @doc """
+@doc """
 Create a PhyNode.
 
 PhyNodes represent nodes in a phylogenetic tree. All arguments are optional when creating PhyNodes:
@@ -69,6 +69,7 @@ two = PhyNode(name = "two",
     else
       x.parent = x
     end
+    x.children = PhyNode[]
     for child in children
       graft!(x, child)
     end
@@ -76,70 +77,58 @@ two = PhyNode(name = "two",
   end
 end
 
+
 @doc """
-Create a PhyNode.
-
-PhyNodes represent nodes in a phylogenetic tree. All arguments are optional when creating PhyNodes:
-
-```julia
-one = PhyNode()
-two = PhyNode(name = "two",
-              branchlength = 1.0,
-              parent = one)
-```
-
+Test whether the branchlength in the node is known (i.e. is not -1.0).
 """ {
   :section => "PhyNode",
-  :parameters => {
-    (:name,
-     "The name of the node (optional). Defaults to an empty string, indicating the node has no name."),
-    (:branchlength,
-     "The branch length of the node from its parent (optional). Defaults to `-1.0`, indicating an unknown branch length."),
-    (:ext,
-     "An array of zero or more PhyExtensions (optional). Defaults to an empty array, i.e. `[]`, indicating there are no extensions."),
-    (:parent,
-     "The parent node (optional). Defaults to a self-reference, indicating the node has no parent.")},
-  :returns => (PhyNode)
+  :parameters => {(:x, "The PhyNode to test.")},
+  :returns =>(Bool)
 } ->
-function PhyNode(name::String = "",
-                 branchlength::Float64 = -1.0,
-                 confidence::Float64 = -1.0,
-                 ext::Vector{PhyExtension} = PhyExtension[],
-                 children::Vector{PhyNode} = PhyNode[],
-                 parent = nothing)
-  x = PhyNode("", -1.0, -1.0, PhyExtension[], PhyNode[], x)
-  name!(x, name)
-  branchlength!(x, branchlength)
-  confidence!(x, confidence)
-  x.extensions = ext
-  if parent != nothing
-    parent_unsafe!(x, x)
-  end
-  for child in children
-    graft!(x, child)
-  end
-  return x
-end
-=#
-
-### Node Manipulation / methods on the PhyNode type...
-
 function blisknown(x::PhyNode)
   return !x.branchlength == -1.0
 end
 
+@doc """
+Test whether the confidence in the node is known (i.e. is not -1.0).
+""" {
+  :section => "PhyNode",
+  :parameters => {(:x, "The PhyNode to test.")},
+  :returns =>(Bool)
+} ->
 function confisknown(x::PhyNode)
   return !x.confidence == -1.0
 end
 
+@doc """
+Get the confidence of the node.
+""" {
+  :section => "PhyNode",
+  :parameters => {(:x, "The PhyNode to return the confidence of.")},
+  :returns =>(Float64)
+} ->
 function confidence(x::PhyNode)
   return x.confidence
 end
 
+@doc """
+Set the confidence of the node.
+""" {
+  :section => "PhyNode",
+  :parameters => {(:x, "The PhyNode to set the confidence of."), (:conf, "The value of the confidence to be set.")},
+  :returns =>(Float64)
+} ->
 function confidence!(x::PhyNode, conf::Float64)
   x.confidence = conf
 end
 
+@doc """
+Set the confidence of the node.
+""" {
+  :section => "PhyNode",
+  :parameters => {(:x, "The PhyNode to set the confidence of."), (:conf, "The value of the confidence to be set.")},
+  :returns =>(Float64)
+} ->
 function confidence!(x::PhyNode, conf::Nothing)
   x.confidence = -1.0
 end
@@ -171,7 +160,7 @@ Get the branch length of a PhyNode.
 """ {
   :section => "PhyNode",
   :parameters => {(:x, "The PhyNode to get the branch length of.")},
-  :returns => (Bool)
+  :returns => (Float64)
 } ->
 function getbranchlength(x::PhyNode)
   return x.branchlength
@@ -617,4 +606,23 @@ function isequal(x::PhyNode, y::PhyNode)
   n = x.name == y.name
   exts = x.extensions == y.extensions
   return all([bl, n, exts])
+end
+
+@doc """
+Find the distance of a node from its parent. This is different from branch length, because it handles the situation where branch length is unknown. It is only used when the distances between nodes are calculated.
+
+The method is necessary because unknown branch lengths are represented as -1.0.
+If all branch lengths are unknown, the tree is a cladogram, and it is still useful to be able to compare relative distances. If individual branch lengths are unknown, they should not affect the calculation of path distances. To satisfy both of these cases, we use machine epsilon as the minimal distance.
+""" {
+  :section => "Phylogeny",
+  :parameters => {
+    (:tree, "The Phylogeny to search in."),
+    (:n1, "The first node."),
+    (:n2, "The second node.")
+  },
+  :returns => (Int)
+} ->
+function distanceof(x::PhyNode)
+  bl = branchlength(x)
+  return bl == -1.0 ? eps() : bl
 end
