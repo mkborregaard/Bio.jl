@@ -544,20 +544,6 @@ function graft!(parent::PhyNode, children::Vector{PhyNode})
 end
 
 @doc """
-**warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
-rather, this function simply alters the root field. Generally this should not be used, except as a step in other methods. Careless use of this could result in loosing part of a tree for instance.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:tree, "The phylogeny for which the root is to be set."),
-    (:node, "The PhyNode that is to become the root of the tree.")
-  }
-} ->
-function root_unsafe!(tree::Phylogeny, node::PhyNode)
-  tree.root = node
-end
-
-@doc """
 Destroy the relationship between a PhyNode `x` and its parent, returning the PhyNode.
 
 This method cleanly removes the PhyNode `x` from its parent's `children` array, and removes the `parent` reference from the PhyNode `x`. All other fields of the `child` are left intact.
