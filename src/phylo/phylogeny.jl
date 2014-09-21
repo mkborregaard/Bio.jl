@@ -359,7 +359,6 @@ function terminals(x::Phylogeny)
   return terminaldescendents(x.root)
 end
 
-
 @doc """
 Get one or more nodes by name.
 """ {
@@ -368,10 +367,24 @@ Get one or more nodes by name.
     (:tree, "The Phylogeny to search."),
     (:names, "The names of the nodes to get.")
   },
-  :returns => (Bool)
+  :returns => (Vector{PhyNode})
 } ->
 function getindex(tree::Phylogeny, names::String...)
   return searchall(DepthFirst(tree), x -> in(name(x), names))
+end
+
+@doc """
+Get one nodes by name.
+""" {
+  :section => "Phylogeny",
+  :parameters => {
+    (:tree, "The Phylogeny to search."),
+    (:names, "The name of the nodes to get.")
+  },
+  :returns => (Bool)
+} ->
+function getindex(tree::Phylogeny, name::String)
+  return search(DepthFirst(tree), x -> name(x) == name)
 end
 
 @doc """
@@ -430,8 +443,10 @@ Find the distance between two nodes in a tree.
   :returns => (Int)
 } ->
 function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
-  p = pathbetween(tree, n1, n2) # Not nessecery to check n1 and n2 is in tree as pathbetween, on which this function depends, does the check.
-  return length(p) == 1 ? 0.0 : sum(distanceof, p)
+  p = pathbetween(tree, n1, n2)
+  a = mrca(tree, n1, n2)
+  filter!((x) -> !x === a, p)
+  return sum(distanceof, p)
 end
 
 @doc """

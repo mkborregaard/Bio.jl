@@ -401,7 +401,7 @@ Get the most recent common ancestor of an array of nodes.
   :parameters => {
     (:nodes, "An array of `PhyNode`s to find the most common ancestor of.")
   },
-  :returns => (Bool)
+  :returns => (PhyNode)
 } ->
 function getmrca(nodes::Vector{PhyNode})
   paths = [collect(Tip2Root(i)) for i in nodes]
@@ -432,7 +432,7 @@ Set the branch length of a PhyNode.
     (:x, "The PhyNode to set the branchlength of."),
     (:bl, "The branch length to give the PhyNode.")
   },
-  :returns => (Bool)
+  :returns => (Float64)
 } ->
 function setbranchlength!(x::PhyNode, bl::Float64)
   x.branchlength = bl
@@ -449,17 +449,41 @@ Remove the parent of a node (thus setting the parent property to be self-referen
   :parameters => {
     (:x, "The PhyNode to remove the parent of."),
   },
-  :returns => (Bool)
+  :returns => (PhyNode)
 } ->
 function removeparent_unsafe!(x::PhyNode)
   parent_unsafe!(x, x)
 end
 
+@doc """
+Set the parent of a node.
+
+**Warning:** this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use `graft!()`, which does ensure the two-way link is built.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:parent, "The PhyNode to set as parent."),
+    (:child, "The PhyNode to set the parent of.")
+  },
+  :returns => (PhyNode)
+} ->
 function parent_unsafe!(parent::PhyNode, child::PhyNode)
   child.parent = parent
 end
 
 
+@doc """
+Set the children of a node.
+
+**Warning:** this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use `graft!()`, which does ensure the two-way link is built.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:parent, "The PhyNode to add a child to."),
+    (:child, "The PhyNode to add as a child.")
+  },
+  :returns => (PhyNode)
+} ->
 function addchild_unsafe!(parent::PhyNode, child::PhyNode)
   if haschild(parent, child)
     error("The child node is already a child of the parent.")
@@ -472,16 +496,22 @@ function removechild_unsafe!(parent::PhyNode, child::PhyNode)
   filter!(x -> !(x === child), parent.children)
 end
 
+@doc """
+Graft a node onto another node, create a parent-child relationship between them.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:parent, "The PhyNode to add a child to."),
+    (:child, "The PhyNode to add as a child.")
+  }
+} ->
 function graft!(parent::PhyNode, child::PhyNode)
-  # When grafting a subtree to another tree, or node to a node. You make sure that if it already has a parent.
-  # its reference is removed from the parents Children field.
   if hasparent(child)
     error("This node is already attached to a parent.")
   end
   parent_unsafe!(parent, child)
   addchild_unsafe!(parent, child)
 end
-
 
 @doc """
 Graft a node onto another node, create a parent-child relationship between them, and associatiing a branch length with the relationship.
@@ -491,8 +521,7 @@ Graft a node onto another node, create a parent-child relationship between them,
     (:parent, "The PhyNode to add a child to."),
     (:child, "The PhyNode to add as a child."),
     (:branchlength, "The branch length between parent and child.")
-  },
-  :returns => (Bool)
+  }
 } ->
 function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
     graft!(parent, child)
@@ -506,13 +535,59 @@ Graft one or more nodes onto another node, create a parent-child relationship be
   :parameters => {
     (:parent, "The PhyNode to add a child to."),
     (:children, "The array of PhyNodes to add as a child.")
-  },
-  :returns => (Bool)
+  }
 } ->
 function graft!(parent::PhyNode, children::Vector{PhyNode})
   for i in children
     graft!(parent, i)
   end
+end
+
+@doc """
+Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
+This function sets the root of the phylogeny object to an empty node, as the root, and so the entire structure of the tree,
+has been moved to the tree containing the specified parent PhyNode.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:parent, "The PhyNode to add the root of phylogeny too."),
+    (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode.")
+  }
+} ->
+function graft!(parent::PhyNode, child::Phylogeny)
+  graft!(parent, root(children))
+  root_unsafe!(child, PhyNode())
+end
+
+@doc """
+Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:parent, "The PhyNode to add the root of phylogeny too."),
+    (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode."),
+    (:bl, "Branch length that the ")
+  }
+} ->
+function graft!(parent::PhyNode, child::Phylogeny, bl::Float64)
+  branchlength!(root(children), bl)
+  graft!(parent, child)
+end
+
+@doc """
+Set the root field of a Phylogeny variable.
+
+**warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
+rather, this function simply alters the root field. Generally this should not be used, except as a step in other methods. Careless use of this could result in loosing part of a tree for instance.
+""" {
+  :section => "PhyNode",
+  :parameters => {
+    (:tree, "The phylogeny for which the root is to be set."),
+    (:node, "The PhyNode that is to become the root of the tree.")
+  }
+} ->
+function root_unsafe!(tree::Phylogeny, node::PhyNode)
+  tree.root = node
 end
 
 @doc """
@@ -523,12 +598,10 @@ This method cleanly removes the PhyNode `x` from its parent's `children` array, 
   :section => "PhyNode",
   :parameters => {
     (:x, "The PhyNode prune from its parent.")
-  },
-  :returns => (Bool)
+  }
 } ->
 function prune!(x::PhyNode)
   if hasparent(x)
-    # You must make sure the parent of this node from which you are pruning, does not contain a reference to it.
     removechild_unsafe!(x.parent, x)
     removeparent_unsafe!(x)
     return x
