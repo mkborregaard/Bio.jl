@@ -544,39 +544,6 @@ function graft!(parent::PhyNode, children::Vector{PhyNode})
 end
 
 @doc """
-Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
-This function sets the root of the phylogeny object to an empty node, as the root, and so the entire structure of the tree,
-has been moved to the tree containing the specified parent PhyNode.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to add the root of phylogeny too."),
-    (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode.")
-  }
-} ->
-function graft!(parent::PhyNode, child::Phylogeny)
-  graft!(parent, root(children))
-  root_unsafe!(child, PhyNode())
-end
-
-@doc """
-Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
-""" {
-  :section => "PhyNode",
-  :parameters => {
-    (:parent, "The PhyNode to add the root of phylogeny too."),
-    (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode."),
-    (:bl, "Branch length that the ")
-  }
-} ->
-function graft!(parent::PhyNode, child::Phylogeny, bl::Float64)
-  branchlength!(root(children), bl)
-  graft!(parent, child)
-end
-
-@doc """
-Set the root field of a Phylogeny variable.
-
 **warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
 rather, this function simply alters the root field. Generally this should not be used, except as a step in other methods. Careless use of this could result in loosing part of a tree for instance.
 """ {
