@@ -384,7 +384,12 @@ Get one nodes by name.
   :returns => (PhyNode)
 } ->
 function getindex(tree::Phylogeny, name::String)
-  return search(DepthFirst(tree), x -> name(x) == name)
+  for i in DepthFirst(tree)
+    if name(i) == name
+      return i
+    end
+  end
+  error("No Node in phylogeny by specified name.")
 end
 
 @doc """
