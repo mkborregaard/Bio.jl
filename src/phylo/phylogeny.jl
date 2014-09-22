@@ -369,7 +369,7 @@ Get one or more nodes by name.
   },
   :returns => (Vector{PhyNode})
 } ->
-function getindex(tree::Phylogeny, names::String...)
+function getindex(tree::Phylogeny, names::Array{String, 1})
   return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
 
@@ -385,7 +385,7 @@ Get one nodes by name.
 } ->
 function getindex(tree::Phylogeny, name::String)
   for i in DepthFirst(tree)
-    if name(i) == name
+    if i.name == name
       return i
     end
   end
