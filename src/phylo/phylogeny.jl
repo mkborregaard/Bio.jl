@@ -448,6 +448,9 @@ Find the distance between two nodes in a tree.
   :returns => (Int)
 } ->
 function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
+  if !isintree(tree, n1) || !isintree(tree, n2)
+    error("One of the nodes is not present in the tree.")
+  end
   p1::Vector{PhyNode} = collect(Tip2Root(n1))
   p2::Vector{PhyNode} = collect(Tip2Root(n2))
   inter::Vector{PhyNode} = intersect(p1, p2)
