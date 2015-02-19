@@ -1,9 +1,10 @@
-#==================================# 
+#==================================#
 # Iteration and traversal of trees #
 #==================================#
 
 # Ben J. Ward, 2014.
-
+@doc """PhylogenyIterator is an abstract type that defines a family of iterators
+for traversing trees in various ways, including BreadthFirst, and DepthFirst, or from a tip to a root.""" ->
 abstract PhylogenyIterator
 
 type BreadthFirst <: PhylogenyIterator
@@ -18,6 +19,7 @@ type BreadthFirst <: PhylogenyIterator
     end
 end
 
+@doc """Construct a BreadthFirst iterator for a tree.""" ->
 function BreadthFirst(x::Phylogeny)
   BreadthFirst(x.root)
 end
@@ -110,7 +112,7 @@ function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
 end
 
 function Base.done(x::Tip2Root, state::(PhyNode,Bool))
-  return state[2] 
+  return state[2]
 end
 
 function search(it::PhylogenyIterator, condition::Function)
