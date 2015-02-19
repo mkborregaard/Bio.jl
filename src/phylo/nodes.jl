@@ -626,7 +626,7 @@ Returns a new Phylogeny with the detached node as root.
     (:rooted, "Whether the detached subtree is rooted."),
     (:rerootable, "Whether the detached subtree is rerootable.")
   },
-  returns => (PhyNode)
+  returns = (PhyNode)
 ) ->
 function detach!(x::PhyNode, name::String = "", rooted::Bool = true, rerootable::Bool = true)
   detached = prune!(x)
