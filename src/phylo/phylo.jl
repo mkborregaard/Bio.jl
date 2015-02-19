@@ -1,3 +1,8 @@
+#==================================#
+#  Definition of the Phylo module  #
+#==================================#
+
+# Ben J. Ward, 2014.
 
 module Phylo
 

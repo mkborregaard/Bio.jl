@@ -218,7 +218,7 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
   end
 end
 
-function parsecondfidence(text::String)
+function parseconfidence(text::String)
   try
     return float(text)
   catch
@@ -226,7 +226,8 @@ function parsecondfidence(text::String)
   end
 end
 
-
+@doc """ Builds a Phylogeny from a newick string.
+""" 
 function parsenewick(newickstring::String, commentsarebl = false)
   definition = [ ("open paren", r"\("), ("close paren", r"\)"), ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"),
   ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"), ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"),

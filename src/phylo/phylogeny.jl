@@ -22,7 +22,8 @@ end
 
 # Phylogeny constructors...
 @doc """
-Create a Phylogeny with a name, root node, and set whether it is rooted and whether it is re-rootable.
+Create a Phylogeny with a name, root node, and set whether it is rooted and whether
+it is re-rootable.
 """ {
   :section => "Phylogeny",
   :parameters => {
@@ -445,7 +446,7 @@ Find the distance between two nodes in a tree.
     (:n1, "The first node."),
     (:n2, "The second node.")
   },
-  :returns => (Int)
+  :returns => (Float64)
 } ->
 function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   if !isintree(tree, n1) || !isintree(tree, n2)
@@ -484,7 +485,7 @@ Find the distance between a node and the root of a tree.
     (:tree, "The Phylogeny to search in."),
     (:n1, "The node.")
   },
-  :returns => (Int)
+  :returns => (Float64)
 } ->
 function distance(tree::Phylogeny, n1::PhyNode)
   p = Tip2Root(n1)
@@ -498,7 +499,7 @@ Find the distance of each node from the root.
   :parameters => {
     (:tree, "The Phylogeny to measure.")
   },
-  :returns => (Bool)
+  :returns => (Dict{PhyNode, Float64})
 } ->
 function distance(tree::Phylogeny)
   distances = Dict()
@@ -544,7 +545,7 @@ has been moved to the tree containing the specified parent PhyNode.
     (:parent, "The PhyNode to add the root of phylogeny too."),
     (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode.")
   }
-} -> 
+} ->
 function graft!(parent::PhyNode, child::Phylogeny)
   graft!(parent, root(children))
   root_unsafe!(child, PhyNode())

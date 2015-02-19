@@ -1,4 +1,5 @@
 # Testscript for Bio.jl phylo.
+using Bio
 
 function testphylo()
   a = Bio.PhyNode("A.", 0.1)
@@ -19,3 +20,5 @@ function testphylo()
   tree = Bio.Phylogeny("TestTree", i, false, true)
   return tree
 end
+
+testTree = testphylo()
