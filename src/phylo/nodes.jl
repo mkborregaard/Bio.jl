@@ -4,9 +4,7 @@ import Base.delete!, Base.isequal, Base.getindex
 PhyExtension allows defining arbitrary metadata to annotate nodes.
 
 This allows the PhyNode type to support any phylogenetic tree format that includes annotations (e.g. PhyloXML, NeXML), and allows programmatic extension of nodes with annotations.
-"""; Dict{Symbol, ASCIIString}(
- :section => "PhyExtension"
-) ->
+"""; section => "PhyExtension") ->
 type PhyExtension{T}
   value::T
 end
