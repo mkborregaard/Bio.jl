@@ -1,4 +1,4 @@
-@doc """
+@doc meta("""
 Phylogeny represents a phylogenetic tree.
 
 A tree can have:
@@ -8,9 +8,9 @@ A tree can have:
 - `rooted`
 - `rerootable`
 
-""" {
-  :section => "Phylogeny"
-} ->
+""",
+  section = "Phylogeny"
+) ->
 type Phylogeny
   name::String
   root::PhyNode
@@ -21,19 +21,19 @@ type Phylogeny
 end
 
 # Phylogeny constructors...
-@doc """
+@doc meta("""
 Create a Phylogeny with a name, root node, and set whether it is rooted and whether
 it is re-rootable.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:name, "The name of the tree."),
     (:root, "The root node."),
     (:rooted, "Whether the tree is rooted."),
     (:rerootable, "Whether the tree is re-rootable.")
   },
-  :returns => (Phylogeny)
-} ->
+  returns = (Phylogeny)
+) ->
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   x = Phylogeny()
   name!(x, name)
@@ -43,110 +43,110 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   return x
 end
 
-@doc """
+@doc meta("""
 Test whether a phylogeny is empty.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny to test.")
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function isempty(x::Phylogeny)
   return isempty(x.root)
 end
 
-@doc """
+@doc meta("""
 Set the name of a Phylogeny
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny to set the name of."),
     (:name, "The name to set.")
   }
-} ->
+) ->
 function name!(x::Phylogeny, name::String)
   x.name = name
 end
 
-@doc """
+@doc meta("""
 Test whether a Phylogeny is rooted.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny to test."),
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function isrooted(x::Phylogeny)
   return x.rooted
 end
 
-@doc """
+@doc meta("""
 Test whether a Phylogeny is re-rootable.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny to test."),
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function isrerootable(x::Phylogeny)
   return x.rerootable
 end
 
-@doc """
+@doc meta("""
 Get the root node of a Phylogeny.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny to get the root of."),
   },
-  :returns => (PhyNode)
-} ->
+  returns = (PhyNode)
+) ->
 function root(x::Phylogeny)
   return x.root
 end
 
-@doc """
+@doc meta("""
 Test whether a given node is in a given tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to check."),
     (:clade, "The PhyNode to check.")
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function isintree(tree::Phylogeny, clade::PhyNode)
   s = search(BreadthFirst(tree), x -> x === clade)
   return typeof(s) == PhyNode
 end
 
-@doc """
+@doc meta("""
 Root a tree at the midpoint between the two most distant taxa.
 
 This method modifies the `tree` variable.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to root."),
   }
-} ->
+) ->
 function root!(tree::Phylogeny, newbl::Float64 = -1.0)
   midpoint = findmidpoint(tree)
   root!(tree, midpoint, newbl)
 end
 
-@doc """
+@doc meta("""
 Find the maximum branch length in a dictionary mapping nodes to their branch lengths.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:dict, "The dictionary.")
   },
-  :returns => (Int)
-} ->
+  returns = (Int)
+) ->
 function maxindict(dictionary::Dict)
   keyvalpairs = collect(dictionary)
   values = [i[2] for i in keyvalpairs]
@@ -154,44 +154,44 @@ function maxindict(dictionary::Dict)
   return keyvalpairs[matches][1]
 end
 
-@doc """
+@doc meta("""
 Find the node that is furthest from the root of a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search.")
   },
-  :returns => (PhyNode)
-} ->
+  returns = (PhyNode)
+) ->
 function furthestfromroot(tree::Phylogeny)
   distances = distance(tree)
   return maxindict(distances, x -> maximum(x) .== x)
 end
 
-@doc """
+@doc meta("""
 Find the leaf that is furthest from a given node in a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny containing the nodes."),
     (:node, "The PhyNode find the furthest node from.")
   },
-  :returns => (PhyNode)
-} ->
+  returns = (PhyNode)
+) ->
 function furthestleaf(tree::Phylogeny, node::PhyNode)
   distances = {i => distance(tree, node, i) for i in terminaldescendents(root(tree))}
   return maxindict(distances)
 end
 
-@doc """
+@doc meta("""
 Find the midpoint of a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to find the midpoint of.")
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function findmidpoint(tree::Phylogeny)
   furthestfromroot, ffrdist = furthestfromroot(tree)
   furthestfromleaf, ffldist = furthestleaf(tree, furthestfromroot)
@@ -210,16 +210,16 @@ function findmidpoint(tree::Phylogeny)
   return current
 end
 
-@doc """
+@doc meta("""
 Root a tree using a given array of nodes as the outgroup, and optionally setting the branch length.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to root."),
     (:outgroup, "An array of PhyNodes to use as outgroup."),
     (:newbl, "The new branch length (optional).")
   }
-} ->
+) ->
 function root!(tree::Phylogeny,
                outgroup::Vector{PhyNode},
                newbl::Float64 = -1.0)
@@ -227,16 +227,16 @@ function root!(tree::Phylogeny,
   root!(tree, o, newbl)
 end
 
-@doc """
+@doc meta("""
 Root a tree using a given node as the outgroup, and optionally setting the branch length,
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to root."),
     (:outgroup, "A PhyNode to use as outgroup."),
     (:newbl, "The new branch length (optional).")
   }
-} ->
+) ->
 function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = -1.0)
   # Check for errors and edge cases first as much as possible.
   # 1 - The tree is not rerootable.
@@ -321,69 +321,69 @@ end
 
 # This is probably unnecessary given root puts the rooted flag to true.
 # perhaps and unroot! method is more appropriate.
-@doc """
+@doc meta("""
 Unroot a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny to unroot.")
   }
-} ->
+) ->
 function unroot!(x::Phylogeny)
   x.rooted = false
 end
 
-@doc """
+@doc meta("""
 Set whether a tree is re-rootable.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny."),
     (:rerootable, "Whether the Phylogeny is re-rootable.")
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function rerootable!(x::Phylogeny, rerootable::Bool)
   x.rerootable = rerootable
 end
 
-@doc """
+@doc meta("""
 Get the terminal nodes of a phylogeny.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:x, "The Phylogeny.")
   },
-  :returns => (Array)
-} ->
+  returns = (Array)
+) ->
 function terminals(x::Phylogeny)
   return terminaldescendents(x.root)
 end
 
-@doc """
+@doc meta("""
 Get one or more nodes by name.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search."),
     (:names, "The names of the nodes to get.")
   },
-  :returns => (Vector{PhyNode})
-} ->
+  returns = (Vector{PhyNode})
+) ->
 function getindex(tree::Phylogeny, names::Array{String, 1})
   return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
 
-@doc """
+@doc meta("""
 Get one nodes by name.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search."),
     (:names, "The name of the nodes to get.")
   },
-  :returns => (PhyNode)
-} ->
+  returns = (PhyNode)
+) ->
 function getindex(tree::Phylogeny, name::String)
   for i in DepthFirst(tree)
     if i.name == name
@@ -393,15 +393,15 @@ function getindex(tree::Phylogeny, name::String)
   error("No Node in phylogeny by specified name.")
 end
 
-@doc """
+@doc meta("""
 Generate an index mapping names to nodes
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to index."),
   },
-  :returns => (Dict{String, PhyNode})
-} ->
+  returns = (Dict{String, PhyNode})
+) ->
 function generateindex(tree::Phylogeny)
   output = Dict{String, PhyNode}()
   for i = BreadthFirst(tree)
@@ -414,17 +414,17 @@ function generateindex(tree::Phylogeny)
   return output
 end
 
-@doc """
+@doc meta("""
 Find the shortest path between two nodes in a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search in ."),
     (:n1, "The first node."),
     (:n2, "The second node.")
   },
-  :returns => (Array)
-} ->
+  returns = (Array)
+) ->
 function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   if !isintree(tree, n1) || !isintree(tree, n2)
     error("One of the nodes is not present in the tree.")
@@ -437,17 +437,17 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
-@doc """
+@doc meta("""
 Find the distance between two nodes in a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search in."),
     (:n1, "The first node."),
     (:n2, "The second node.")
   },
-  :returns => (Float64)
-} ->
+  returns = (Float64)
+) ->
 function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   if !isintree(tree, n1) || !isintree(tree, n2)
     error("One of the nodes is not present in the tree.")
@@ -461,46 +461,46 @@ function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return sum(distanceof, p)
 end
 
-@doc """
+@doc meta("""
 Find the number of edges in the shortest path between two nodes in a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search in."),
     (:n1, "The first node."),
     (:n2, "The second node.")
   },
-  :returns => (Int)
-} ->
+  returns = (Int)
+) ->
 function depth(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   p = pathbetween(tree, n1, n2)
   return length(p) == 1 ? 0 : length(p) - 1
 end
 
-@doc """
+@doc meta("""
 Find the distance between a node and the root of a tree.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to search in."),
     (:n1, "The node.")
   },
-  :returns => (Float64)
-} ->
+  returns = (Float64)
+) ->
 function distance(tree::Phylogeny, n1::PhyNode)
   p = Tip2Root(n1)
   return sum(getbranchlength, p)
 end
 
-@doc """
+@doc meta("""
 Find the distance of each node from the root.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to measure.")
   },
-  :returns => (Dict{PhyNode, Float64})
-} ->
+  returns = (Dict{PhyNode, Float64})
+) ->
 function distance(tree::Phylogeny)
   distances = Dict()
   function updatedistances(node, currentdist)
@@ -514,15 +514,15 @@ function distance(tree::Phylogeny)
   return distances
 end
 
-@doc """
+@doc meta("""
 Find the depth of each node from the root.
-""" {
-  :section => "Phylogeny",
-  :parameters => {
+""",
+  section = "Phylogeny",
+  parameters = {
     (:tree, "The Phylogeny to measure.")
   },
-  :returns => (Bool)
-} ->
+  returns = (Bool)
+) ->
 function depth(tree::Phylogeny)
   depths = Dict()
   function updatedepths(node, currentdepth)
@@ -535,49 +535,49 @@ function depth(tree::Phylogeny)
   return depths
 end
 
-@doc """
+@doc meta("""
 Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
 This function sets the root of the phylogeny object to an empty node, as the root, and so the entire structure of the tree,
 has been moved to the tree containing the specified parent PhyNode.
-""" {
-  :section => "PhyNode",
-  :parameters => {
+""",
+  section = "PhyNode",
+  parameters = {
     (:parent, "The PhyNode to add the root of phylogeny too."),
     (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode.")
   }
-} ->
+) ->
 function graft!(parent::PhyNode, child::Phylogeny)
   graft!(parent, root(children))
   root_unsafe!(child, PhyNode())
 end
 
-@doc """
+@doc meta("""
 Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
-""" {
-  :section => "PhyNode",
-  :parameters => {
+""",
+  section = "PhyNode",
+  parameters = {
     (:parent, "The PhyNode to add the root of phylogeny too."),
     (:child, "The Phylogeny for which the root is to be attached to the input parent PhyNode."),
     (:bl, "Branch length that the ")
   }
-} ->
+) ->
 function graft!(parent::PhyNode, child::Phylogeny, bl::Float64)
   branchlength!(root(children), bl)
   graft!(parent, child)
 end
 
-@doc """
+@doc meta("""
 Set the root field of a Phylogeny variable.
 
 **warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
 rather, this function simply alters the root field. Generally this should not be used, except as a step in other methods. Careless use of this could result in loosing part of a tree for instance.
-""" {
-  :section => "PhyNode",
-  :parameters => {
+""",
+  section = "PhyNode",
+  parameters = {
     (:tree, "The phylogeny for which the root is to be set."),
     (:node, "The PhyNode that is to become the root of the tree.")
   }
-} ->
+) ->
 function root_unsafe!(tree::Phylogeny, node::PhyNode)
   tree.root = node
 end
