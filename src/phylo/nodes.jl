@@ -84,69 +84,69 @@ function blisknown(x::PhyNode)
   return !x.branchlength == -1.0
 end
 
-@doc """
+@doc meta("""
 Test whether the confidence in the node is known (i.e. is not -1.0).
-""" {
-  :section => "PhyNode",
-  :parameters => {(:x, "The PhyNode to test.")},
-  :returns =>(Bool)
-} ->
+""",
+  section = "PhyNode",
+  parameters = {(:x, "The PhyNode to test.")},
+  returns = (Bool)
+) ->
 function confisknown(x::PhyNode)
   return !x.confidence == -1.0
 end
 
-@doc """
+@doc meta("""
 Get the confidence of the node.
-""" {
-  :section => "PhyNode",
-  :parameters => {(:x, "The PhyNode to return the confidence of.")},
-  :returns =>(Float64)
-} ->
+""",
+  section = "PhyNode",
+  parameters = {(:x, "The PhyNode to return the confidence of.")},
+  returns = (Float64)
+) ->
 function confidence(x::PhyNode)
   return x.confidence
 end
 
-@doc """
+@doc meta("""
 Set the confidence of the node.
-""" {
-  :section => "PhyNode",
-  :parameters => {(:x, "The PhyNode to set the confidence of."), (:conf, "The value of the confidence to be set.")},
-  :returns =>(Float64)
-} ->
+""",
+  section = "PhyNode",
+  parameters = {(:x, "The PhyNode to set the confidence of."), (:conf, "The value of the confidence to be set.")},
+  returns = (Float64)
+) ->
 function confidence!(x::PhyNode, conf::Float64)
   x.confidence = conf
 end
 
-@doc """
+@doc meta("""
 Set the confidence of the node.
-""" {
-  :section => "PhyNode",
-  :parameters => {(:x, "The PhyNode to set the confidence of."), (:conf, "The value of the confidence to be set.")},
-  :returns =>(Float64)
-} ->
+""",
+  section = "PhyNode",
+  parameters = {(:x, "The PhyNode to set the confidence of."), (:conf, "The value of the confidence to be set.")},
+  returns = (Float64)
+) ->
 function confidence!(x::PhyNode, conf::Nothing)
   x.confidence = -1.0
 end
 
-@doc """
+@doc meta("""
 Test whether a node is empty.
-""" {
-  :section => "PhyNode",
-  :parameters => {(:x, "The PhyNode to test.")},
-  :returns => (Bool)
-} ->
+""",
+  section = "PhyNode",
+  parameters = {(:x, "The PhyNode to test.")},
+  returns = (Bool)
+) ->
 function isempty(x::PhyNode)
   return x.name == "" && x.branchlength == -1.0 && !hasextensions(x) && !haschildren(x) && parentisself(x)
 end
 
-@doc """
+@doc meta("""
 Get the name of a PhyNode.
-""" {
-  :section => "PhyNode",
-  :parameters => {(:x, "The PhyNode to get the name of.")},
-  :returns => (Bool)
-} ->
-function getname(x::PhyNode)
+""",
+  section = "PhyNode",
+  parameters = {(:x, "The PhyNode to get the name of.")},
+  returns = (Bool)
+) ->
+function name(x::PhyNode)
   return x.name
 end
 
