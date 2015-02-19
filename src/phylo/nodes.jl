@@ -44,7 +44,7 @@ two = PhyNode(name = "two",
 
 """,
   section = "PhyNode",
-  parameters = Dict(
+  parameters = (
     (:name,
      "The name of the node (optional). Defaults to an empty string, indicating the node has no name."),
     (:branchlength,
