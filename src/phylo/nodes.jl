@@ -42,9 +42,9 @@ two = PhyNode(name = "two",
               parent = one)
 ```
 
-""";
-  section => "PhyNode";
-  parameters => Dict(
+""",
+  section = "PhyNode",
+  parameters = Dict(
     (:name,
      "The name of the node (optional). Defaults to an empty string, indicating the node has no name."),
     (:branchlength,
@@ -52,8 +52,8 @@ two = PhyNode(name = "two",
     (:ext,
      "An array of zero or more PhyExtensions (optional). Defaults to an empty array, i.e. `[]`, indicating there are no extensions."),
     (:parent,
-     "The parent node (optional). Defaults to a self-reference, indicating the node has no parent."));
-  returns => (PhyNode)
+     "The parent node (optional). Defaults to a self-reference, indicating the node has no parent.")),
+  returns = (PhyNode)
 ) ->
 function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], children::Vector{PhyNode} = PhyNode[], parent = nothing)
     x = new()
