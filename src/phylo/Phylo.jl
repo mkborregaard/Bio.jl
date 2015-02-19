@@ -7,9 +7,7 @@
 module Phylo
 
 using Docile
-@docstrings [
-  :manual => ["../../doc/phylo.md"]
-]
+@docstrings(manual = ["../../doc/phylo.md"])
 
 using Base.Intrinsics
 
