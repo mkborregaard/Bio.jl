@@ -179,7 +179,7 @@ Find the leaf that is furthest from a given node in a tree.
   returns = (PhyNode)
 ) ->
 function furthestleaf(tree::Phylogeny, node::PhyNode)
-  distances = {i => distance(tree, node, i) for i in terminaldescendents(root(tree))}
+  distances = Dict{PhyNode, Float64}([i => distance(tree, node, i) for i in terminaldescendents(root(tree))])
   return maxindict(distances)
 end
 
