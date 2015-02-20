@@ -37,7 +37,7 @@ export
   getmrca, hasextensions, getroot, pathbetween
 
 include("nodes.jl")
-#include("phylogeny.jl")
+include("phylogeny.jl")
 #include("iteration.jl")
 
 end # module Phylo
