@@ -8,9 +8,7 @@ A tree can have:
 - `rooted`
 - `rerootable`
 
-""",
-  section = "Phylogeny"
-) ->
+""" ->
 type Phylogeny
   name::String
   root::PhyNode
@@ -85,7 +83,7 @@ function isrooted(x::Phylogeny)
 end
 
 @doc """
-    
+
     func_name(args...) -> (Bool,)
 
 Test whether a Phylogeny is re-rootable.
