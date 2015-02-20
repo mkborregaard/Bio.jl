@@ -1,4 +1,4 @@
-@doc meta("""
+@doc """
 Phylogeny represents a phylogenetic tree.
 
 A tree can have:
@@ -20,20 +20,21 @@ type Phylogeny
   Phylogeny() = new("", PhyNode(), false, true)
 end
 
-# Phylogeny constructors...
-@doc meta("""
+@doc """
+    func_name(args...) -> (Phylogeny,)
 Create a Phylogeny with a name, root node, and set whether it is rooted and whether
 it is re-rootable.
-""",
-  section = "Phylogeny",
-  parameters = {
-    (:name, "The name of the tree."),
-    (:root, "The root node."),
-    (:rooted, "Whether the tree is rooted."),
-    (:rerootable, "Whether the tree is re-rootable.")
-  },
-  returns = (Phylogeny)
-) ->
+
+**Parameters:**
+
+* `name`:       The name of the tree.
+
+* `root`:       The root node.
+
+* `rooted`:     Whether the tree is rooted.
+
+* `rerootable`: Whether the tree is re-rootable.
+""" ->
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   x = Phylogeny()
   name!(x, name)
@@ -43,72 +44,74 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
   return x
 end
 
-@doc meta("""
+@doc """
+
+    func_name(args...) -> (Bool,)
+
 Test whether a phylogeny is empty.
-""",
-  section = "Phylogeny",
-  parameters = {
-    (:x, "The Phylogeny to test.")
-  },
-  returns = (Bool)
-) ->
+
+**Parameters:**
+* `x`: The Phylogeny to test.
+""" ->
 function isempty(x::Phylogeny)
   return isempty(x.root)
 end
 
-@doc meta("""
+@doc """
 Set the name of a Phylogeny
-""",
-  section = "Phylogeny",
-  parameters = {
-    (:x, "The Phylogeny to set the name of."),
-    (:name, "The name to set.")
-  }
-) ->
+
+**Parameters:**
+
+* `x`:    The Phylogeny to set the name of.
+
+* `name`: The name to set.
+""" ->
 function name!(x::Phylogeny, name::String)
   x.name = name
 end
 
-@doc meta("""
+@doc """
+
+    func_name(args...) -> (Bool,)
+
 Test whether a Phylogeny is rooted.
-""",
-  section = "Phylogeny",
-  parameters = {
-    (:x, "The Phylogeny to test."),
-  },
-  returns = (Bool)
-) ->
+
+**Parameters:**
+
+* `x`: The Phylogeny to test.
+""" ->
 function isrooted(x::Phylogeny)
   return x.rooted
 end
 
-@doc meta("""
+@doc """
+    
+    func_name(args...) -> (Bool,)
+
 Test whether a Phylogeny is re-rootable.
-""",
-  section = "Phylogeny",
-  parameters = {
-    (:x, "The Phylogeny to test."),
-  },
-  returns = (Bool)
-) ->
+
+**Parameters:**
+
+* `x`: The Phylogeny to test.
+""" ->
 function isrerootable(x::Phylogeny)
   return x.rerootable
 end
 
-@doc meta("""
+@doc """
+
+    func_name(args...) -> (PhyNode,)
 Get the root node of a Phylogeny.
-""",
-  section = "Phylogeny",
-  parameters = {
-    (:x, "The Phylogeny to get the root of."),
-  },
-  returns = (PhyNode)
-) ->
+
+**Parameters:**
+
+* `x`: The Phylogeny to get the root of.
+""" ->
 function root(x::Phylogeny)
   return x.root
 end
 
-@doc meta("""
+@doc """
 Test whether a given node is in a given tree.
 """,
   section = "Phylogeny",
@@ -123,7 +126,7 @@ function isintree(tree::Phylogeny, clade::PhyNode)
   return typeof(s) == PhyNode
 end
 
-@doc meta("""
+@doc """
 Root a tree at the midpoint between the two most distant taxa.
 
 This method modifies the `tree` variable.
@@ -138,7 +141,7 @@ function root!(tree::Phylogeny, newbl::Float64 = -1.0)
   root!(tree, midpoint, newbl)
 end
 
-@doc meta("""
+@doc """
 Find the maximum branch length in a dictionary mapping nodes to their branch lengths.
 """,
   section = "Phylogeny",
@@ -154,7 +157,7 @@ function maxindict(dictionary::Dict)
   return keyvalpairs[matches][1]
 end
 
-@doc meta("""
+@doc """
 Find the node that is furthest from the root of a tree.
 """,
   section = "Phylogeny",
@@ -168,7 +171,7 @@ function furthestfromroot(tree::Phylogeny)
   return maxindict(distances, x -> maximum(x) .== x)
 end
 
-@doc meta("""
+@doc """
 Find the leaf that is furthest from a given node in a tree.
 """,
   section = "Phylogeny",
@@ -183,7 +186,7 @@ function furthestleaf(tree::Phylogeny, node::PhyNode)
   return maxindict(distances)
 end
 
-@doc meta("""
+@doc """
 Find the midpoint of a tree.
 """,
   section = "Phylogeny",
@@ -210,7 +213,7 @@ function findmidpoint(tree::Phylogeny)
   return current
 end
 
-@doc meta("""
+@doc """
 Root a tree using a given array of nodes as the outgroup, and optionally setting the branch length.
 """,
   section = "Phylogeny",
@@ -227,7 +230,7 @@ function root!(tree::Phylogeny,
   root!(tree, o, newbl)
 end
 
-@doc meta("""
+@doc """
 Root a tree using a given node as the outgroup, and optionally setting the branch length,
 """,
   section = "Phylogeny",
@@ -321,7 +324,7 @@ end
 
 # This is probably unnecessary given root puts the rooted flag to true.
 # perhaps and unroot! method is more appropriate.
-@doc meta("""
+@doc """
 Unroot a tree.
 """,
   section = "Phylogeny",
@@ -333,7 +336,7 @@ function unroot!(x::Phylogeny)
   x.rooted = false
 end
 
-@doc meta("""
+@doc """
 Set whether a tree is re-rootable.
 """,
   section = "Phylogeny",
@@ -347,7 +350,7 @@ function rerootable!(x::Phylogeny, rerootable::Bool)
   x.rerootable = rerootable
 end
 
-@doc meta("""
+@doc """
 Get the terminal nodes of a phylogeny.
 """,
   section = "Phylogeny",
@@ -360,7 +363,7 @@ function terminals(x::Phylogeny)
   return terminaldescendents(x.root)
 end
 
-@doc meta("""
+@doc """
 Get one or more nodes by name.
 """,
   section = "Phylogeny",
@@ -374,7 +377,7 @@ function getindex(tree::Phylogeny, names::Array{String, 1})
   return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
 
-@doc meta("""
+@doc """
 Get one nodes by name.
 """,
   section = "Phylogeny",
@@ -393,7 +396,7 @@ function getindex(tree::Phylogeny, name::String)
   error("No Node in phylogeny by specified name.")
 end
 
-@doc meta("""
+@doc """
 Generate an index mapping names to nodes
 """,
   section = "Phylogeny",
@@ -414,7 +417,7 @@ function generateindex(tree::Phylogeny)
   return output
 end
 
-@doc meta("""
+@doc """
 Find the shortest path between two nodes in a tree.
 """,
   section = "Phylogeny",
@@ -437,7 +440,7 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return [p1, inter[1], reverse(p2)]
 end
 
-@doc meta("""
+@doc """
 Find the distance between two nodes in a tree.
 """,
   section = "Phylogeny",
@@ -461,7 +464,7 @@ function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return sum(distanceof, p)
 end
 
-@doc meta("""
+@doc """
 Find the number of edges in the shortest path between two nodes in a tree.
 """,
   section = "Phylogeny",
@@ -477,7 +480,7 @@ function depth(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
   return length(p) == 1 ? 0 : length(p) - 1
 end
 
-@doc meta("""
+@doc """
 Find the distance between a node and the root of a tree.
 """,
   section = "Phylogeny",
@@ -492,7 +495,7 @@ function distance(tree::Phylogeny, n1::PhyNode)
   return sum(getbranchlength, p)
 end
 
-@doc meta("""
+@doc """
 Find the distance of each node from the root.
 """,
   section = "Phylogeny",
@@ -514,7 +517,7 @@ function distance(tree::Phylogeny)
   return distances
 end
 
-@doc meta("""
+@doc """
 Find the depth of each node from the root.
 """,
   section = "Phylogeny",
@@ -535,7 +538,7 @@ function depth(tree::Phylogeny)
   return depths
 end
 
-@doc meta("""
+@doc """
 Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
 This function sets the root of the phylogeny object to an empty node, as the root, and so the entire structure of the tree,
 has been moved to the tree containing the specified parent PhyNode.
@@ -551,7 +554,7 @@ function graft!(parent::PhyNode, child::Phylogeny)
   root_unsafe!(child, PhyNode())
 end
 
-@doc meta("""
+@doc """
 Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
 """,
   section = "PhyNode",
@@ -566,7 +569,7 @@ function graft!(parent::PhyNode, child::Phylogeny, bl::Float64)
   graft!(parent, child)
 end
 
-@doc meta("""
+@doc """
 Set the root field of a Phylogeny variable.
 
 **warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
