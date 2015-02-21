@@ -3,6 +3,8 @@
 #==================================#
 
 # Ben J. Ward, 2014.
+
+
 @doc """PhylogenyIterator is an abstract type that defines a family of iterators
 for traversing trees in various ways, including BreadthFirst, and DepthFirst, or from a tip to a root.""" ->
 abstract PhylogenyIterator

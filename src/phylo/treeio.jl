@@ -1,4 +1,9 @@
-# I/O For the various tree formats / standards.
+#==========================================#
+# IO phylogenies stored in various formats #
+#==========================================#
+
+# Ben J. Ward 2015
+
 
 # Recusrsiveley builds tree structure from PhyloXML format.
 function buildrecursively(xmlclade::XMLElement, extensionsArray)
@@ -38,142 +43,6 @@ function readphyloxml(file::String, Extensions...)
   error("No Trees found in file...")
 end
 
-
-
-
-
-
-# Build up the tree from a newick string by recursive descent.
-function buildrecursively(newick::String, from::Int, to::Int, parent::PhyNode)
-  if newick[from] != '\('
-    name!(parent, newick[from:to])
-  else
-    bracketCounter::Int = 0
-    colonMarker::Int = 0
-    positionMarker::Int = from
-    for i in from:to
-      token::Char = newick[i]
-      if token == '\('
-        bracketCounter += 1
-      elseif token == '\)'
-        bracketCounter -= 1
-      elseif token == ':'
-        colonMarker = i
-      end
-      if (bracketCounter == 0) || (bracketCounter == 1 && token == ',')
-        addChild!(parent, buildrecursively(newick, positionMarker + 1, colonMarker, PhyNode("", false, float(newick[(colonMarker + 1):(i - 1)]), PhyExtension[], parent)))
-        positionMarker = i
-      end
-    end
-  end
-end
-
-
-
-function makenodefromns(SubString::String, Depth::Int)
-    if search(SubString, '(') == 0
-      error(string("Tree is not well formed, location: ", SubString))
-    end
-    # Split the Substring into Children.
-    childrenStrings = split(SubString, ',')
-    childrenNodes = PhyNode[]
-    for cs in childrenStrings
-      if length(cs) == 0
-        continue
-      end
-      nodeInformation = split(cs, ':')
-      name, bl::Float64, bs::Float64 = "", 0.0, 0.0
-      if length(nodeInformation) == 2 # If nodeinfo is of length 2, the node contains info on the name / branchlength, or possibly bootstrap support.
-        bl = float(nodeInformation[2])
-        name = nodeInformation[1]
-        # The nexus format may put bootstrap values in the names position...
-        try
-          name = float(name)
-          if 0 <= name <= 1
-            bs = name
-          elseif 1 <= name <= 100
-            bs = name / 100
-          end
-          name = ""
-        catch
-          name = nodeInformation[1]
-        end
-      else # otherwise assume the length is 1 in which case the entry only contains a name...
-        name = nodeInformation[1]
-      end
-      node = PhyNode(name, false, bl, PhyXExtension[])
-      push!(childrenNodes, node)
-    end
-    return childrenNodes
-end
-
-
-
-function parsenewicknode(NewickString, Depth)
-  NewickString == "" ? error("Input NewickString is devoid of characters.") : nothing
-  search(NewickString, '(') == 0 ? return makeNodesFromNS(NewickString, Depth) : nothing
-
-  nodes = PhyNode[]
-  children = PhyNode[]
-  start::Int = 1
-  lengthOfPreNewickString::Int = 0
-  bracketStack::Stack = Stack()
-
-  for i in 1:length(NewickString)
-    if NewickString[i] == '('
-      push!(bracketStack, i)
-      continue
-    end
-
-    if NewickString[i] == ')'
-      j = pop!(bracketStack)
-      if length(bracketStack) == 0
-        InternalNode = nothing
-        subNewick = NewickString[start + lengthOfPreNewickString: j]
-        preceedingNodes = makeNodeFromNS(subNewick, Depth)
-        nodes = vcat(nodes, preceedingNodes)
-        if i + 1 < length(NewickString)
-          rightOfBracket = NewickString[i + 1:end]
-          m = match(r"[\)\,\(]", rightOfBracket)
-          if m != nothing
-            indexOfNextSymbol = m.offset
-            repOfInternalNode = rightOfBracket[1:indexOfNextSymbol]
-            internalNodes = makeNodeFromNS(repOfInternalNode, Depth)
-            if length(internalNodes) > 0
-              InternalNode = internalNodes[1]
-            end
-            lengthOfPreNewickString = length(repOfInternalNode)
-          else
-            InternalNode = makeNodeFromNS(NewickString[i + 1:end], Depth)[1]
-            lengthOfPreNewickString = length(NewickString) - i
-        end
-        if InternalNode == nothing
-          InternalNode = PhyNode("", false, 0.0, PhyXExtension[])
-          lengthOfPreNewickString = 0
-        end
-
-        childNewickString = NewickString[j + 1 : i]
-        addChild!(InternalNode, )
-end
-
-
-
-function parsenewick(newickstring::String, rooted::Bool, rerootable::Bool)
-  newickstring = replace(newickstring, r"(\r|\n|\s)", "")
-  treename = ""
-  if ismatch(r"^[^\(]+\(", newickstring)
-    cutoff = length(match(r"^[^\(]+\(", newickstring).match)
-    treename = chop(match(r"^[^\(]+\(", newickstring).match)
-    treename = treename[length(treename)] == ' ' ? treename[1:length(treename)-1] : treename
-    newickstring = newickstring[cutoff:length(newickstring)]
-  end
-  finalsemi::Int = rsearchindex(newickstring, ":")
-  root::PhyNode = PhyNode()
-  buildrecursively(newickstring, 1, finalsemi, root)
-  return Phylogeny(treename, root, rooted, rerootable)
-end
-
-
 function readnewick(file::String)
   instream = open(expanduser(file))
   instring = readall(instream)
@@ -188,7 +57,6 @@ function readnewick(file::String)
   end
   error("No phylogenies detected in the file.")
 end
-
 
 type Tokenizer
   dict::Dict{String, Regex}
@@ -206,7 +74,19 @@ function tokenizestring(s::String, t::Tokenizer)
   return matchall(t.tokenizer, s)
 end
 
+function makenewclade()
+  return PhyNode()
+end
+
+function makenewclade(parent::PhyNode)
+  newclade = PhyNode()
+  graft!(parent, newclade)
+  return newclade
+end
+
 function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
+  # Check if the node has a name, and if values are not confidence, and there are no conf 
+  # values in values or comments, and confience is not known, 
   if name(node) != "" && !(valuesareconf || commentsareconf) && !confisknown(node)
     confidence!(node, parsecondfidence(name(node)))
     if confisknown(node)
@@ -214,7 +94,10 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
     end 
   end
   if hasparent(node)
-    
+    parent = parent(node)
+    prune!(node)
+    graft!(parent, node)
+    return parent
   end
 end
 
@@ -226,51 +109,101 @@ function parseconfidence(text::String)
   end
 end
 
-@doc """ Builds a Phylogeny from a newick string.
-""" 
-function parsenewick(newickstring::String, commentsarebl = false)
-  definition = [ ("open paren", r"\("), ("close paren", r"\)"), ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"),
-  ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"), ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"),
-  ("quoted node label", r"\'(\\.|[^\'])*\'"), ("semicolon", r"\;"), ("newline", r"\n")]
+type NewickException <: Exception
+  msg::String
+end
+
+Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
+
+function parsenewick(newickstring::String, commentsareconf = false, valuesareconf = false)
+  # Create a definition of the tokens that appear in a newick string, and the meanings of them.
+  definition = [ ("open paren", r"\("), ("close paren", r"\)"),
+  ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"), ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"),
+  ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"), ("quoted node label", r"\'(\\.|[^\'])*\'"),
+  ("semicolon", r"\;"), ("newline", r"\n")]
   tokenizer = Tokenizer(definition)
+  # Convet the newick string into a series of tokens than can be considered in turn and understood.
   tokens = tokenizestring(strip(newickstring), tokenizer)
+  # Create the first clade, i.e. the root and set the variable that points to the current clade 
+  # to the root.
   root = PhyNode("Root")
   current = root
   @assert root === current
   enteringbl = false
+  # Assign two variables which will keep track of the number of left and right parentheses.
   leftpcount = 0
   rightpcount = 0
-  for token in tokens
+  state = start(tokens)
+  while !done(tokens, state)
+  token, state = next(tokens, state)
     if beginswith(token, "\'")
       # This is a quoted label, characters need to be added to the clade name.
       name!(current, name(current) * token[2:end])
     elseif beginswith(token, "[")
       # This is a comment.
       # TODO produce a comment type for PhyExtentions and add it to the current clade.
-      if commentsarebl
+      if commentsareconf
         # TODO produce a numeric support value type for PhyExtentions and add it to current clade.
       end
     elseif token == "("
       # The start of a new clade. It is a child of the current clade.
-      newclade = PhyNode()
-      graft!(current, newclade)
-      current = newclade
+      current = makenewclade(current)
       enteringbl = false
       leftpcount += 1
     elseif token == ","
       # If the current clade is the root, it means the external parentheses are missing. 
       if current === root
-        root = PhyNode("Root")
+        root = makenewclade()
+        name!(root, "Root")
         prune!(current)
         graft!(root, current)
       end
       # Start a new child clade at the same level as the current clade. i.e. a sibling.
-
-
-
+      parent = processclade(current, valuesareconf, commentsareconf)
+      current = makenewclade(parent)
+      enteringbl = false
+    elseif token == ')'
+      # Addition of children for the current clade is done, so we process it.
+      parent = processclade(current, valuesareconf, commentsareconf)
+      ### TODO need to sort out some kind of error or catch here for if a parent is not returned.
+      current = parent
+      enteringbl = false
+      rightpcount += 1
+    elseif token == ';'
+      break
+    elseif beginswith(token, ':')
+      # This token is branchlength or confidence...
+      value = float(token[2:end])
+      if valuesareconf
+        confidence!(current, value)
+      else
+        branchlength!(current, value)
+      end
+    elseif token == '\n'
+      continue
+    else
+      # Current token is an unquoted node label, and so we simply need to set the clade
+      # name to the token.
+      name!(current, token)
+    end
   end
-
+  if leftpcount != rightpcount
+    throw(NewickException("The number of left and right parentheses do not match."))
+  end
+  try
+    token, state = next(tokens, state)
+    throw(NewickException("There are characters after the semicolon in the newick string."))
+  catch exception
+    if isa(exception, NewickException)
+      rethrow(exception)
+    end
+  end
+  processclade(current)
+  processclade(root)
+  return Phylogeny("", root, true, true)
 end
+
+
 
 
 

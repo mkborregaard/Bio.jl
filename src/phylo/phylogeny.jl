@@ -19,7 +19,6 @@ type Phylogeny
 end
 
 @doc """
-    func_name(args...) -> (Phylogeny,)
 Create a Phylogeny with a name, root node, and set whether it is rooted and whether
 it is re-rootable.
 
@@ -43,9 +42,6 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a phylogeny is empty.
 
 **Parameters:**
@@ -69,9 +65,6 @@ function name!(x::Phylogeny, name::String)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a Phylogeny is rooted.
 
 **Parameters:**
