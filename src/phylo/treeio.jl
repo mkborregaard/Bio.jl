@@ -6,10 +6,10 @@
 
 
 # Recusrsiveley builds tree structure from PhyloXML format.
-function buildrecursively(xmlclade::XMLElement, extensionsArray)
+function buildrecursively(xmlclade::LightXML.XMLElement, extensionsArray)
   label::String = ""
   node::PhyNode = PhyNode(name = label, branchlength = (bl == nothing ? -1.0 : float(bl)), ext = PhyExtension[parsephylo(xmlclade, i) for i in extensionsArray])
-  xmlchildren::Array{XMLElement, 1} = get_elements_by_tagname(xmlclade, "clade")
+  xmlchildren::Array{LightXML.XMLElement, 1} = LightXML.get_elements_by_tagname(xmlclade, "clade")
   for n in xmlchildren
     graft!(node, buildrecursively(n, extensionsArray))
   end
