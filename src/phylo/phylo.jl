@@ -11,7 +11,7 @@ using Docile
 
 using Base.Intrinsics
 
-import LightXML
+import LightXML: XMLElement
 
 import Base: getindex, length, start, next, done, isempty
 
