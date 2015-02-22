@@ -202,8 +202,8 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       rethrow(exception)
     end
   end
-  processclade(current)
-  processclade(root)
+  processclade(current, valuesareconf, commentsareconf)
+  processclade(root, valuesareconf, commentsareconf)
   return Phylogeny("", root, true, true)
 end
 
