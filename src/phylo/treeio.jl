@@ -163,7 +163,7 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       parent = processclade(current, valuesareconf, commentsareconf)
       current = makenewclade(parent)
       enteringbl = false
-    elseif token == ')'
+    elseif token == ")"
       # Addition of children for the current clade is done, so we process it.
       parent = processclade(current, valuesareconf, commentsareconf)
       ### TODO need to sort out some kind of error or catch here for if a parent is not returned.
@@ -171,9 +171,9 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       enteringbl = false
       rightpcount += 1
       println("RightPCount: $(rightpcount)")
-    elseif token == ';'
+    elseif token == ";"
       break
-    elseif startswith(token, ':')
+    elseif startswith(token, ":")
       # This token is branchlength or confidence...
       value = float(token[2:end])
       if valuesareconf
@@ -181,7 +181,7 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       else
         branchlength!(current, value)
       end
-    elseif token == '\n'
+    elseif token == "\n"
       continue
     else
       # Current token is an unquoted node label, and so we simply need to set the clade
