@@ -187,6 +187,8 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       name!(current, token)
     end
   end
+  println(leftpcount)
+  println(rightpcount)
   if leftpcount != rightpcount
     throw(NewickException("The number of left and right parentheses do not match."))
   end
