@@ -136,10 +136,10 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
   state = start(tokens)
   while !done(tokens, state)
   token, state = next(tokens, state)
-    if beginswith(token, "\'")
+    if startswith(token, "\'")
       # This is a quoted label, characters need to be added to the clade name.
       name!(current, name(current) * token[2:end])
-    elseif beginswith(token, "[")
+    elseif startswith(token, "[")
       # This is a comment.
       # TODO produce a comment type for PhyExtentions and add it to the current clade.
       if commentsareconf
@@ -171,7 +171,7 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       rightpcount += 1
     elseif token == ';'
       break
-    elseif beginswith(token, ':')
+    elseif startswith(token, ':')
       # This token is branchlength or confidence...
       value = float(token[2:end])
       if valuesareconf
