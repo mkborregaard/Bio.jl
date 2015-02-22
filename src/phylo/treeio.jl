@@ -170,6 +170,7 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       current = parent
       enteringbl = false
       rightpcount += 1
+      println("RightPCount: $(rightpcount)")
     elseif token == ';'
       break
     elseif startswith(token, ':')
