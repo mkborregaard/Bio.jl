@@ -88,7 +88,7 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
   # Check if the node has a name, and if values are not confidence, and there are no conf 
   # values in values or comments, and confience is not known, 
   if name(node) != "" && !(valuesareconf || commentsareconf) && !confisknown(node)
-    confidence!(node, parsecondfidence(name(node)))
+    confidence!(node, parseconfidence(name(node)))
     if confisknown(node)
       name!(node, "")
     end 
