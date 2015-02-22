@@ -136,6 +136,7 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
   state = start(tokens)
   while !done(tokens, state)
   token, state = next(tokens, state)
+  println("Current token is: $(token)")
     if startswith(token, "\'")
       # This is a quoted label, characters need to be added to the clade name.
       name!(current, name(current) * token[2:end])
