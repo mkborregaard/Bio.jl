@@ -63,7 +63,7 @@ when creating PhyNodes:
                   the node has no parent.
 """ ->
 function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], children::Vector{PhyNode} = PhyNode[], parent = nothing)
-    x = new()
+    x = PhyNode()
     name!(x, name)
     branchlength!(x, branchlength)
     confidence!(x, confidence)
