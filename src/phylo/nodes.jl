@@ -30,9 +30,8 @@ type PhyNode
   extensions::Vector{PhyExtension}
   children::Vector{PhyNode}
   parent::PhyNode
-end
 
-@doc """
+"""
 
     func_name(args...) -> (PhyNode,)
 
@@ -61,9 +60,9 @@ when creating PhyNodes:
 
 * `parent`:       The parent node (optional). Defaults to a self-reference, indicating
                   the node has no parent.
-""" ->
+"""
 function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], children::Vector{PhyNode} = PhyNode[], parent = nothing)
-    x = PhyNode()
+    x = new()
     name!(x, name)
     branchlength!(x, branchlength)
     confidence!(x, confidence)
@@ -78,6 +77,7 @@ function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Fl
       graft!(x, child)
     end
     return x
+end
 end
 
 
