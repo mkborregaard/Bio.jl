@@ -94,7 +94,7 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
     end 
   end
   if hasparent(node)
-    parent = parent(node)
+    parent = node.parent
     prune!(node)
     graft!(parent, node)
     return parent
