@@ -9,7 +9,7 @@ use_directory_urls: false
 pages:
 - [index.md, Ind]
 - [installing.md, User Guide, Installation]
-- [phylo/phylo.md, API, Phylo]
+- [phylo.md, API, Phylo]
 - [LICENSE.md, About, License]
 
 markdown_extensions: [codehilite]

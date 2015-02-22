@@ -7,7 +7,7 @@
 module Phylo
 
 using Docile
-@docstrings(manual = ["../../docs/phylo/phylo.md"])
+#@docstrings(manual = ["../../docs/phylo/phylo.md"])
 
 using Base.Intrinsics
 
@@ -40,7 +40,7 @@ export
 
 include("nodes.jl")
 include("phylogeny.jl")
-include("iteration.jl")
 include("treeio.jl")
+include("iteration.jl")
 
 end # module Phylo
