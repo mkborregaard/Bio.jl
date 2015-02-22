@@ -106,7 +106,7 @@ Test whether the confidence in the node is known (i.e. is not -1.0).
 * `x`:  The PhyNode to test.
 """ ->
 function confisknown(x::PhyNode)
-  return !x.confidence == -1.0
+  return x.confidence != -1.0
 end
 
 @doc """
