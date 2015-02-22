@@ -317,9 +317,6 @@ function siblings(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Get the parent of a node.
 
 **Parameters:**
@@ -334,8 +331,6 @@ function parent(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
 Test whether a node is the root node.
 
 **Parameters:**
@@ -347,9 +342,6 @@ function isroot(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is unlinked, i.e. has no children and no parent.
 
 **Parameters:**
