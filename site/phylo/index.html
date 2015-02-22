@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Phylo - Bio.jl</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="../index.html">Bio.jl</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            <li >
+                                <a href="../installing/index.html">Installation</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">API <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            <li class="active">
+                                <a href="index.html">Phylo</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            <li >
+                                <a href="../LICENSE/index.html">License</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                
+                <li >
+                    <a rel="next" href="../installing/index.html">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../LICENSE/index.html">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                
+                <li>
+                    <a href="https://github.com/BioJulia/Bio.jl/">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#biophylo">Bio.Phylo</a></li>
+        
+    
+        <li class="main "><a href="#biophylo_1">Bio.Phylo</a></li>
+        
+            <li><a href="#exported">Exported</a></li>
+        
+            <li><a href="#internal">Internal</a></li>
+        
+            <li><a href="#exported_1">Exported</a></li>
+        
+            <li><a href="#internal_1">Internal</a></li>
+        
+    
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="biophylo">Bio.Phylo</h1>
+<h1 id="biophylo_1">Bio.Phylo</h1>
+<p>The <code>Bio.Phylo</code> submodule provides phylogenetic tools for <a href="../index.html">BioJulia</a>.</p>
+<p>The module exposes types for phylogenetic trees, nodes in trees, and annotations for nodes.</p>
+<p>Methods are provided for building, manipulating, accessing and measuring trees and their nodes.</p>
+<h2 id="exported">Exported</h2>
+<hr />
+<h4 id="countchildrenxbiophylophynode">countchildren(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Int,)</code></pre>
+
+
+<p>Count the number of children of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to count the children of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L430">Bio/src/phylo/nodes.jl:430</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childbiophylophynode">graft!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<p>Graft a node onto another node, create a parent-child relationship between them.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>child</code>:  The PhyNode to add as a child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L614">Bio/src/phylo/nodes.jl:614</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childbiophylophynode-branchlengthfloat64">graft!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode, branchlength::Float64)</h4>
+<p>Graft a node onto another node, create a parent-child relationship between them, and associatiing a branch length with the relationship.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>:       The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>child</code>:        The PhyNode to add as a child.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length between parent and child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L635">Bio/src/phylo/nodes.jl:635</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childrenarraybiophylophynode-1">graft!(parent::Bio.Phylo.PhyNode, children::Array{Bio.Phylo.PhyNode, 1})</h4>
+<p>Graft one or more nodes onto another node, create a parent-child relationship between each of the grafted nodes and the node they are grafted onto.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>:   The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>children</code>: The array of PhyNodes to add as a child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L650">Bio/src/phylo/nodes.jl:650</a></p>
+<hr />
+<h4 id="haschildrenxbiophylophynode">haschildren(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node has children.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L225">Bio/src/phylo/nodes.jl:225</a></p>
+<hr />
+<h4 id="hasextensionsxbiophylophynode">hasextensions(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node has extensions.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L255">Bio/src/phylo/nodes.jl:255</a></p>
+<hr />
+<h4 id="hasparentxbiophylophynode">hasparent(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node has a parent.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L283">Bio/src/phylo/nodes.jl:283</a></p>
+<hr />
+<h4 id="isleafxbiophylophynode">isleaf(x::Bio.Phylo.PhyNode)</h4>
+<p>func_name(args...) -&gt; (Bool,)</p>
+<p>Test whether a node is a leaf.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L211">Bio/src/phylo/nodes.jl:211</a></p>
+<hr />
+<h4 id="ispreterminalxbiophylophynode">ispreterminal(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is preterminal i.e. It's children are all leaves.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L398">Bio/src/phylo/nodes.jl:398</a></p>
+<hr />
+<h4 id="isrootxbiophylophynode">isroot(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is the root node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L343">Bio/src/phylo/nodes.jl:343</a></p>
+<hr />
+<h4 id="issemipreterminalxbiophylophynode">issemipreterminal(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is semi-preterminal i.e. Some of it's children are leaves, but not all are.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L415">Bio/src/phylo/nodes.jl:415</a></p>
+<hr />
+<h4 id="parentisselfxbiophylophynode">parentisself(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is its own parent. See PhyNode().</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L269">Bio/src/phylo/nodes.jl:269</a></p>
+<hr />
+<h4 id="prunexbiophylophynode">prune!(x::Bio.Phylo.PhyNode)</h4>
+<p>Destroy the relationship between a PhyNode <code>x</code> and its parent, returning the PhyNode.</p>
+<p>This method cleanly removes the PhyNode <code>x</code> from its parent's <code>children</code> array, and removes the <code>parent</code> reference from the PhyNode <code>x</code>. All other fields of the <code>child</code> are left intact.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode prune from its parent.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L666">Bio/src/phylo/nodes.jl:666</a></p>
+<hr />
+<h4 id="pruneregraftprunebiophylophynode-grafttobiophylophynode">pruneregraft!(prune::Bio.Phylo.PhyNode, graftto::Bio.Phylo.PhyNode)</h4>
+<p>Prune a PhyNode from its parent and graft it to another parent.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>prune</code>:    The PhyNode to remove from its parent.</p>
+</li>
+<li>
+<p><code>graftto</code>:  The PhyNode to become the new parent of <code>prune</code>.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L686">Bio/src/phylo/nodes.jl:686</a></p>
+<hr />
+<h4 id="pruneregraftprunebiophylophynode-grafttobiophylophynode-branchlengthfloat64">pruneregraft!(prune::Bio.Phylo.PhyNode, graftto::Bio.Phylo.PhyNode, branchlength::Float64)</h4>
+<p>Prune a PhyNode from its parent and graft it to another parent, setting the branch length.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>prune</code>:        The PhyNode to remove from its parent.</p>
+</li>
+<li>
+<p><code>graftto</code>:      The PhyNode to become the new parent of <code>prune</code>.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L703">Bio/src/phylo/nodes.jl:703</a></p>
+<hr />
+<h4 id="biophylophyextensiont">Bio.Phylo.PhyExtension{T}</h4>
+<p>PhyExtension allows defining arbitrary metadata to annotate nodes.</p>
+<p>This allows the PhyNode type to support any phylogenetic tree format 
+that includes annotations (e.g. PhyloXML, NeXML), and allows programmatic 
+extension of nodes with annotations.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L9">Bio/src/phylo/nodes.jl:9</a></p>
+<hr />
+<h4 id="biophylophynode">Bio.Phylo.PhyNode</h4>
+<p>PhyNode represents a node in a phylogenetic tree.</p>
+<p>A node can have:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>branchlength</code></li>
+<li>one or more <code>extensions</code></li>
+<li>a reference to its <code>parent</code> PhyNode</li>
+<li>reference to one or more <code>children</code></li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L25">Bio/src/phylo/nodes.jl:25</a></p>
+<h2 id="internal">Internal</h2>
+<hr />
+<h4 id="addchild_unsafeparentbiophylophynode-childbiophylophynode">addchild_unsafe!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Add a node to the <code>children</code> array of another node.</p>
+<p><strong>Warning:</strong> this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use <code>graft!()</code>, which does ensure the two-way link is built.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>child</code>:  The PhyNode to add as a child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L581">Bio/src/phylo/nodes.jl:581</a></p>
+<hr />
+<h4 id="blisknownxbiophylophynode">blisknown(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether the branchlength in the node is known (i.e. is not -1.0).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>:  The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L93">Bio/src/phylo/nodes.jl:93</a></p>
+<hr />
+<h4 id="branchlengthxbiophylophynode-blfloat64">branchlength!(x::Bio.Phylo.PhyNode, bl::Float64)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Set the branch length of a PhyNode.</p>
+<p><strong>This method modifies the PhyNode.</strong></p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:  The PhyNode to set the branchlength of.</p>
+</li>
+<li>
+<p><code>bl</code>: The branch length to give the PhyNode. Either a Float64 value or <code>nothing</code>.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L526">Bio/src/phylo/nodes.jl:526</a></p>
+<hr />
+<h4 id="branchlengthxbiophylophynode">branchlength(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Get the branch length of a PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the branch length of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L197">Bio/src/phylo/nodes.jl:197</a></p>
+<hr />
+<h4 id="calltypebiophylophynode">call(::Type{Bio.Phylo.PhyNode})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="calltypebiophylophynode-nameabstractstring">call(::Type{Bio.Phylo.PhyNode}, name::AbstractString)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="calltypebiophylophynode-nameabstractstring-branchlengthfloat64">call(::Type{Bio.Phylo.PhyNode}, name::AbstractString, branchlength::Float64)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="calltypebiophylophynode-nameabstractstring-branchlengthfloat64-confidencefloat64">call(::Type{Bio.Phylo.PhyNode}, name::AbstractString, branchlength::Float64, confidence::Float64)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="calltypebiophylophynode-nameabstractstring-branchlengthfloat64-confidencefloat64-extarraybiophylophyextensiont-1">call(::Type{Bio.Phylo.PhyNode}, name::AbstractString, branchlength::Float64, confidence::Float64, ext::Array{Bio.Phylo.PhyExtension{T}, 1})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="calltypebiophylophynode-nameabstractstring-branchlengthfloat64-confidencefloat64-extarraybiophylophyextensiont-1-childrenarraybiophylophynode-1">call(::Type{Bio.Phylo.PhyNode}, name::AbstractString, branchlength::Float64, confidence::Float64, ext::Array{Bio.Phylo.PhyExtension{T}, 1}, children::Array{Bio.Phylo.PhyNode, 1})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="calltypebiophylophynode-nameabstractstring-branchlengthfloat64-confidencefloat64-extarraybiophylophyextensiont-1-childrenarraybiophylophynode-1-parent">call(::Type{Bio.Phylo.PhyNode}, name::AbstractString, branchlength::Float64, confidence::Float64, ext::Array{Bio.Phylo.PhyExtension{T}, 1}, children::Array{Bio.Phylo.PhyNode, 1}, parent)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Create a PhyNode.</p>
+<p>PhyNodes represent nodes in a phylogenetic tree. All arguments are optional 
+when creating PhyNodes:</p>
+<p><strong>Example:</strong></p>
+<pre class="codehilite"><code>one = PhyNode()
+two = PhyNode(name = &quot;two&quot;,
+  branchlength = 1.0,
+  parent = one)</code></pre>
+
+
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length of the node from its parent (optional).
+                  Defaults to <code>-1.0</code>, indicating an unknown branch length.</p>
+</li>
+<li>
+<p><code>ext</code>:          An array of zero or more PhyExtensions (optional). Defaults to an empty
+                  array, i.e. <code>[]</code>, indicating there are no extensions.</p>
+</li>
+<li>
+<p><code>parent</code>:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L64">Bio/src/phylo/nodes.jl:64</a></p>
+<hr />
+<h4 id="childrenxbiophylophynode">children(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Vector{PhyNode},)</code></pre>
+
+
+<p>Get the children of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get children for.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L297">Bio/src/phylo/nodes.jl:297</a></p>
+<hr />
+<h4 id="confidencexbiophylophynode-conffloat64">confidence!(x::Bio.Phylo.PhyNode, conf::Float64)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Set the confidence of the node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The PhyNode to set the confidence of.</p>
+</li>
+<li>
+<p><code>conf</code>: The value of the confidence to be set.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L137">Bio/src/phylo/nodes.jl:137</a></p>
+<hr />
+<h4 id="confidencexbiophylophynode-confvoid">confidence!(x::Bio.Phylo.PhyNode, conf::Void)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Set the confidence of the node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The PhyNode to set the confidence of.</p>
+</li>
+<li>
+<p><code>conf</code>: The value of the confidence to be set.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L155">Bio/src/phylo/nodes.jl:155</a></p>
+<hr />
+<h4 id="confidencexbiophylophynode">confidence(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Get the confidence of the node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>:  The PhyNode to return the confidence of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L121">Bio/src/phylo/nodes.jl:121</a></p>
+<hr />
+<h4 id="confisknownxbiophylophynode">confisknown(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether the confidence in the node is known (i.e. is not -1.0).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>:  The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L107">Bio/src/phylo/nodes.jl:107</a></p>
+<hr />
+<h4 id="deletexbiophylophynode">delete!(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Delete a node, destroying the relationships between it and its parent, and it and its children. The children of the node become the children of the node's former parent.</p>
+<p>Returns the deleted node.</p>
+<p><strong>Parameter:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to delete.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L720">Bio/src/phylo/nodes.jl:720</a></p>
+<hr />
+<h4 id="descendentsxbiophylophynode">descendents(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Vector{PhyNode},)</code></pre>
+
+
+<p>Get the descendents of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the descendents of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L445">Bio/src/phylo/nodes.jl:445</a></p>
+<hr />
+<h4 id="detachxbiophylophynode">detach!(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L744">Bio/src/phylo/nodes.jl:744</a></p>
+<hr />
+<h4 id="detachxbiophylophynode-nameabstractstring">detach!(x::Bio.Phylo.PhyNode, name::AbstractString)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L744">Bio/src/phylo/nodes.jl:744</a></p>
+<hr />
+<h4 id="detachxbiophylophynode-nameabstractstring-rootedbool">detach!(x::Bio.Phylo.PhyNode, name::AbstractString, rooted::Bool)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L744">Bio/src/phylo/nodes.jl:744</a></p>
+<hr />
+<h4 id="detachxbiophylophynode-nameabstractstring-rootedbool-rerootablebool">detach!(x::Bio.Phylo.PhyNode, name::AbstractString, rooted::Bool, rerootable::Bool)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L744">Bio/src/phylo/nodes.jl:744</a></p>
+<hr />
+<h4 id="distanceofxbiophylophynode">distanceof(x::Bio.Phylo.PhyNode)</h4>
+<p>Find the distance of a node from its parent. This is different from branch length, because it handles the situation where branch length is unknown. It is only used when the distances between nodes are calculated.</p>
+<p>The method is necessary because unknown branch lengths are represented as -1.0.
+If all branch lengths are unknown, the tree is a cladogram, and it is still useful to be able to compare relative distances. If individual branch lengths are unknown, they should not affect the calculation of path distances. To satisfy both of these cases, we use machine epsilon as the minimal distance.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: A PhyNode.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L779">Bio/src/phylo/nodes.jl:779</a></p>
+<hr />
+<h4 id="haschildparentbiophylophynode-childbiophylophynode">haschild(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is the parent of another specific node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: The potential parent PhyNode to test.</p>
+</li>
+<li>
+<p><code>child</code>:  The potential child PhyNode to test.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L241">Bio/src/phylo/nodes.jl:241</a></p>
+<hr />
+<h4 id="isancestralposancbiophylophynode-nodesarraybiophylophynode-1">isancestral(posanc::Bio.Phylo.PhyNode, nodes::Array{Bio.Phylo.PhyNode, 1})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is ancesteral to one or more other nodes.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>posanc</code>: The PhyNode to test.</p>
+</li>
+<li>
+<p><code>nodes</code>: An array of <code>PhyNode</code>s that the test node must be ancestral to.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L475">Bio/src/phylo/nodes.jl:475</a></p>
+<hr />
+<h4 id="isemptyxbiophylophynode">isempty(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is empty.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L169">Bio/src/phylo/nodes.jl:169</a></p>
+<hr />
+<h4 id="isequalxbiophylophynode-ybiophylophynode">isequal(x::Bio.Phylo.PhyNode, y::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether two PhyNodes are equal. Specifically, test whether all three of <code>branchlength</code>, <code>name</code> and <code>extensions</code> are equal.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>: The left PhyNode to compare.</p>
+</li>
+<li>
+<p><code>y</code>: The right PhyNode to compare.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L761">Bio/src/phylo/nodes.jl:761</a></p>
+<hr />
+<h4 id="isinternalxbiophylophynode">isinternal(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is internal, i.e. has a parent and one or more children.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L384">Bio/src/phylo/nodes.jl:384</a></p>
+<hr />
+<h4 id="islinkedxbiophylophynode">islinked(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is linked, i.e. has one or more children and/or a parent.
+<strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L370">Bio/src/phylo/nodes.jl:370</a></p>
+<hr />
+<h4 id="isunlinkedxbiophylophynode">isunlinked(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is unlinked, i.e. has no children and no parent.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L357">Bio/src/phylo/nodes.jl:357</a></p>
+<hr />
+<h4 id="mrcanodesarraybiophylophynode-1">mrca(nodes::Array{Bio.Phylo.PhyNode, 1})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Get the most recent common ancestor of an array of nodes.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>nodes</code>:  An array of <code>PhyNode</code>s to find the most common ancestor of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L490">Bio/src/phylo/nodes.jl:490</a></p>
+<hr />
+<h4 id="namexbiophylophynode-nameabstractstring">name!(x::Bio.Phylo.PhyNode, name::AbstractString)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Set the name of a PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The PhyNode to set the name of.</p>
+</li>
+<li>
+<p><code>name</code>: The name to give the PhyNode.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L508">Bio/src/phylo/nodes.jl:508</a></p>
+<hr />
+<h4 id="namexbiophylophynode">name(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Get the name of a PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the name of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L183">Bio/src/phylo/nodes.jl:183</a></p>
+<hr />
+<h4 id="parentxbiophylophynode">parent(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Get the parent of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the parent of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L327">Bio/src/phylo/nodes.jl:327</a></p>
+<hr />
+<h4 id="parent_unsafeparentbiophylophynode-childbiophylophynode">parent_unsafe!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Set the parent of a node.</p>
+<p><strong>Warning:</strong> this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use <code>graft!()</code>, which does ensure the two-way link is built.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>:  The PhyNode to set as parent.</p>
+</li>
+<li>
+<p><code>child</code>:   The PhyNode to set the parent of.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L562">Bio/src/phylo/nodes.jl:562</a></p>
+<hr />
+<h4 id="removechild_unsafeparentbiophylophynode-childbiophylophynode">removechild_unsafe!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<p>Remove a node from the <code>children</code> array of another node.</p>
+<p><strong>Warning:</strong> this method is considered unsafe because it does not destroy any two-way link between parent and child. If you want to remove a child from a node, you should use <code>prune!()</code>, which does ensure the two-way link is destroyed.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: </p>
+</li>
+<li>
+<p><code>child</code>:</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L600">Bio/src/phylo/nodes.jl:600</a></p>
+<hr />
+<h4 id="removeparent_unsafexbiophylophynode">removeparent_unsafe!(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Remove the parent of a <code>PhyNode</code> (thus setting the parent property to be self-referential).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to remove the parent of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L544">Bio/src/phylo/nodes.jl:544</a></p>
+<hr />
+<h4 id="siblingsxbiophylophynode">siblings(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Vector{PhyNode},)</code></pre>
+
+
+<p>Get the siblings of a node. Included in output is the input node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get siblings for.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L311">Bio/src/phylo/nodes.jl:311</a></p>
+<hr />
+<h4 id="terminaldescendentsxbiophylophynode">terminaldescendents(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Get the terminal descendents of a node. i.e. Nodes that are leaves, which have the input node as an ancestor.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get ther terminal descendents of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/cfa79f96fb71ea6b394ff47e77e9a8a14708cb45/src/phylo/nodes.jl#L459">Bio/src/phylo/nodes.jl:459</a></p>
+<h2 id="exported_1">Exported</h2>
+<hr />
+<h4 id="countchildrenxbiophylophynode_1">countchildren(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Int,)</code></pre>
+
+
+<p>Count the number of children of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to count the children of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L422">Bio/src/phylo/nodes.jl:422</a></p>
+<hr />
+<h4 id="generateindextreebiophylophylogeny">generateindex(tree::Bio.Phylo.Phylogeny)</h4>
+<p>Generate an index mapping names to nodes</p>
+<p><strong>Parameters:</strong>
+* <code>tree</code>: The Phylogeny to index.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L359">Bio/src/phylo/phylogeny.jl:359</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childbiophylophynode_1">graft!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<p>Graft a node onto another node, create a parent-child relationship between them.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>child</code>:  The PhyNode to add as a child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L606">Bio/src/phylo/nodes.jl:606</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childbiophylophynode-branchlengthfloat64_1">graft!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode, branchlength::Float64)</h4>
+<p>Graft a node onto another node, create a parent-child relationship between them, and associatiing a branch length with the relationship.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>:       The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>child</code>:        The PhyNode to add as a child.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length between parent and child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L627">Bio/src/phylo/nodes.jl:627</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childbiophylophylogeny">graft!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.Phylogeny)</h4>
+<p>Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
+This function sets the root of the phylogeny object to an empty node, as the root, and so the entire structure of the tree,
+has been moved to the tree containing the specified parent PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>parent</code>: The PhyNode to add the root of phylogeny too.</li>
+<li><code>child</code>:  The Phylogeny for which the root is to be attached to the input parent PhyNode.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L485">Bio/src/phylo/phylogeny.jl:485</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childbiophylophylogeny-blfloat64">graft!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.Phylogeny, bl::Float64)</h4>
+<p>Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.</p>
+<p><strong>Parameters:</strong>
+<em> <code>parent</code>: The PhyNode to add the root of phylogeny too.
+</em> <code>child</code>:  The Phylogeny for which the root is to be attached to the input parent PhyNode.
+* <code>bl</code>:     Branch length connecting the parent node to the grafted phylogeny.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L498">Bio/src/phylo/phylogeny.jl:498</a></p>
+<hr />
+<h4 id="graftparentbiophylophynode-childrenarraybiophylophynode-1_1">graft!(parent::Bio.Phylo.PhyNode, children::Array{Bio.Phylo.PhyNode, 1})</h4>
+<p>Graft one or more nodes onto another node, create a parent-child relationship between each of the grafted nodes and the node they are grafted onto.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>:   The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>children</code>: The array of PhyNodes to add as a child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L642">Bio/src/phylo/nodes.jl:642</a></p>
+<hr />
+<h4 id="haschildrenxbiophylophynode_1">haschildren(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node has children.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L225">Bio/src/phylo/nodes.jl:225</a></p>
+<hr />
+<h4 id="hasextensionsxbiophylophynode_1">hasextensions(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node has extensions.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L255">Bio/src/phylo/nodes.jl:255</a></p>
+<hr />
+<h4 id="hasparentxbiophylophynode_1">hasparent(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node has a parent.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L283">Bio/src/phylo/nodes.jl:283</a></p>
+<hr />
+<h4 id="isintreetreebiophylophylogeny-cladebiophylophynode">isintree(tree::Bio.Phylo.Phylogeny, clade::Bio.Phylo.PhyNode)</h4>
+<p>Test whether a given node is in a given tree.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>:   The Phylogeny to check.
+</em> <code>clade</code>:  The PhyNode to check.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L110">Bio/src/phylo/phylogeny.jl:110</a></p>
+<hr />
+<h4 id="isleafxbiophylophynode_1">isleaf(x::Bio.Phylo.PhyNode)</h4>
+<p>func_name(args...) -&gt; (Bool,)</p>
+<p>Test whether a node is a leaf.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L211">Bio/src/phylo/nodes.jl:211</a></p>
+<hr />
+<h4 id="ispreterminalxbiophylophynode_1">ispreterminal(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is preterminal i.e. It's children are all leaves.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L390">Bio/src/phylo/nodes.jl:390</a></p>
+<hr />
+<h4 id="isrerootablexbiophylophylogeny">isrerootable(x::Bio.Phylo.Phylogeny)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a Phylogeny is re-rootable.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The Phylogeny to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L87">Bio/src/phylo/phylogeny.jl:87</a></p>
+<hr />
+<h4 id="isrootxbiophylophynode_1">isroot(x::Bio.Phylo.PhyNode)</h4>
+<p>Test whether a node is the root node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L338">Bio/src/phylo/nodes.jl:338</a></p>
+<hr />
+<h4 id="isrootedxbiophylophylogeny">isrooted(x::Bio.Phylo.Phylogeny)</h4>
+<p>Test whether a Phylogeny is rooted.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The Phylogeny to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L73">Bio/src/phylo/phylogeny.jl:73</a></p>
+<hr />
+<h4 id="issemipreterminalxbiophylophynode_1">issemipreterminal(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is semi-preterminal i.e. Some of it's children are leaves, but not all are.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L407">Bio/src/phylo/nodes.jl:407</a></p>
+<hr />
+<h4 id="parentisselfxbiophylophynode_1">parentisself(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is its own parent. See PhyNode().</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L269">Bio/src/phylo/nodes.jl:269</a></p>
+<hr />
+<h4 id="pathbetweentreebiophylophylogeny-n1biophylophynode-n2biophylophynode">pathbetween(tree::Bio.Phylo.Phylogeny, n1::Bio.Phylo.PhyNode, n2::Bio.Phylo.PhyNode)</h4>
+<p>Find the shortest path between two nodes in a tree.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The Phylogeny to search in .
+</em> <code>n1</code>:   The first node.
+* <code>n2</code>:   The second node.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L379">Bio/src/phylo/phylogeny.jl:379</a></p>
+<hr />
+<h4 id="prunexbiophylophynode_1">prune!(x::Bio.Phylo.PhyNode)</h4>
+<p>Destroy the relationship between a PhyNode <code>x</code> and its parent, returning the PhyNode.</p>
+<p>This method cleanly removes the PhyNode <code>x</code> from its parent's <code>children</code> array, and removes the <code>parent</code> reference from the PhyNode <code>x</code>. All other fields of the <code>child</code> are left intact.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode prune from its parent.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L658">Bio/src/phylo/nodes.jl:658</a></p>
+<hr />
+<h4 id="pruneregraftprunebiophylophynode-grafttobiophylophynode_1">pruneregraft!(prune::Bio.Phylo.PhyNode, graftto::Bio.Phylo.PhyNode)</h4>
+<p>Prune a PhyNode from its parent and graft it to another parent.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>prune</code>:    The PhyNode to remove from its parent.</p>
+</li>
+<li>
+<p><code>graftto</code>:  The PhyNode to become the new parent of <code>prune</code>.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L678">Bio/src/phylo/nodes.jl:678</a></p>
+<hr />
+<h4 id="pruneregraftprunebiophylophynode-grafttobiophylophynode-branchlengthfloat64_1">pruneregraft!(prune::Bio.Phylo.PhyNode, graftto::Bio.Phylo.PhyNode, branchlength::Float64)</h4>
+<p>Prune a PhyNode from its parent and graft it to another parent, setting the branch length.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>prune</code>:        The PhyNode to remove from its parent.</p>
+</li>
+<li>
+<p><code>graftto</code>:      The PhyNode to become the new parent of <code>prune</code>.</p>
+</li>
+<li>
+<p><code>branchlength</code>: The branch length.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L695">Bio/src/phylo/nodes.jl:695</a></p>
+<hr />
+<h4 id="roottreebiophylophylogeny">root!(tree::Bio.Phylo.Phylogeny)</h4>
+<p>Root a tree at the midpoint between the two most distant taxa.</p>
+<p>This method modifies the <code>tree</code> variable.</p>
+<p><strong>Parameters:</strong>
+* <code>tree</code>: The Phylogeny to root.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L123">Bio/src/phylo/phylogeny.jl:123</a></p>
+<hr />
+<h4 id="roottreebiophylophylogeny-newblfloat64">root!(tree::Bio.Phylo.Phylogeny, newbl::Float64)</h4>
+<p>Root a tree at the midpoint between the two most distant taxa.</p>
+<p>This method modifies the <code>tree</code> variable.</p>
+<p><strong>Parameters:</strong>
+* <code>tree</code>: The Phylogeny to root.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L123">Bio/src/phylo/phylogeny.jl:123</a></p>
+<hr />
+<h4 id="roottreebiophylophylogeny-outgrouparraybiophylophynode-1">root!(tree::Bio.Phylo.Phylogeny, outgroup::Array{Bio.Phylo.PhyNode, 1})</h4>
+<p>Root a tree using a given array of nodes as the outgroup, and optionally setting the branch length.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The Phylogeny to root.
+</em> <code>outgroup</code>: An array of PhyNodes to use as outgroup.
+* <code>newbl</code>: The new branch length (optional).</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L196">Bio/src/phylo/phylogeny.jl:196</a></p>
+<hr />
+<h4 id="roottreebiophylophylogeny-outgrouparraybiophylophynode-1-newblfloat64">root!(tree::Bio.Phylo.Phylogeny, outgroup::Array{Bio.Phylo.PhyNode, 1}, newbl::Float64)</h4>
+<p>Root a tree using a given array of nodes as the outgroup, and optionally setting the branch length.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The Phylogeny to root.
+</em> <code>outgroup</code>: An array of PhyNodes to use as outgroup.
+* <code>newbl</code>: The new branch length (optional).</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L196">Bio/src/phylo/phylogeny.jl:196</a></p>
+<hr />
+<h4 id="roottreebiophylophylogeny-outgroupbiophylophynode">root!(tree::Bio.Phylo.Phylogeny, outgroup::Bio.Phylo.PhyNode)</h4>
+<p>Root a tree using a given node as the outgroup, and optionally setting the branch length,</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>:     The Phylogeny to root.
+</em> <code>outgroup</code>: A PhyNode to use as outgroup.
+* <code>newbl</code>:    The new branch length (optional).</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L211">Bio/src/phylo/phylogeny.jl:211</a></p>
+<hr />
+<h4 id="roottreebiophylophylogeny-outgroupbiophylophynode-newblfloat64">root!(tree::Bio.Phylo.Phylogeny, outgroup::Bio.Phylo.PhyNode, newbl::Float64)</h4>
+<p>Root a tree using a given node as the outgroup, and optionally setting the branch length,</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>:     The Phylogeny to root.
+</em> <code>outgroup</code>: A PhyNode to use as outgroup.
+* <code>newbl</code>:    The new branch length (optional).</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L211">Bio/src/phylo/phylogeny.jl:211</a></p>
+<hr />
+<h4 id="biophylophyextensiont_1">Bio.Phylo.PhyExtension{T}</h4>
+<p>PhyExtension allows defining arbitrary metadata to annotate nodes.</p>
+<p>This allows the PhyNode type to support any phylogenetic tree format 
+that includes annotations (e.g. PhyloXML, NeXML), and allows programmatic 
+extension of nodes with annotations.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L9">Bio/src/phylo/nodes.jl:9</a></p>
+<hr />
+<h4 id="biophylophynode_1">Bio.Phylo.PhyNode</h4>
+<p>PhyNode represents a node in a phylogenetic tree.</p>
+<p>A node can have:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>branchlength</code></li>
+<li>one or more <code>extensions</code></li>
+<li>a reference to its <code>parent</code> PhyNode</li>
+<li>reference to one or more <code>children</code></li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L25">Bio/src/phylo/nodes.jl:25</a></p>
+<hr />
+<h4 id="biophylophylogeny">Bio.Phylo.Phylogeny</h4>
+<p>Phylogeny represents a phylogenetic tree.</p>
+<p>A tree can have:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>root</code></li>
+<li><code>rooted</code></li>
+<li><code>rerootable</code></li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L11">Bio/src/phylo/phylogeny.jl:11</a></p>
+<hr />
+<h4 id="biophylophylogenyiterator">Bio.Phylo.PhylogenyIterator</h4>
+<p>PhylogenyIterator is an abstract type that defines a family of iterators
+for traversing trees in various ways, including BreadthFirst, and DepthFirst, or from a tip to a root.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/iteration.jl#L9">Bio/src/phylo/iteration.jl:9</a></p>
+<h2 id="internal_1">Internal</h2>
+<hr />
+<h4 id="addchild_unsafeparentbiophylophynode-childbiophylophynode_1">addchild_unsafe!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Add a node to the <code>children</code> array of another node.</p>
+<p><strong>Warning:</strong> this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use <code>graft!()</code>, which does ensure the two-way link is built.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: The PhyNode to add a child to.</p>
+</li>
+<li>
+<p><code>child</code>:  The PhyNode to add as a child.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L573">Bio/src/phylo/nodes.jl:573</a></p>
+<hr />
+<h4 id="blisknownxbiophylophynode_1">blisknown(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether the branchlength in the node is known (i.e. is not -1.0).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>:  The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L93">Bio/src/phylo/nodes.jl:93</a></p>
+<hr />
+<h4 id="branchlengthxbiophylophynode-blfloat64_1">branchlength!(x::Bio.Phylo.PhyNode, bl::Float64)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Set the branch length of a PhyNode.</p>
+<p><strong>This method modifies the PhyNode.</strong></p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:  The PhyNode to set the branchlength of.</p>
+</li>
+<li>
+<p><code>bl</code>: The branch length to give the PhyNode. Either a Float64 value or <code>nothing</code>.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L518">Bio/src/phylo/nodes.jl:518</a></p>
+<hr />
+<h4 id="branchlengthxbiophylophynode_1">branchlength(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Get the branch length of a PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the branch length of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L197">Bio/src/phylo/nodes.jl:197</a></p>
+<hr />
+<h4 id="calltypebiophylobreadthfirst-xbiophylophylogeny">call(::Type{Bio.Phylo.BreadthFirst}, x::Bio.Phylo.Phylogeny)</h4>
+<p>Construct a BreadthFirst iterator for a tree.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/iteration.jl#L24">Bio/src/phylo/iteration.jl:24</a></p>
+<hr />
+<h4 id="calltypebiophylophylogeny-nameabstractstring-rootbiophylophynode-rootedbool-rerootablebool">call(::Type{Bio.Phylo.Phylogeny}, name::AbstractString, root::Bio.Phylo.PhyNode, rooted::Bool, rerootable::Bool)</h4>
+<p>Create a Phylogeny with a name, root node, and set whether it is rooted and whether
+it is re-rootable.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>name</code>:       The name of the tree.</p>
+</li>
+<li>
+<p><code>root</code>:       The root node.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the tree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the tree is re-rootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L34">Bio/src/phylo/phylogeny.jl:34</a></p>
+<hr />
+<h4 id="childrenxbiophylophynode_1">children(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Vector{PhyNode},)</code></pre>
+
+
+<p>Get the children of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get children for.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L297">Bio/src/phylo/nodes.jl:297</a></p>
+<hr />
+<h4 id="confidencexbiophylophynode-conffloat64_1">confidence!(x::Bio.Phylo.PhyNode, conf::Float64)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Set the confidence of the node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The PhyNode to set the confidence of.</p>
+</li>
+<li>
+<p><code>conf</code>: The value of the confidence to be set.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L137">Bio/src/phylo/nodes.jl:137</a></p>
+<hr />
+<h4 id="confidencexbiophylophynode-confvoid_1">confidence!(x::Bio.Phylo.PhyNode, conf::Void)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Set the confidence of the node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The PhyNode to set the confidence of.</p>
+</li>
+<li>
+<p><code>conf</code>: The value of the confidence to be set.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L155">Bio/src/phylo/nodes.jl:155</a></p>
+<hr />
+<h4 id="confidencexbiophylophynode_1">confidence(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Float64,)</code></pre>
+
+
+<p>Get the confidence of the node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>:  The PhyNode to return the confidence of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L121">Bio/src/phylo/nodes.jl:121</a></p>
+<hr />
+<h4 id="confisknownxbiophylophynode_1">confisknown(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether the confidence in the node is known (i.e. is not -1.0).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>:  The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L107">Bio/src/phylo/nodes.jl:107</a></p>
+<hr />
+<h4 id="deletexbiophylophynode_1">delete!(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Delete a node, destroying the relationships between it and its parent, and it and its children. The children of the node become the children of the node's former parent.</p>
+<p>Returns the deleted node.</p>
+<p><strong>Parameter:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to delete.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L712">Bio/src/phylo/nodes.jl:712</a></p>
+<hr />
+<h4 id="depthtreebiophylophylogeny">depth(tree::Bio.Phylo.Phylogeny)</h4>
+<p>Find the depth of each node from the root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>tree</code>: The Phylogeny to measure.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L463">Bio/src/phylo/phylogeny.jl:463</a></p>
+<hr />
+<h4 id="depthtreebiophylophylogeny-n1biophylophynode-n2biophylophynode">depth(tree::Bio.Phylo.Phylogeny, n1::Bio.Phylo.PhyNode, n2::Bio.Phylo.PhyNode)</h4>
+<p>Find the number of edges in the shortest path between two nodes in a tree.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The Phylogeny to search in.
+</em> <code>n1</code>: The first node.
+* <code>n2</code>: The second node.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L420">Bio/src/phylo/phylogeny.jl:420</a></p>
+<hr />
+<h4 id="descendentsxbiophylophynode_1">descendents(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Vector{PhyNode},)</code></pre>
+
+
+<p>Get the descendents of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the descendents of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L437">Bio/src/phylo/nodes.jl:437</a></p>
+<hr />
+<h4 id="detachxbiophylophynode_1">detach!(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L736">Bio/src/phylo/nodes.jl:736</a></p>
+<hr />
+<h4 id="detachxbiophylophynode-nameabstractstring_1">detach!(x::Bio.Phylo.PhyNode, name::AbstractString)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L736">Bio/src/phylo/nodes.jl:736</a></p>
+<hr />
+<h4 id="detachxbiophylophynode-nameabstractstring-rootedbool_1">detach!(x::Bio.Phylo.PhyNode, name::AbstractString, rooted::Bool)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L736">Bio/src/phylo/nodes.jl:736</a></p>
+<hr />
+<h4 id="detachxbiophylophynode-nameabstractstring-rootedbool-rerootablebool_1">detach!(x::Bio.Phylo.PhyNode, name::AbstractString, rooted::Bool, rerootable::Bool)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Detach a subtree at a given node.</p>
+<p>Returns a new Phylogeny with the detached node as root.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:          The PhyNode to detach.</p>
+</li>
+<li>
+<p><code>name</code>:       The name of the new Phylogeny.</p>
+</li>
+<li>
+<p><code>rooted</code>:     Whether the detached subtree is rooted.</p>
+</li>
+<li>
+<p><code>rerootable</code>: Whether the detached subtree is rerootable.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L736">Bio/src/phylo/nodes.jl:736</a></p>
+<hr />
+<h4 id="distancetreebiophylophylogeny">distance(tree::Bio.Phylo.Phylogeny)</h4>
+<p>Find the distance of each node from the root.</p>
+<p><strong>Parameters:</strong>
+* <code>tree</code>: The Phylogeny to measure.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L443">Bio/src/phylo/phylogeny.jl:443</a></p>
+<hr />
+<h4 id="distancetreebiophylophylogeny-n1biophylophynode">distance(tree::Bio.Phylo.Phylogeny, n1::Bio.Phylo.PhyNode)</h4>
+<p>Find the distance between a node and the root of a tree.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The Phylogeny to search in.
+</em> <code>n1</code>:   The node.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L432">Bio/src/phylo/phylogeny.jl:432</a></p>
+<hr />
+<h4 id="distancetreebiophylophylogeny-n1biophylophynode-n2biophylophynode">distance(tree::Bio.Phylo.Phylogeny, n1::Bio.Phylo.PhyNode, n2::Bio.Phylo.PhyNode)</h4>
+<p>Find the distance between two nodes in a tree.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The Phylogeny to search in.
+</em> <code>n1</code>:   The first node.
+* <code>n2</code>:   The second node.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L399">Bio/src/phylo/phylogeny.jl:399</a></p>
+<hr />
+<h4 id="distanceofxbiophylophynode_1">distanceof(x::Bio.Phylo.PhyNode)</h4>
+<p>Find the distance of a node from its parent. This is different from branch length, because it handles the situation where branch length is unknown. It is only used when the distances between nodes are calculated.</p>
+<p>The method is necessary because unknown branch lengths are represented as -1.0.
+If all branch lengths are unknown, the tree is a cladogram, and it is still useful to be able to compare relative distances. If individual branch lengths are unknown, they should not affect the calculation of path distances. To satisfy both of these cases, we use machine epsilon as the minimal distance.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: A PhyNode.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L771">Bio/src/phylo/nodes.jl:771</a></p>
+<hr />
+<h4 id="findmidpointtreebiophylophylogeny">findmidpoint(tree::Bio.Phylo.Phylogeny)</h4>
+<p>Find the midpoint of a tree.</p>
+<p><strong>Parameters:</strong>
+* <code>tree</code>: The Phylogeny to find the midpoint of.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L170">Bio/src/phylo/phylogeny.jl:170</a></p>
+<hr />
+<h4 id="furthestfromroottreebiophylophylogeny">furthestfromroot(tree::Bio.Phylo.Phylogeny)</h4>
+<p>Find the node that is furthest from the root of a tree.</p>
+<p><strong>Parameters:</strong>
+* <code>tree</code> The Phylogeny to search.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L147">Bio/src/phylo/phylogeny.jl:147</a></p>
+<hr />
+<h4 id="furthestleaftreebiophylophylogeny-nodebiophylophynode">furthestleaf(tree::Bio.Phylo.Phylogeny, node::Bio.Phylo.PhyNode)</h4>
+<p>Find the leaf that is furthest from a given node in a tree.</p>
+<p><strong>Parameters:</strong>
+  * <code>tree</code>: The Phylogeny containing the nodes.
+  * <code>node</code>: The PhyNode find the furthest node from.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L159">Bio/src/phylo/phylogeny.jl:159</a></p>
+<hr />
+<h4 id="getindextreebiophylophylogeny-nameabstractstring">getindex(tree::Bio.Phylo.Phylogeny, name::AbstractString)</h4>
+<p>Get one node by name.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>:  The Phylogeny to search.
+</em> <code>names</code>: The name of the nodes to get.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L344">Bio/src/phylo/phylogeny.jl:344</a></p>
+<hr />
+<h4 id="getindextreebiophylophylogeny-namesarrayabstractstring-1">getindex(tree::Bio.Phylo.Phylogeny, names::Array{AbstractString, 1})</h4>
+<p>Get one or more nodes by name.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>:  The Phylogeny to search.
+</em> <code>names</code>: The names of the nodes to get.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L333">Bio/src/phylo/phylogeny.jl:333</a></p>
+<hr />
+<h4 id="haschildparentbiophylophynode-childbiophylophynode_1">haschild(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is the parent of another specific node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: The potential parent PhyNode to test.</p>
+</li>
+<li>
+<p><code>child</code>:  The potential child PhyNode to test.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L241">Bio/src/phylo/nodes.jl:241</a></p>
+<hr />
+<h4 id="isancestralposancbiophylophynode-nodesarraybiophylophynode-1_1">isancestral(posanc::Bio.Phylo.PhyNode, nodes::Array{Bio.Phylo.PhyNode, 1})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is ancesteral to one or more other nodes.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>posanc</code>: The PhyNode to test.</p>
+</li>
+<li>
+<p><code>nodes</code>: An array of <code>PhyNode</code>s that the test node must be ancestral to.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L467">Bio/src/phylo/nodes.jl:467</a></p>
+<hr />
+<h4 id="isemptyxbiophylophynode_1">isempty(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is empty.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L169">Bio/src/phylo/nodes.jl:169</a></p>
+<hr />
+<h4 id="isemptyxbiophylophylogeny">isempty(x::Bio.Phylo.Phylogeny)</h4>
+<p>Test whether a phylogeny is empty.</p>
+<p><strong>Parameters:</strong>
+* <code>x</code>: The Phylogeny to test.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L49">Bio/src/phylo/phylogeny.jl:49</a></p>
+<hr />
+<h4 id="isequalxbiophylophynode-ybiophylophynode_1">isequal(x::Bio.Phylo.PhyNode, y::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether two PhyNodes are equal. Specifically, test whether all three of <code>branchlength</code>, <code>name</code> and <code>extensions</code> are equal.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>: The left PhyNode to compare.</p>
+</li>
+<li>
+<p><code>y</code>: The right PhyNode to compare.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L753">Bio/src/phylo/nodes.jl:753</a></p>
+<hr />
+<h4 id="isinternalxbiophylophynode_1">isinternal(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is internal, i.e. has a parent and one or more children.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L376">Bio/src/phylo/nodes.jl:376</a></p>
+<hr />
+<h4 id="islinkedxbiophylophynode_1">islinked(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Test whether a node is linked, i.e. has one or more children and/or a parent.
+<strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L362">Bio/src/phylo/nodes.jl:362</a></p>
+<hr />
+<h4 id="isunlinkedxbiophylophynode_1">isunlinked(x::Bio.Phylo.PhyNode)</h4>
+<p>Test whether a node is unlinked, i.e. has no children and no parent.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to test.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L349">Bio/src/phylo/nodes.jl:349</a></p>
+<hr />
+<h4 id="maxindictdictionarydictk-v">maxindict(dictionary::Dict{K, V})</h4>
+<p>Find the maximum branch length in a dictionary mapping nodes to their branch lengths.</p>
+<p><strong>Parameters:</strong>
+* <code>dict</code>: The dictionary.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L134">Bio/src/phylo/phylogeny.jl:134</a></p>
+<hr />
+<h4 id="mrcanodesarraybiophylophynode-1_1">mrca(nodes::Array{Bio.Phylo.PhyNode, 1})</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Get the most recent common ancestor of an array of nodes.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>nodes</code>:  An array of <code>PhyNode</code>s to find the most common ancestor of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L482">Bio/src/phylo/nodes.jl:482</a></p>
+<hr />
+<h4 id="namexbiophylophynode-nameabstractstring_1">name!(x::Bio.Phylo.PhyNode, name::AbstractString)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Set the name of a PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The PhyNode to set the name of.</p>
+</li>
+<li>
+<p><code>name</code>: The name to give the PhyNode.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L500">Bio/src/phylo/nodes.jl:500</a></p>
+<hr />
+<h4 id="namexbiophylophylogeny-nameabstractstring">name!(x::Bio.Phylo.Phylogeny, name::AbstractString)</h4>
+<p>Set the name of a Phylogeny</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>x</code>:    The Phylogeny to set the name of.</p>
+</li>
+<li>
+<p><code>name</code>: The name to set.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L62">Bio/src/phylo/phylogeny.jl:62</a></p>
+<hr />
+<h4 id="namexbiophylophynode_1">name(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Get the name of a PhyNode.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the name of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L183">Bio/src/phylo/nodes.jl:183</a></p>
+<hr />
+<h4 id="parentxbiophylophynode_1">parent(x::Bio.Phylo.PhyNode)</h4>
+<p>Get the parent of a node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get the parent of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L324">Bio/src/phylo/nodes.jl:324</a></p>
+<hr />
+<h4 id="parent_unsafeparentbiophylophynode-childbiophylophynode_1">parent_unsafe!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Set the parent of a node.</p>
+<p><strong>Warning:</strong> this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use <code>graft!()</code>, which does ensure the two-way link is built.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>:  The PhyNode to set as parent.</p>
+</li>
+<li>
+<p><code>child</code>:   The PhyNode to set the parent of.</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L554">Bio/src/phylo/nodes.jl:554</a></p>
+<hr />
+<h4 id="removechild_unsafeparentbiophylophynode-childbiophylophynode_1">removechild_unsafe!(parent::Bio.Phylo.PhyNode, child::Bio.Phylo.PhyNode)</h4>
+<p>Remove a node from the <code>children</code> array of another node.</p>
+<p><strong>Warning:</strong> this method is considered unsafe because it does not destroy any two-way link between parent and child. If you want to remove a child from a node, you should use <code>prune!()</code>, which does ensure the two-way link is destroyed.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>
+<p><code>parent</code>: </p>
+</li>
+<li>
+<p><code>child</code>:</p>
+</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L592">Bio/src/phylo/nodes.jl:592</a></p>
+<hr />
+<h4 id="removeparent_unsafexbiophylophynode_1">removeparent_unsafe!(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Remove the parent of a <code>PhyNode</code> (thus setting the parent property to be self-referential).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to remove the parent of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L536">Bio/src/phylo/nodes.jl:536</a></p>
+<hr />
+<h4 id="rerootablexbiophylophylogeny-rerootablebool">rerootable!(x::Bio.Phylo.Phylogeny, rerootable::Bool)</h4>
+<p>Set whether a tree is re-rootable.</p>
+<p><strong>Parameters:</strong>
+<em> <code>x</code>:          The Phylogeny.
+</em> <code>rerootable</code>: Whether the Phylogeny is re-rootable.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L312">Bio/src/phylo/phylogeny.jl:312</a></p>
+<hr />
+<h4 id="rootxbiophylophylogeny">root(x::Bio.Phylo.Phylogeny)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (PhyNode,)</code></pre>
+
+
+<p>Get the root node of a Phylogeny.</p>
+<p><strong>Parameters:</strong>
+* <code>x</code>: The Phylogeny to get the root of.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L99">Bio/src/phylo/phylogeny.jl:99</a></p>
+<hr />
+<h4 id="root_unsafetreebiophylophylogeny-nodebiophylophynode">root_unsafe!(tree::Bio.Phylo.Phylogeny, node::Bio.Phylo.PhyNode)</h4>
+<p>Set the root field of a Phylogeny variable.</p>
+<p><strong>warning</strong> This is different from the other <code>root!</code> methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
+rather, this function simply alters the root field. Generally this should not be used, except as a step in other methods. Careless use of this could result in loosing part of a tree for instance.</p>
+<p><strong>Parameters:</strong>
+<em> <code>tree</code>: The phylogeny for which the root is to be set.
+</em> <code>node</code>: The PhyNode that is to become the root of the tree.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L513">Bio/src/phylo/phylogeny.jl:513</a></p>
+<hr />
+<h4 id="siblingsxbiophylophynode_1">siblings(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Vector{PhyNode},)</code></pre>
+
+
+<p>Get the siblings of a node. Included in output is the input node.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get siblings for.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L311">Bio/src/phylo/nodes.jl:311</a></p>
+<hr />
+<h4 id="terminaldescendentsxbiophylophynode_1">terminaldescendents(x::Bio.Phylo.PhyNode)</h4>
+<pre class="codehilite"><code>func_name(args...) -&gt; (Bool,)</code></pre>
+
+
+<p>Get the terminal descendents of a node. i.e. Nodes that are leaves, which have the input node as an ancestor.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>x</code>: The PhyNode to get ther terminal descendents of.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/nodes.jl#L451">Bio/src/phylo/nodes.jl:451</a></p>
+<hr />
+<h4 id="terminalsxbiophylophylogeny">terminals(x::Bio.Phylo.Phylogeny)</h4>
+<p>Get the terminal nodes of a phylogeny.</p>
+<p><strong>Parameters:</strong>
+* <code>x</code>: The Phylogeny.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L322">Bio/src/phylo/phylogeny.jl:322</a></p>
+<hr />
+<h4 id="unrootxbiophylophylogeny">unroot!(x::Bio.Phylo.Phylogeny)</h4>
+<p>Unroot a tree.</p>
+<p><strong>Parameters:</strong>
+* <code>x</code>: The Phylogeny to unroot.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/Ward9250/Bio.jl/tree/e3a4bc322041ddfa80456a49e6e6f2d8806df976/src/phylo/phylogeny.jl#L301">Bio/src/phylo/phylogeny.jl:301</a></p>
+</div>
+            
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>

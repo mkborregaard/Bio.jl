@@ -2,6 +2,8 @@
 order: 0
 title: Introduction
 ...
+# Bio
+BioJulia provides biological analysis tools for the [Julia language](http://julialang.org).
 
 Bio.jl is a general purpose bioinformatics library for Julia. It includes highly
 efficient algorithms and data structures for working with genomic,
@@ -15,6 +17,7 @@ Pkg.add("Bio")
 ```
 
 BioJulia provides biological tools for the [Julia language](http://julialang.org).
+
 
 ## Submodules
 

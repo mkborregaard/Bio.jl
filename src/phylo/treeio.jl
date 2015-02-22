@@ -43,6 +43,8 @@ function readphyloxml(file::String, Extensions...)
   error("No Trees found in file...")
 end
 
+
+
 function readnewick(file::String)
   instream = open(expanduser(file))
   instring = readall(instream)
@@ -58,9 +60,28 @@ function readnewick(file::String)
   error("No phylogenies detected in the file.")
 end
 
+@doc """
+Tokenizer type that is responsible for splitting a string into token according to a
+regex specification. The regex specification is stored in `dict`.
+
+**Fields:**
+
+* `dict`:      A Dictionary of String keys and Regex values.
+* `tokenizer`: A regex that is generated from the specification.
+""" ->
 type Tokenizer
   dict::Dict{String, Regex}
   tokenizer::Regex
+  """
+  Inner constructor for Tokenizers. Accepts a vector of String, Regex
+  tuples that makes the token specifications.
+
+  **Parameters:**
+
+  * `x`: An array of ASCIIString, Regex tuples. 
+
+  **Returns:** Instance of `Tokenizer`
+  """
   function Tokenizer(x::Array{(ASCIIString, Regex), 1})
     dictvalues = [i[2] for i in x]
     stringvalues = String[i.pattern for i in dictvalues]
@@ -70,20 +91,57 @@ type Tokenizer
   end
 end
 
+@doc """
+Break a string into a series of tokens.
+
+**Parameters:**
+
+* `s`: The input `String` to be broken into tokens.
+* `t`: The `Tokenizer` to use when forming tokens.
+
+**Returns:** An array of `String` tokens.
+""" -> 
 function tokenizestring(s::String, t::Tokenizer)
   return matchall(t.tokenizer, s)
 end
 
+@doc """
+Makes a new clade when building a tree from a newick string.
+This method of the function accepts no parameters and returns an empty `PhyNode`.
+""" ->
 function makenewclade()
   return PhyNode()
 end
 
+@doc """
+Makes a new clade when building a tree from a newick string.
+
+This method is used in the `parsenewick` method to take car of linking a 
+newly created node to its parent on creation.
+
+**Parameters:**
+
+* `parent`: The parent of the to-be-created PhyNode.
+
+**Returns:** A reference to the newly created `PhyNode`.
+""" ->
 function makenewclade(parent::PhyNode)
   newclade = PhyNode()
   graft!(parent, newclade)
   return newclade
 end
 
+@doc """
+Finishes the processing of the current clade in the newick file.
+
+**Parameters:**
+
+* `node`:            The `PhyNode` to finish processing.
+* `valuesareconf`:   `Bool` that specifies whether the values of the clade are confidence values.
+* `commentsareconf`: `Bool` that specifies if comments are confidence values.
+
+**Returns:** The parent `PhyNode` of the `PhyNode` provided as the `node` parameter.
+""" ->
 function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
   # Check if the node has a name, and if values are not confidence, and there are no conf 
   # values in values or comments, and confience is not known, 
@@ -101,6 +159,10 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
   end
 end
 
+@doc """
+Parses confidence values from string - if this is not possible,
+-1.0 is returned, which is the value for 'unknown' in `Phylo`.
+""" ->
 function parseconfidence(text::String)
   try
     return float(text)
@@ -109,12 +171,37 @@ function parseconfidence(text::String)
   end
 end
 
+@doc """
+A simple Exception type that is thrown by newick related functions when an error occurs.
+
+**Fields:**
+
+* `msg`: A `String` containing the message to print to screen with `showerror`. 
+""" ->
 type NewickException <: Exception
   msg::String
 end
 
+@doc """ 
+Basic function that prints NewickExceptions to screen. 
+""" ->
 Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
 
+@doc """
+Build a `Phylogeny` from a String formatted as a Newick string.
+
+Newick strings are of the form `(((A,B),C),D);`.
+In such strings, parentheses delimit clades, and text delimits taxa names. Somtimes accompanied
+by a floating point value that may be a branch length, or clade support value.
+
+**Paramerters:**
+
+* `newickstring`: A newick formatted `String`.
+* `commentsareconf`: `Bool` value indicating if comments provide clade support values.
+* `valuessareconf`: `Bool` value indicating if values (usually branchlengths) provide clade support values.
+
+**Returns:** A `Phylogeny` constructed from the string.
+""" ->
 function parsenewick(newickstring::String, commentsareconf = false, valuesareconf = false)
   # Create a definition of the tokens that appear in a newick string, and the meanings of them.
   definition = [ ("open paren", r"\("), ("close paren", r"\)"),
@@ -136,7 +223,6 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
   state = start(tokens)
   while !done(tokens, state)
   token, state = next(tokens, state)
-  println("Current token is: $(token)")
     if startswith(token, "\'")
       # This is a quoted label, characters need to be added to the clade name.
       name!(current, name(current) * token[2:end])
@@ -170,7 +256,6 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       current = parent
       enteringbl = false
       rightpcount += 1
-      println("RightPCount: $(rightpcount)")
     elseif token == ";"
       break
     elseif startswith(token, ":")
@@ -189,8 +274,6 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       name!(current, token)
     end
   end
-  println(leftpcount)
-  println(rightpcount)
   if leftpcount != rightpcount
     throw(NewickException("The number of left and right parentheses do not match."))
   end
