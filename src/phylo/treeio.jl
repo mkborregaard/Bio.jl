@@ -45,6 +45,10 @@ end
 
 
 
+
+
+### Newick Parsing and Lexing functionality.
+
 function readnewick(file::String)
   instream = open(expanduser(file))
   instring = readall(instream)
@@ -290,6 +294,57 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
   return Phylogeny("", root, true, true)
 end
 
+
+function informationmaker(plain::Bool, blconfidence::Bool, blonly::Bool,
+  maximumconf::Float64)
+  if plain
+    #If plain is selected, a plain newick string is to be made
+    makeinfostring(node, terminal = false) = "$(comment(node))"
+  elseif blconfidence
+    # Branchlengths are support values. Therefore you want to ignore 
+    # the actual branchlengths, instead writing out the confidence to the string.
+    function makeinfostring(node, terminal = false)
+      if terminal
+        # Terminal branches by definition, have 100% support as they are what 
+        # is observed in nature.
+        out::String = ":$(maximumconf)$(comment(node))"
+      else
+        out::String = ":$(confidence(node))$(comment(node))"
+      end
+      return out
+    end
+  elseif blonly
+    # The function should ignore confidence and only write branchlength.
+    function makeinfostring(node, terminal = false)
+      return ":$(branchlength(node))$(comment(node))"
+    end
+  else
+    function makeinfostring(node, terminal = false)
+      if terminal || !hasconfidence(node)
+        return ":$(branchlength(node))$(comment(node))"
+      else
+        return "$(confidence(node):$(branchlength(node))$(comment(node)))"
+      end
+    end
+  end
+  return makeinfostring
+end
+
+function newickstring(blconfidence = false, blonly = false, plain = false,
+  plainnewick = true, ladderize = nothing, maximumconf = 1.0, confSF = "1.2f",
+  formatbl = "1.5f")
+  
+  if blconfidence || blonly
+    plain = false
+  end
+
+  infostring = informationmaker(plain, blconfidence, blonly,
+    maximumconf, formatconf, formatbl)
+
+
+
+
+end
 
 
 
