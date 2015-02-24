@@ -61,23 +61,23 @@ when creating PhyNodes:
 * `parent`:       The parent node (optional). Defaults to a self-reference, indicating
                   the node has no parent.
 """
-function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], children::Vector{PhyNode} = PhyNode[], parent = nothing)
-    x = new()
-    name!(x, name)
-    branchlength!(x, branchlength)
-    confidence!(x, confidence)
-    x.extensions = ext
-    if parent != nothing
-      graft!(parent, x)
-    else
-      x.parent = x
-    end
-    x.children = PhyNode[]
-    for child in children
-      graft!(x, child)
-    end
-    return x
-end
+  function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], children::Vector{PhyNode} = PhyNode[], parent = nothing)
+      x = new()
+      name!(x, name)
+      branchlength!(x, branchlength)
+      confidence!(x, confidence)
+      x.extensions = ext
+      if parent != nothing
+        graft!(parent, x)
+      else
+        x.parent = x
+      end
+      x.children = PhyNode[]
+      for child in children
+        graft!(x, child)
+      end
+      return x
+  end
 end
 
 
