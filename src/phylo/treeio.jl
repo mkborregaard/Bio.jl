@@ -234,7 +234,7 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
       name!(current, name(current) * token[2:end])
     elseif startswith(token, "[")
       # This is a comment for the clade.
-      comments[current] = [2:end - 1]
+      comments[current] = [2:end-1]
       if commentsareconf
         confidence!(current, parseconfidence(comments[current]))
       end
