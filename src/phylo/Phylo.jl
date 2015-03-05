@@ -13,7 +13,7 @@ using Base.Intrinsics
 
 using LightXML: XMLElement, get_elements_by_tagname, attribute
 
-import Base: getindex, length, start, next, done, isempty
+import Base: getindex, setindex!, length, start, next, done, isempty, isequal, parent, delete!
 
 import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 

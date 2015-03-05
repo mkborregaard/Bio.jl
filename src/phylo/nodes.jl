@@ -1,15 +1,3 @@
-import Base.delete!, Base.isequal, Base.getindex
-
-@doc """
-PhyExtension allows defining arbitrary metadata to annotate nodes.
-
-This allows the PhyNode type to support any phylogenetic tree format
-that includes annotations (e.g. PhyloXML, NeXML), and allows programmatic
-extension of nodes with annotations.
-""" ->
-type PhyExtension{T}
-  value::T
-end
 
 @doc """
 PhyNode represents a node in a phylogenetic tree.
@@ -18,7 +6,6 @@ A node can have:
 
 - `name`
 - `branchlength`
-- one or more `extensions`
 - a reference to its `parent` PhyNode
 - reference to one or more `children`
 
@@ -27,7 +14,6 @@ type PhyNode
   name::String
   branchlength::Float64
   confidence::Float64
-  extensions::Vector{PhyExtension}
   children::Vector{PhyNode}
   parent::PhyNode
 
@@ -61,7 +47,7 @@ when creating PhyNodes:
 * `parent`:       The parent node (optional). Defaults to a self-reference, indicating
                   the node has no parent.
 """
-  function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, ext::Vector{PhyExtension} = PhyExtension[], children::Vector{PhyNode} = PhyNode[], parent = nothing)
+  function PhyNode(name::String = "", branchlength::Float64 = -1.0, confidence::Float64 = -1.0, children::Vector{PhyNode} = PhyNode[], parent = nothing)
       x = new()
       name!(x, name)
       branchlength!(x, branchlength)
@@ -241,20 +227,6 @@ Test whether a node is the parent of another specific node.
 """ ->
 function haschild(parent::PhyNode, child::PhyNode)
   return in(child, parent.children)
-end
-
-@doc """
-
-    func_name(args...) -> (Bool,)
-
-Test whether a node has extensions.
-
-**Parameters:**
-
-* `x`: The PhyNode to test.
-""" ->
-function hasextensions(x::PhyNode)
-  return length(x.extensions) > 0
 end
 
 @doc """
