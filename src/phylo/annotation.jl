@@ -11,7 +11,7 @@ type TreeAnnotations{T}
   annotations::NodeAnnotations{T}
 end
 
-function TreeAnnotations{T}(x::PhyNode)
+function TreeAnnotations{T}(x::Phylogeny)
   return TreeAnnotations(x, NodeAnnotations{T}())
 end
 
