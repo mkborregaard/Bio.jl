@@ -315,9 +315,9 @@ function informationmaker(plain::Bool, blconfidence::Bool, blonly::Bool,
       if terminal
         # Terminal branches by definition, have 100% support as they are what 
         # is observed in nature.
-        out::String = ":$(maximumconf)$(comment(node))"
+        out = ":$(maximumconf)$(comment(node))"
       else
-        out::String = ":$(confidence(node))$(comment(node))"
+        out = ":$(confidence(node))$(comment(node))"
       end
       return out
     end
