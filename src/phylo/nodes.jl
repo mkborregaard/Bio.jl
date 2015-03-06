@@ -726,8 +726,7 @@ Test whether two PhyNodes are equal. Specifically, test whether all three of `br
 function isequal(x::PhyNode, y::PhyNode)
   bl = x.branchlength == y.branchlength
   n = x.name == y.name
-  exts = x.extensions == y.extensions
-  return all([bl, n, exts])
+  return all([bl, n])
 end
 
 @doc """
