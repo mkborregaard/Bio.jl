@@ -7,7 +7,6 @@ A tree can have:
 - `root`
 - `rooted`
 - `rerootable`
-
 """ ->
 type Phylogeny
   name::String
@@ -23,13 +22,9 @@ Create a Phylogeny with a name, root node, and set whether it is rooted and whet
 it is re-rootable.
 
 **Parameters:**
-
 * `name`:       The name of the tree.
-
 * `root`:       The root node.
-
 * `rooted`:     Whether the tree is rooted.
-
 * `rerootable`: Whether the tree is re-rootable.
 """ ->
 function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
@@ -55,9 +50,7 @@ end
 Set the name of a Phylogeny
 
 **Parameters:**
-
 * `x`:    The Phylogeny to set the name of.
-
 * `name`: The name to set.
 """ ->
 function name!(x::Phylogeny, name::String)
@@ -68,7 +61,6 @@ end
 Test whether a Phylogeny is rooted.
 
 **Parameters:**
-
 * `x`: The Phylogeny to test.
 """ ->
 function isrooted(x::Phylogeny)
@@ -82,7 +74,6 @@ end
 Test whether a Phylogeny is re-rootable.
 
 **Parameters:**
-
 * `x`: The Phylogeny to test.
 """ ->
 function isrerootable(x::Phylogeny)
@@ -90,8 +81,6 @@ function isrerootable(x::Phylogeny)
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
 Get the root node of a Phylogeny.
 
 **Parameters:**
@@ -442,12 +431,11 @@ Find the distance of each node from the root.
 * `tree`: The Phylogeny to measure.
 """ ->
 function distance(tree::Phylogeny)
-  distances = Dict()
-  function updatedistances(node, currentdist)
+  distances::TreeAnnotations{Float64} = TreeAnnotations{Float64}(tree)
+  function updatedistances(node::PhyNode, currentdist::Float64)
     distances[node] = currentdist
     for child in children(node)
-      newdist = currentdist + distanceof(child)
-      updatedistances(child, newdist)
+      updatedistances(child, currentdist + distanceof(child))
     end
   end
   updatedistances(root(tree), distanceof(root(tree)))
@@ -458,12 +446,11 @@ end
 Find the depth of each node from the root.
 
 **Parameters:**
-
 * `tree`: The Phylogeny to measure.
 """ ->
 function depth(tree::Phylogeny)
-  depths = Dict()
-  function updatedepths(node, currentdepth)
+  depths::TreeAnnotations{Int} = TreeAnnotations{Int}(tree)
+  function updatedepths(node::PhyNode, currentdepth::Int)
     depths[node] = currentdepth
     for child in children(node)
       updatedepths(child, currentdepth + 1)
@@ -479,7 +466,6 @@ This function sets the root of the phylogeny object to an empty node, as the roo
 has been moved to the tree containing the specified parent PhyNode.
 
 **Parameters:**
-
 * `parent`: The PhyNode to add the root of phylogeny too.
 * `child`:  The Phylogeny for which the root is to be attached to the input parent PhyNode.
 """ ->
@@ -497,14 +483,14 @@ Graft a Phylogeny to the node of another tree, creates a parent-child relationsh
 * `bl`:     Branch length connecting the parent node to the grafted phylogeny.
 """ ->
 function graft!(parent::PhyNode, child::Phylogeny, bl::Float64)
-  branchlength!(root(children), bl)
+  branchlength!(root(child), bl)
   graft!(parent, child)
 end
 
 @doc """
 Set the root field of a Phylogeny variable.
 
-**warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
+**Warning** This is different from the other `root!` methods, which rearrange the structure of a Phylogeny, rooting it based on an outgroup or midpoint.
 rather, this function simply alters the root field. Generally this should not be used, except as a step in other methods. Careless use of this could result in loosing part of a tree for instance.
 
 **Parameters:**

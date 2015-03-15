@@ -18,9 +18,6 @@ type PhyNode
   parent::PhyNode
 
 """
-
-    func_name(args...) -> (PhyNode,)
-
 Create a PhyNode.
 
 PhyNodes represent nodes in a phylogenetic tree. All arguments are optional
@@ -67,9 +64,6 @@ end
 
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether the branchlength in the node is known (i.e. is not -1.0).
 
 **Parameters:**
@@ -109,9 +103,6 @@ function confidence(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Float64,)
-
 Set the confidence of the node.
 
 **Parameters:**
@@ -125,9 +116,6 @@ function confidence!(x::PhyNode, conf::Float64)
 end
 
 @doc """
-
-    func_name(args...) -> (Float64,)
-
 Set the confidence of the node.
 
 **Parameters:**
@@ -143,9 +131,6 @@ function confidence!(x::PhyNode, conf::Nothing)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is empty.
 
 **Parameters:**
@@ -157,9 +142,6 @@ function isempty(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Get the name of a PhyNode.
 
 **Parameters:**
@@ -171,9 +153,6 @@ function name(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Float64,)
-
 Get the branch length of a PhyNode.
 
 **Parameters:**
@@ -185,9 +164,6 @@ function branchlength(x::PhyNode)
 end
 
 @doc """
-
-  func_name(args...) -> (Bool,)
-
 Test whether a node is a leaf.
 
 **Parameters:**
@@ -199,9 +175,6 @@ function isleaf(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node has children.
 
 **Parameters:**
@@ -213,9 +186,6 @@ function haschildren(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is the parent of another specific node.
 
 **Parameters:**
@@ -229,9 +199,6 @@ function haschild(parent::PhyNode, child::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is its own parent. See PhyNode().
 
 **Parameters:**
@@ -243,9 +210,6 @@ function parentisself(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node has a parent.
 
 **Parameters:**
@@ -258,9 +222,6 @@ end
 
 
 @doc """
-
-    func_name(args...) -> (Vector{PhyNode},)
-
 Get the children of a node.
 
 **Parameters:**
@@ -272,9 +233,6 @@ function children(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Vector{PhyNode},)
-
 Get the siblings of a node. Included in output is the input node.
 
 **Parameters:**
@@ -324,9 +282,6 @@ function isunlinked(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is linked, i.e. has one or more children and/or a parent.
 **Parameters:**
 
@@ -337,9 +292,6 @@ function islinked(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is internal, i.e. has a parent and one or more children.
 
 **Parameters:**
@@ -351,9 +303,6 @@ function isinternal(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is preterminal i.e. It's children are all leaves.
 
 **Parameters:**
@@ -368,9 +317,6 @@ function ispreterminal(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is semi-preterminal i.e. Some of it's children are leaves, but not all are.
 
 **Parameters:**
@@ -383,9 +329,6 @@ function issemipreterminal(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Int,)
-
 Count the number of children of a node.
 
 **Parameters:**
@@ -397,9 +340,6 @@ function countchildren(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Vector{PhyNode},)
-
 Get the descendents of a node.
 
 **Parameters:**
@@ -412,9 +352,6 @@ function descendents(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Get the terminal descendents of a node. i.e. Nodes that are leaves, which have the input node as an ancestor.
 
 **Parameters:**
@@ -426,9 +363,6 @@ function terminaldescendents(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether a node is ancesteral to one or more other nodes.
 
 **Parameters:**
@@ -443,9 +377,6 @@ function isancestral(posanc::PhyNode, nodes::Vector{PhyNode})
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Get the most recent common ancestor of an array of nodes.
 
 **Parameters:**
@@ -459,9 +390,6 @@ function mrca(nodes::Vector{PhyNode})
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Set the name of a PhyNode.
 
 **Parameters:**
@@ -475,9 +403,6 @@ function name!(x::PhyNode, name::String)
 end
 
 @doc """
-
-    func_name(args...) -> (Float64,)
-
 Set the branch length of a PhyNode.
 **This method modifies the PhyNode.**
 
@@ -496,9 +421,6 @@ function branchlength!(x::PhyNode, bl::Nothing)
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Remove the parent of a `PhyNode` (thus setting the parent property to be self-referential).
 
 **Parameters:**
@@ -510,9 +432,6 @@ function removeparent_unsafe!(x::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Set the parent of a node.
 
 **Warning:** this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use `graft!()`, which does ensure the two-way link is built.
@@ -528,9 +447,6 @@ function parent_unsafe!(parent::PhyNode, child::PhyNode)
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Add a node to the `children` array of another node.
 
 **Warning:** this method is considered unsafe because it does not build the two-way link between parent and child. If you want to add a child to a node, you should use `graft!()`, which does ensure the two-way link is built.
@@ -551,7 +467,6 @@ end
 
 
 @doc """
-
 Remove a node from the `children` array of another node.
 
 **Warning:** this method is considered unsafe because it does not destroy any two-way link between parent and child. If you want to remove a child from a node, you should use `prune!()`, which does ensure the two-way link is destroyed.
@@ -567,7 +482,6 @@ function removechild_unsafe!(parent::PhyNode, child::PhyNode)
 end
 
 @doc """
-
 Graft a node onto another node, create a parent-child relationship between them.
 
 **Parameters:**
@@ -585,7 +499,6 @@ function graft!(parent::PhyNode, child::PhyNode)
 end
 
 @doc """
-
 Graft a node onto another node, create a parent-child relationship between them, and associatiing a branch length with the relationship.
 
 **Parameters:**
@@ -603,7 +516,6 @@ function graft!(parent::PhyNode, child::PhyNode, branchlength::Float64)
 end
 
 @doc """
-
 Graft one or more nodes onto another node, create a parent-child relationship between each of the grafted nodes and the node they are grafted onto.
 
 **Parameters:**
@@ -619,7 +531,6 @@ function graft!(parent::PhyNode, children::Vector{PhyNode})
 end
 
 @doc """
-
 Destroy the relationship between a PhyNode `x` and its parent, returning the PhyNode.
 
 This method cleanly removes the PhyNode `x` from its parent's `children` array, and removes the `parent` reference from the PhyNode `x`. All other fields of the `child` are left intact.
@@ -639,7 +550,6 @@ function prune!(x::PhyNode)
 end
 
 @doc """
-
 Prune a PhyNode from its parent and graft it to another parent.
 
 **Parameters:**
@@ -654,7 +564,6 @@ function pruneregraft!(prune::PhyNode, graftto::PhyNode)
 end
 
 @doc """
-
 Prune a PhyNode from its parent and graft it to another parent, setting the branch length.
 
 **Parameters:**
@@ -671,9 +580,6 @@ function pruneregraft!(prune::PhyNode, graftto::PhyNode, branchlength::Float64)
 end
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Delete a node, destroying the relationships between it and its parent, and it and its children. The children of the node become the children of the node's former parent.
 
 Returns the deleted node.
@@ -689,9 +595,6 @@ end
 
 
 @doc """
-
-    func_name(args...) -> (PhyNode,)
-
 Detach a subtree at a given node.
 
 Returns a new Phylogeny with the detached node as root.
@@ -712,9 +615,6 @@ function detach!(x::PhyNode, name::String = "", rooted::Bool = true, rerootable:
 end
 
 @doc """
-
-    func_name(args...) -> (Bool,)
-
 Test whether two PhyNodes are equal. Specifically, test whether all three of `branchlength`, `name` and `extensions` are equal.
 
 **Parameters:**

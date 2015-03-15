@@ -4,65 +4,8 @@
 
 # Ben J. Ward 2015
 
-
-# Recusrsiveley builds tree structure from PhyloXML format.
-# function buildrecursively(xmlclade::XMLElement, extensionsArray)
-#   label::String = ""
-#   node::PhyNode = PhyNode(name = label, branchlength = (bl == nothing ? -1.0 : float(bl)), ext = PhyExtension[parsephylo(xmlclade, i) for i in extensionsArray])
-#   xmlchildren::Array{XMLElement, 1} = get_elements_by_tagname(xmlclade, "clade")
-#   for n in xmlchildren
-#     graft!(node, buildrecursively(n, extensionsArray))
-#   end
-#   return node
-# end
-
-# function parsephyloxml(xmltree::XMLElement, ::Type{Phylogeny}, extensions) # extensions is a tuple of types.
-#   # Get the first clade of the tree - the root clade in the XML, the recursiveley build up the tree structure.
-#   # Function assumes a tree is rerootable unless otherwise specified, and assumes it's not rooted unless otherwise specified in the file.
-#   # Function also assumes that there is and can only be one name for the tree.
-#   XML::XMLElement = get_elements_by_tagname(xmltree, "clade")[1]
-#   root::PhyNode = buildRecursively(XML, extensions, nothing)
-#   name::Array{XMLElement, 1} = get_elements_by_tagname(xmltree, "name")
-#   treename = length(name) == 1 ? content(name[1]) : ""
-#   rerootable::Bool = attribute(xmltree, "rerootable") == "false" ? true : false
-#   rooted::Bool = attribute(xmltree, "rooted") == "true" ? true : false
-#   return Phylogeny(treename, root, rooted, rerootable)
-# end
-
-# # Open to suggestions making this function neater re deciding on different formats. Since branching conditionally on the format variable seems less neat to me,
-# # than taking advantage of method dispatch. Perhaps some dummy types for the input formats to allow method dispatch would be better?
-
-# function readphyloxml(file::String, Extensions...)
-#   treedoc::XMLDocument = parse_file(expanduser(file))
-#   phylogenies::Array{XMLElement,1} = get_elements_by_tagname(root(treedoc), "phylogeny")
-#   if length(phylogenies) > 1
-#     return [parsephyloxml(i, Phylogeny, Extensions) for i in phylogenies]
-#   else
-#     return parsephyloxml(phylogenies[1], Phylogeny, Extensions)
-#   end
-#   error("No Trees found in file...")
-# end
-
-
-
-
-
-### Newick Parsing and Lexing functionality.
-
-function readnewick(file::String)
-  instream = open(expanduser(file))
-  instring = readall(instream)
-  close(instream)
-  newickstrings = split(instring, ';')
-  newickstrings = [replace(i, r"(\r|\n|\s)", "") for i in newickstrings]
-  newickstrings = newickstrings[bool([length(t) > 0 for t in newickstrings])]
-  if length(newickstrings) > 1
-    return [parsenewick(i) for i in newickstrings]
-  else
-    return parsenewick(newickstrings[1])
-  end
-  error("No phylogenies detected in the file.")
-end
+# 1). General types used for parsing file formats used for molecular evolution:
+# * A Tokenizer that can break up text from files and strings into tokens that can then be processed.
 
 @doc """
 Tokenizer type that is responsible for splitting a string into token according to a
@@ -95,19 +38,28 @@ type Tokenizer
   end
 end
 
+
+# 2). Methods for parsing newick format strings into phylogenies.
+
+# Exception types.
+
 @doc """
-Break a string into a series of tokens.
+A simple Exception type that is thrown by newick related functions when an error occurs.
 
-**Parameters:**
+**Fields:**
 
-* `s`: The input `String` to be broken into tokens.
-* `t`: The `Tokenizer` to use when forming tokens.
-
-**Returns:** An array of `String` tokens.
-""" -> 
-function tokenizestring(s::String, t::Tokenizer)
-  return matchall(t.tokenizer, s)
+* `msg`: A `String` containing the message to print to screen with `showerror`. 
+""" ->
+type NewickException <: Exception
+  msg::String
 end
+
+@doc """ 
+Basic function that prints NewickExceptions to screen. 
+""" ->
+Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
+
+# Internal methods used by newick string parser method.
 
 @doc """
 Makes a new clade when building a tree from a newick string.
@@ -175,22 +127,7 @@ function parseconfidence(text::String)
   end
 end
 
-@doc """
-A simple Exception type that is thrown by newick related functions when an error occurs.
-
-**Fields:**
-
-* `msg`: A `String` containing the message to print to screen with `showerror`. 
-""" ->
-type NewickException <: Exception
-  msg::String
-end
-
-@doc """ 
-Basic function that prints NewickExceptions to screen. 
-""" ->
-Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
-
+# Method for parsing a Newick formatted string.
 
 @doc """
 Build a `Phylogeny` from a String formatted as a Newick string.
@@ -207,15 +144,18 @@ by a floating point value that may be a branch length, or clade support value.
 
 **Returns:** A `Phylogeny` constructed from the string.
 """ ->
-function parsenewick(newickstring::String, commentsareconf = false, valuesareconf = false)
+function parsenewick(newickstring::String, commentsareconf::Bool = false, valuesareconf::Bool = false)
   # Create a definition of the tokens that appear in a newick string, and the meanings of them.
-  definition = [ ("open paren", r"\("), ("close paren", r"\)"),
+  definition::Array{(ASCIIString, Regex), 1} = [ ("open paren", r"\("), ("close paren", r"\)"),
   ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"), ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"),
   ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"), ("quoted node label", r"\'(\\.|[^\'])*\'"),
   ("semicolon", r"\;"), ("newline", r"\n")]
-  tokenizer = Tokenizer(definition)
+  tokenizer::Tokenizer = Tokenizer(definition)
   # Convet the newick string into a series of tokens than can be considered in turn and understood.
   tokens = tokenizestring(strip(newickstring), tokenizer)
+
+  # TODO ensure that all the basic components of a phylogeny are contained in the string.
+
   # Create the first clade, i.e. the root and set the variable that points to the current clade 
   # to the root.
   root = PhyNode("Root")
@@ -229,6 +169,9 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
   comments = TreeAnnotations{String}()
   while !done(tokens, state)
   token, state = next(tokens, state)
+
+  # TODO - Remodel this truly horrible set of chained if statements.
+
     if startswith(token, "\'")
       # This is a quoted label, characters need to be added to the clade name.
       name!(current, name(current) * token[2:end])
@@ -295,6 +238,82 @@ function parsenewick(newickstring::String, commentsareconf = false, valuesarecon
   processclade(root, valuesareconf, commentsareconf)
   return Phylogeny("", root, true, true), comments
 end
+
+# Method for reading a file of Newick formatted strings i.e. Newick Format files.
+
+function readnewick(file::String)
+  instream = open(expanduser(file))
+  instring = readall(instream)
+  close(instream)
+  newickstrings = split(instring, ';')
+  newickstrings = [replace(i, r"(\r|\n|\s)", "") for i in newickstrings]
+  newickstrings = newickstrings[bool([length(t) > 0 for t in newickstrings])]
+  if length(newickstrings) > 1
+    return [parsenewick(i) for i in newickstrings]
+  else
+    return parsenewick(newickstrings[1])
+  end
+  error("No phylogenies detected in the file.")
+end
+
+
+
+
+
+# Recusrsiveley builds tree structure from PhyloXML format.
+# function buildrecursively(xmlclade::XMLElement, extensionsArray)
+#   label::String = ""
+#   node::PhyNode = PhyNode(name = label, branchlength = (bl == nothing ? -1.0 : float(bl)), ext = PhyExtension[parsephylo(xmlclade, i) for i in extensionsArray])
+#   xmlchildren::Array{XMLElement, 1} = get_elements_by_tagname(xmlclade, "clade")
+#   for n in xmlchildren
+#     graft!(node, buildrecursively(n, extensionsArray))
+#   end
+#   return node
+# end
+
+# function parsephyloxml(xmltree::XMLElement, ::Type{Phylogeny}, extensions) # extensions is a tuple of types.
+#   # Get the first clade of the tree - the root clade in the XML, the recursiveley build up the tree structure.
+#   # Function assumes a tree is rerootable unless otherwise specified, and assumes it's not rooted unless otherwise specified in the file.
+#   # Function also assumes that there is and can only be one name for the tree.
+#   XML::XMLElement = get_elements_by_tagname(xmltree, "clade")[1]
+#   root::PhyNode = buildRecursively(XML, extensions, nothing)
+#   name::Array{XMLElement, 1} = get_elements_by_tagname(xmltree, "name")
+#   treename = length(name) == 1 ? content(name[1]) : ""
+#   rerootable::Bool = attribute(xmltree, "rerootable") == "false" ? true : false
+#   rooted::Bool = attribute(xmltree, "rooted") == "true" ? true : false
+#   return Phylogeny(treename, root, rooted, rerootable)
+# end
+
+# # Open to suggestions making this function neater re deciding on different formats. Since branching conditionally on the format variable seems less neat to me,
+# # than taking advantage of method dispatch. Perhaps some dummy types for the input formats to allow method dispatch would be better?
+
+# function readphyloxml(file::String, Extensions...)
+#   treedoc::XMLDocument = parse_file(expanduser(file))
+#   phylogenies::Array{XMLElement,1} = get_elements_by_tagname(root(treedoc), "phylogeny")
+#   if length(phylogenies) > 1
+#     return [parsephyloxml(i, Phylogeny, Extensions) for i in phylogenies]
+#   else
+#     return parsephyloxml(phylogenies[1], Phylogeny, Extensions)
+#   end
+#   error("No Trees found in file...")
+# end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
