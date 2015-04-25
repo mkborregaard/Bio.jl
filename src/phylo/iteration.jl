@@ -248,7 +248,7 @@ that matches a given condition.
 * `it`: One of any type of `PhylogenyIterator`. This dictates the order in which nodes will be searched.
 * `condition`: A `Function` that accepts a `PhyNode` as the first and only argument, and returns a Bool.
 """ ->
-function search{T}(it::T <: PhylogenyIterator, condition::Function)
+function search{T <: PhylogenyIterator}(it::T, condition::Function)
   for i = it
     # I feel like the function should catch occasions where the provided condition does not return a Bool.
     if condition(i)
