@@ -319,11 +319,9 @@ function NucleotideSequence{T<:Nucleotide}(t::Type{T}, seq::Union(String,
 end
 
 
-"""
-`NucleotideSequence(chunks::NucleotideSequence...)`
-
-Construct a nucleotide sequence by concatenating the given sequences
-"""
+@Docile.doc """
+Construct a nucleotide sequence by concatenating other sequences.
+""" ->
 function NucleotideSequence{T<:Nucleotide}(chunks::NucleotideSequence{T}...)
     seqlen = 0
     for chunk in chunks
@@ -393,11 +391,9 @@ function immutable!(seq::NucleotideSequence)
 end
 
 
-"""
-`repeat(chunk::NucleotideSequence, n)`
-
-Construct a nucleotide sequence by repeating another sequence `n` times
-"""
+@Docile.doc """
+Construct a nucleotide sequence by repeating another sequences.
+""" ->
 function repeat{T<:Nucleotide}(chunk::NucleotideSequence{T}, n::Integer)
     seqlen = n * length(chunk)
 
@@ -420,7 +416,8 @@ end
 (^){T}(chunk::NucleotideSequence{T}, n::Integer) = repeat(chunk, n::Integer)
 
 
-"""
+
+@Docile.doc """
 Copy `src` to `dest` starting at position `pos`.
 
 This is unsafe in the following ways:
@@ -1678,5 +1675,3 @@ function show{T, K}(io::IO, counts::KmerCounts{T, K})
         println(io, "  ", s, " => ", counts.data[x])
     end
 end
-
-
