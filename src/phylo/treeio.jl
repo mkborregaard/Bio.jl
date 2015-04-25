@@ -124,6 +124,10 @@ function parseconfidence(text::String)
   end
 end
 
+function tokenizestring(s::String, t::Tokenizer)
+  return matchall(t.tokenizer, s)
+end
+
 # Method for parsing a Newick formatted string.
 
 @Docile.doc """
