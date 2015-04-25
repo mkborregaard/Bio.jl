@@ -27,8 +27,6 @@ export
   getdescendents, getterminaldescendents, countchildren,
   isintree,
 
-  PhyExtension,
-
   # Phylogeny and associated methods
   Phylogeny, isrooted, isrerootable, root!,
   setrerootable!, graft!, prune!, pruneregraft!, search,
