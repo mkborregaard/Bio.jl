@@ -4,9 +4,6 @@
 
 # Ben J. Ward 2015
 
-# 1). General types used for parsing file formats used for molecular evolution:
-# * A Tokenizer that can break up text from files and strings into tokens that can then be processed.
-
 @Docile.doc """
 Tokenizer type that is responsible for splitting a string into token according to a
 regex specification. The regex specification is stored in `dict`.
@@ -29,7 +26,7 @@ type Tokenizer
 
   **Returns:** Instance of `Tokenizer`
   """
-  function Tokenizer(x::Array{(ASCIIString, Regex), 1})
+  function Tokenizer(x::Array{Tuple{ASCIIString, Regex}, 1})
     dictvalues = [i[2] for i in x]
     stringvalues = String[i.pattern for i in dictvalues]
     combinedstring = join(stringvalues, "|")
