@@ -4,14 +4,14 @@
 
 # Ben J. Ward, 2014.
 
-@doc """
+@Docile.doc """
 `PhylogenyIterator` is an abstract type that defines a family of iterators
 for traversing trees in various ways, including `BreadthFirst`, and `DepthFirst`,
 or from a tip to a root.
 """ ->
 abstract PhylogenyIterator
 
-@doc """
+@Docile.doc """
 A type for implementing breadth-first traversal of any 
 `Phylogeny`.
 
@@ -29,7 +29,7 @@ immutable BreadthFirst <: PhylogenyIterator
   end
 end
 
-@doc """
+@Docile.doc """
 Construct a BreadthFirst iterator for a tree.
 
 **Parameters**
@@ -39,7 +39,7 @@ function BreadthFirst(x::Phylogeny)
   return BreadthFirst(x.root)
 end
 
-@doc """
+@Docile.doc """
 Start iterating through a `Phylogeny` with a `BreadthFirst` iterator.
 
 **Parameters**
@@ -51,7 +51,7 @@ function Base.start(x::BreadthFirst)
   return state
 end
 
-@doc """
+@Docile.doc """
 Step to the next node when iterating over a `Phylogeny`.
 
 **Parameters:**
@@ -66,7 +66,7 @@ function Base.next(x::BreadthFirst, state::Queue{Deque{PhyNode}})
   return current, state
 end
 
-@doc """
+@Docile.doc """
 Check whether the iterator is at the last node in a phylogeny and is therefore
 done iterating.
 
@@ -78,7 +78,7 @@ function Base.done(x::BreadthFirst, state::Queue{Deque{PhyNode}})
   return length(state) == 0
 end
 
-@doc """
+@Docile.doc """
 A type for implementing depth-first traversal of any 
 `Phylogeny`.
 
@@ -96,7 +96,7 @@ immutable DepthFirst <: PhylogenyIterator
   end
 end
 
-@doc """
+@Docile.doc """
 Construct a DepthFirst iterator for a tree.
 
 **Parameters**
@@ -106,7 +106,7 @@ function DepthFirst(x::Phylogeny)
   return DepthFirst(x.root)
 end
 
-@doc """
+@Docile.doc """
 Start iterating through a `Phylogeny` with a `DepthFirst` iterator.
 
 **Parameters**
@@ -118,7 +118,7 @@ function Base.start(x::DepthFirst)
   return state
 end
 
-@doc """
+@Docile.doc """
 Step to the next node when iterating over a `Phylogeny`.
 
 **Parameters:**
@@ -133,7 +133,7 @@ function Base.next(x::DepthFirst, state::Stack{Deque{PhyNode}})
   return current, state
 end
 
-@doc """
+@Docile.doc """
 Check whether the iterator is at the last node in a phylogeny and is therefore
 done iterating.
 
@@ -145,7 +145,7 @@ function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
   return length(state) == 0
 end
 
-@doc """
+@Docile.doc """
 A type for implementing tip-to-root traversal of any 
 `Phylogeny`.
 
@@ -163,7 +163,7 @@ immutable Tip2Root <: PhylogenyIterator
   end
 end
 
-@doc """
+@Docile.doc """
 Start iterating through a `Phylogeny` with a `Tip2Root` iterator.
 
 **Parameters**
@@ -173,7 +173,7 @@ function Base.start(x::Tip2Root)
   return (x.start, false)
 end
 
-@doc """
+@Docile.doc """
 Step to the next node when iterating over a `Phylogeny`.
 
 **Parameters:**
@@ -184,7 +184,7 @@ function Base.next(x::Tip2Root, state::(PhyNode,Bool))
   return state[1], (state[1].parent, isroot(state[1]))
 end
 
-@doc """
+@Docile.doc """
 Check whether the iterator is at the last node in a phylogeny and is therefore
 done iterating.
 
@@ -196,7 +196,7 @@ function Base.done(x::Tip2Root, state::(PhyNode,Bool))
   return state[2]
 end
 
-@doc """
+@Docile.doc """
 Begin iteration over an individual PhyNode i.e. all other PhyNodes connected to it,
 so parent and children.
 
@@ -211,7 +211,7 @@ function Base.start(x::PhyNode)
   end
 end
 
-@doc """
+@Docile.doc """
 Step to the next node when iterating over a `Phylogeny`.
 
 **Parameters:**
@@ -223,7 +223,7 @@ function Base.next(x::PhyNode, state::(Int64, Array{PhyNode, 1}))
   return current, (state[1] + 1, state[2])
 end
 
-@doc """
+@Docile.doc """
 Check whether iteration over all connections of a PhyNode is complete.
 
 **Parameters:**
@@ -234,7 +234,7 @@ function Base.done(x::PhyNode, state::(Int64, Array{PhyNode, 1}))
   return state[1] > length(state[2])
 end
 
-@doc """
+@Docile.doc """
 Iterate over a `Phylogeny` and return a reference to the first `PhyNode` 
 that matches a given condition.
 
@@ -251,7 +251,7 @@ function search{T}(it::T <: PhylogenyIterator, condition::Function)
   end
 end
 
-@doc """
+@Docile.doc """
 Iterate over a `Phylogeny` and return an array of references to all `PhyNode`s 
 that match a given condition.
 
