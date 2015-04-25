@@ -3,13 +3,13 @@
 #========================================================#
 
 # Ben J. Ward 2015.
-@doc """
+@Docile.doc """
 A type-alias: Dictionaries with keys of type `PhyNode` and values of type `T`
 are aliased as NodeAnnotations{T}.  
 """ ->
 typealias NodeAnnotations{T} Dict{PhyNode, T}
 
-@doc """
+@Docile.doc """
 TreeAnnotations: A type to allow the assignment of data to clades of a phylogeny.
 """ ->
 type TreeAnnotations{T}
@@ -17,21 +17,21 @@ type TreeAnnotations{T}
   annotations::NodeAnnotations{T}
 end
 
-@doc """
+@Docile.doc """
 Construct a TreeAnnotations object which contains no annotations yet.
 """ ->
 function TreeAnnotations{T}(x::Phylogeny, ::Type{T})
   return TreeAnnotations(x, NodeAnnotations{T}())
 end
 
-@doc """
+@Docile.doc """
 Get the annotation associated with a clade / node by a TreeAnnotatons object.
 """ ->
 function Base.getindex{T}(x::TreeAnnotations{T}, index::PhyNode)
   return x.annotations[index]
 end
 
-@doc """
+@Docile.doc """
 Add or set an annotation to be associated with a clade / node by the TreeAnnotations object.
 """ ->
 function Base.setindex!{T}(x::TreeAnnotations{T}, item::T, clade::PhyNode)

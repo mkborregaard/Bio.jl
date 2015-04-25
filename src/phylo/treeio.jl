@@ -7,7 +7,7 @@
 # 1). General types used for parsing file formats used for molecular evolution:
 # * A Tokenizer that can break up text from files and strings into tokens that can then be processed.
 
-@doc """
+@Docile.doc """
 Tokenizer type that is responsible for splitting a string into token according to a
 regex specification. The regex specification is stored in `dict`.
 
@@ -43,7 +43,7 @@ end
 
 # Exception types.
 
-@doc """
+@Docile.doc """
 A simple Exception type that is thrown by newick related functions when an error occurs.
 
 **Fields:**
@@ -54,14 +54,14 @@ type NewickException <: Exception
   msg::String
 end
 
-@doc """ 
+@Docile.doc """ 
 Basic function that prints NewickExceptions to screen. 
 """ ->
 Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
 
 # Internal methods used by newick string parser method.
 
-@doc """
+@Docile.doc """
 Makes a new clade when building a tree from a newick string.
 This method of the function accepts no parameters and returns an empty `PhyNode`.
 """ ->
@@ -69,7 +69,7 @@ function makenewclade()
   return PhyNode()
 end
 
-@doc """
+@Docile.doc """
 Makes a new clade when building a tree from a newick string.
 
 This method is used in the `parsenewick` method to take car of linking a 
@@ -87,7 +87,7 @@ function makenewclade(parent::PhyNode)
   return newclade
 end
 
-@doc """
+@Docile.doc """
 Finishes the processing of the current clade in the newick file.
 
 **Parameters:**
@@ -115,7 +115,7 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
   end
 end
 
-@doc """
+@Docile.doc """
 Parses confidence values from string - if this is not possible,
 -1.0 is returned, which is the value for 'unknown' in `Phylo`.
 """ ->
@@ -129,7 +129,7 @@ end
 
 # Method for parsing a Newick formatted string.
 
-@doc """
+@Docile.doc """
 Build a `Phylogeny` from a String formatted as a Newick string.
 
 Newick strings are of the form `(((A,B),C),D);`.
