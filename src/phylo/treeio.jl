@@ -154,8 +154,6 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
   # Convet the newick string into a series of tokens than can be considered in turn and understood.
   tokens = tokenizestring(strip(newickstring), tokenizer)
 
-  # TODO ensure that all the basic components of a phylogeny are contained in the string.
-
   # Create the first clade, i.e. the root and set the variable that points to the current clade 
   # to the root.
   root = PhyNode("Root")
