@@ -180,7 +180,7 @@ Step to the next node when iterating over a `Phylogeny`.
 * `x`: A `Tip2Root` iterator.
 * `state`: A `Tuple` that contains the node to be visited and whether the root has been reached. 
 """ ->
-function Base.next(x::Tip2Root, state::(PhyNode,Bool))
+function Base.next(x::Tip2Root, state::Tuple{PhyNode,Bool})
   return state[1], (state[1].parent, isroot(state[1]))
 end
 
@@ -192,7 +192,7 @@ done iterating.
 * `x`: A `Tip2Root` `PhylogenyIterator`.
 * `state`: a `Tuple` containing the `PhyNode` that is to be visited next, and whether the root has been reached.
 """ ->
-function Base.done(x::Tip2Root, state::(PhyNode,Bool))
+function Base.done(x::Tip2Root, state::Tuple{PhyNode,Bool})
   return state[2]
 end
 
