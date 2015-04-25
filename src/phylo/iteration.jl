@@ -29,6 +29,8 @@ immutable BreadthFirst <: PhylogenyIterator
   end
 end
 
+typealias BreadthFirstState Queue{Deque{PhyNode}} 
+
 @Docile.doc """
 Construct a BreadthFirst iterator for a tree.
 
@@ -46,7 +48,7 @@ Start iterating through a `Phylogeny` with a `BreadthFirst` iterator.
 * `x`: A `BreadthFirst` iterator to start iterating with.
 """ ->
 function Base.start(x::BreadthFirst)
-  state::Queue{Deque{PhyNode}} = Queue(PhyNode)
+  state::BreadthFirstState = Queue(PhyNode)
   enqueue!(state, x.start)
   return state
 end
@@ -58,7 +60,7 @@ Step to the next node when iterating over a `Phylogeny`.
 * `x`: `Breadthfirst` iterator.
 * `state`: A `Queue` that contains the next nodes to be iterated over.
 """ ->
-function Base.next(x::BreadthFirst, state::Queue{Deque{PhyNode}})
+function Base.next(x::BreadthFirst, state::BreadthFirstState)
   current::PhyNode = dequeue!(state)
   for i in current.children
     enqueue!(state, i)
@@ -74,7 +76,7 @@ done iterating.
 * `x`: A `BreadthFirst` `PhylogenyIterator`.
 * `state`: a `Queue` containing the nodes that are to be visited imminently.
 """ ->
-function Base.done(x::BreadthFirst, state::Queue{Deque{PhyNode}})
+function Base.done(x::BreadthFirst, state::BreadthFirstState)
   return length(state) == 0
 end
 
@@ -106,6 +108,8 @@ function DepthFirst(x::Phylogeny)
   return DepthFirst(x.root)
 end
 
+typealias DepthFirstState Stack{PhyNode} 
+
 @Docile.doc """
 Start iterating through a `Phylogeny` with a `DepthFirst` iterator.
 
@@ -125,7 +129,7 @@ Step to the next node when iterating over a `Phylogeny`.
 * `x`: `Depthfirst` iterator.
 * `state`: A `Stack` that contains the nodes of a `Phylogeny` that are to be visited.  
 """ ->
-function Base.next(x::DepthFirst, state::Stack{Deque{PhyNode}})
+function Base.next(x::DepthFirst, state::DepthFirstState)
   current::PhyNode = pop!(state)
   for i in current.children
     push!(state, i)
@@ -141,7 +145,7 @@ done iterating.
 * `x`: A `DepthFirst` `PhylogenyIterator`.
 * `state`: a `Stack` containing the nodes that are to be visited imminently.
 """ ->
-function Base.done(x::DepthFirst, state::Stack{Deque{PhyNode}})
+function Base.done(x::DepthFirst, state::DepthFirstState)
   return length(state) == 0
 end
 
@@ -163,6 +167,8 @@ immutable Tip2Root <: PhylogenyIterator
   end
 end
 
+typealias Tip2RootState Tuple{PhyNode, Bool}
+
 @Docile.doc """
 Start iterating through a `Phylogeny` with a `Tip2Root` iterator.
 
@@ -180,7 +186,7 @@ Step to the next node when iterating over a `Phylogeny`.
 * `x`: A `Tip2Root` iterator.
 * `state`: A `Tuple` that contains the node to be visited and whether the root has been reached. 
 """ ->
-function Base.next(x::Tip2Root, state::Tuple{PhyNode,Bool})
+function Base.next(x::Tip2Root, state::Tip2RootState)
   return state[1], (state[1].parent, isroot(state[1]))
 end
 
@@ -192,7 +198,7 @@ done iterating.
 * `x`: A `Tip2Root` `PhylogenyIterator`.
 * `state`: a `Tuple` containing the `PhyNode` that is to be visited next, and whether the root has been reached.
 """ ->
-function Base.done(x::Tip2Root, state::Tuple{PhyNode,Bool})
+function Base.done(x::Tip2Root, state::Tip2RootState)
   return state[2]
 end
 
@@ -218,7 +224,7 @@ Step to the next node when iterating over a `Phylogeny`.
 * `x`: A `PhyNode`.
 * `state`: A `Tuple` that contains the index of the `Array` of `PhyNodes` to visit and the array itself.
 """ ->
-function Base.next(x::PhyNode, state::(Int64, Array{PhyNode, 1}))
+function Base.next(x::PhyNode, state::Tuple{Int64, Array{PhyNode, 1}})
   current::PhyNode = state[2][state[1]]
   return current, (state[1] + 1, state[2])
 end
