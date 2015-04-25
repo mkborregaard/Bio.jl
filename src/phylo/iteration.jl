@@ -236,7 +236,7 @@ Check whether iteration over all connections of a PhyNode is complete.
 * `x`: A `PhyNode`.
 * `state`: A `Tuple` that contains the index of the `Array` of `PhyNodes` to visit and the array itself.
 """ ->
-function Base.done(x::PhyNode, state::(Int64, Array{PhyNode, 1}))
+function Base.done(x::PhyNode, state::Tuple{Int64, Array{PhyNode, 1}})
   return state[1] > length(state[2])
 end
 
