@@ -143,7 +143,7 @@ by a floating point value that may be a branch length, or clade support value.
 """ ->
 function parsenewick(newickstring::String, commentsareconf::Bool = false, valuesareconf::Bool = false)
   # Create a definition of the tokens that appear in a newick string, and the meanings of them.
-  definition::Array{(ASCIIString, Regex), 1} = [ ("open paren", r"\("), ("close paren", r"\)"),
+  definition::Array{Tuple{ASCIIString, Regex}, 1} = [ ("open paren", r"\("), ("close paren", r"\)"),
   ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"), ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"),
   ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"), ("quoted node label", r"\'(\\.|[^\'])*\'"),
   ("semicolon", r"\;"), ("newline", r"\n")]
