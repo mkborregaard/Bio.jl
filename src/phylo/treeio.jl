@@ -154,10 +154,10 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
   tokenizer::Tokenizer = Tokenizer(definition)
   # Convet the newick string into a series of tokens than can be considered in turn and understood.
   tokens = tokenizestring(strip(newickstring), tokenizer)
-
   # Create the first clade, i.e. the root and set the variable that points to the current clade 
   # to the root.
   root = PhyNode("Root")
+  phy = Phylogeny("", root, true, true)
   current = root
   @assert root === current
   enteringbl = false
@@ -165,12 +165,10 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
   leftpcount = 0
   rightpcount = 0
   state = start(tokens)
-  comments = TreeAnnotations{String}()
+  comments = TreeAnnotations(phy, String)
   while !done(tokens, state)
   token, state = next(tokens, state)
-
-  # TODO - Remodel this truly horrible set of chained if statements.
-
+  # TODO - Do something about this truly horrible set of chained if statements.
     if startswith(token, "\'")
       # This is a quoted label, characters need to be added to the clade name.
       name!(current, name(current) * token[2:end])
@@ -235,7 +233,7 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
   end
   processclade(current, valuesareconf, commentsareconf)
   processclade(root, valuesareconf, commentsareconf)
-  return Phylogeny("", root, true, true), comments
+  return phy, comments
 end
 
 # Method for reading a file of Newick formatted strings i.e. Newick Format files.
