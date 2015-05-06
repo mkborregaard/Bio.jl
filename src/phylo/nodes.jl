@@ -241,7 +241,7 @@ Get the siblings of a node. Included in output is the input node.
 """ ->
 function siblings(x::PhyNode)
   if hasparent(x)
-    return children(x.parent)
+    return filter(y -> !(y === x), x.parent.children)
   end
 end
 
