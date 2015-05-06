@@ -12,7 +12,7 @@ or from a tip to a root.
 abstract PhylogenyIterator
 
 @Docile.doc """
-A type for implementing breadth-first traversal of any 
+A type for implementing breadth-first traversal of any
 `Phylogeny`.
 
 A `BreathFirst` phylogeny iterator contains:
@@ -29,13 +29,13 @@ immutable BreadthFirst <: PhylogenyIterator
   end
 end
 
-typealias BreadthFirstState Queue{Deque{PhyNode}} 
+typealias BreadthFirstState Queue{Deque{PhyNode}}
 
 @Docile.doc """
 Construct a BreadthFirst iterator for a tree.
 
 **Parameters**
-* `x`: A Phylogeny variable you want to traverse in breadth-first order. 
+* `x`: A Phylogeny variable you want to traverse in breadth-first order.
 """ ->
 function BreadthFirst(x::Phylogeny)
   return BreadthFirst(x.root)
@@ -81,7 +81,7 @@ function Base.done(x::BreadthFirst, state::BreadthFirstState)
 end
 
 @Docile.doc """
-A type for implementing depth-first traversal of any 
+A type for implementing depth-first traversal of any
 `Phylogeny`.
 
 A `DepthFirst` phylogeny iterator contains:
@@ -102,13 +102,13 @@ end
 Construct a DepthFirst iterator for a tree.
 
 **Parameters**
-* `x`: A Phylogeny variable you want to traverse in depth-first order. 
+* `x`: A Phylogeny variable you want to traverse in depth-first order.
 """ ->
 function DepthFirst(x::Phylogeny)
   return DepthFirst(x.root)
 end
 
-typealias DepthFirstState Stack{PhyNode} 
+typealias DepthFirstState Stack{Deque{PhyNode}}
 
 @Docile.doc """
 Start iterating through a `Phylogeny` with a `DepthFirst` iterator.
@@ -127,7 +127,7 @@ Step to the next node when iterating over a `Phylogeny`.
 
 **Parameters:**
 * `x`: `Depthfirst` iterator.
-* `state`: A `Stack` that contains the nodes of a `Phylogeny` that are to be visited.  
+* `state`: A `Stack` that contains the nodes of a `Phylogeny` that are to be visited.
 """ ->
 function Base.next(x::DepthFirst, state::DepthFirstState)
   current::PhyNode = pop!(state)
@@ -150,7 +150,7 @@ function Base.done(x::DepthFirst, state::DepthFirstState)
 end
 
 @Docile.doc """
-A type for implementing tip-to-root traversal of any 
+A type for implementing tip-to-root traversal of any
 `Phylogeny`.
 
 A `Tip2Root` phylogeny iterator contains:
@@ -174,7 +174,7 @@ Start iterating through a `Phylogeny` with a `Tip2Root` iterator.
 
 **Parameters**
 * `x`: A `Tip2Root` iterator to start iterating with.
-""" -> 
+""" ->
 function Base.start(x::Tip2Root)
   return (x.start, false)
 end
@@ -184,7 +184,7 @@ Step to the next node when iterating over a `Phylogeny`.
 
 **Parameters:**
 * `x`: A `Tip2Root` iterator.
-* `state`: A `Tuple` that contains the node to be visited and whether the root has been reached. 
+* `state`: A `Tuple` that contains the node to be visited and whether the root has been reached.
 """ ->
 function Base.next(x::Tip2Root, state::Tip2RootState)
   return state[1], (state[1].parent, isroot(state[1]))
@@ -241,10 +241,10 @@ function Base.done(x::PhyNode, state::Tuple{Int64, Array{PhyNode, 1}})
 end
 
 @Docile.doc """
-Iterate over a `Phylogeny` and return a reference to the first `PhyNode` 
+Iterate over a `Phylogeny` and return a reference to the first `PhyNode`
 that matches a given condition.
 
-**Parameters:** 
+**Parameters:**
 * `it`: One of any type of `PhylogenyIterator`. This dictates the order in which nodes will be searched.
 * `condition`: A `Function` that accepts a `PhyNode` as the first and only argument, and returns a Bool.
 """ ->
@@ -258,10 +258,10 @@ function Base.search{T <: PhylogenyIterator}(it::T, condition::Function)
 end
 
 @Docile.doc """
-Iterate over a `Phylogeny` and return an array of references to all `PhyNode`s 
+Iterate over a `Phylogeny` and return an array of references to all `PhyNode`s
 that match a given condition.
 
-**Parameters:** 
+**Parameters:**
 * `it`: One of any type of `PhylogenyIterator`. This dictates the order in which nodes will be searched.
 * `condition`: A `Function` that accepts a `PhyNode` as the first and only argument, and returns a Bool.
 """ ->
