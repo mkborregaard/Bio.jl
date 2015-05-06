@@ -71,7 +71,7 @@ Test whether the branchlength in the node is known (i.e. is not -1.0).
 * `x`:  The PhyNode to test.
 """ ->
 function blisknown(x::PhyNode)
-  return !x.branchlength == -1.0
+  return x.branchlength != -1.0
 end
 
 @Docile.doc """
