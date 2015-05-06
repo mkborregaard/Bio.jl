@@ -348,7 +348,11 @@ Get the descendents of a node.
 
 """ ->
 function descendents(x::PhyNode)
-  return collect(PhyNode, DepthFirst(x))
+  if haschildren(x)
+    return collect(PhyNode, DepthFirst(x))
+  else
+    return PhyNode[]
+  end
 end
 
 @Docile.doc """
