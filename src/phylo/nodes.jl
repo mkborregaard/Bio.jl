@@ -138,7 +138,7 @@ Test whether a node is empty.
 * `x`: The PhyNode to test.
 """ ->
 function isempty(x::PhyNode)
-  return x.name == "" && !blisknown(x) && !hasextensions(x) && !haschildren(x) && parentisself(x) && !confisknown(x)
+  return x.name == "" && !blisknown(x) && !haschildren(x) && parentisself(x) && !confisknown(x)
 end
 
 @Docile.doc """
