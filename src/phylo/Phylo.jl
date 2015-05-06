@@ -20,12 +20,13 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 export
 
   # PhyNode and associated methods
-  PhyNode, getname, getbranchlength, isleaf,
-  haschildren, parentisself, hasparent, getchildren,
-  getsiblings, getparent, isroot, isnode, setname!,
-  setbranchlength!, ispreterminal, issemipreterminal,
-  getdescendents, getterminaldescendents, countchildren,
-  isintree,
+  PhyNode, blisknown, confisknown, confidence, confidence!, isempty,
+  name, branchlength, isleaf, haschildren, haschild, parentisself, hasparent,
+  children, siblings, parent, isroot, isunlinked, islinked, isinternal,
+  ispreterminal, issemipreterminal, countchildren, descendents,
+  terminaldescendents, isancestral, mrca, name!, branchlength!,
+  removeparent_unsafe!, parent_unsafe!, addchild_unsafe!, removechild_unsafe!,
+  graft!, prune!, prunegraft!, delete!, detach!, isequal, distanceof,
 
   # Phylogeny and associated methods
   Phylogeny, isrooted, isrerootable, root!,
