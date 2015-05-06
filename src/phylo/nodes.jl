@@ -340,14 +340,14 @@ function countchildren(x::PhyNode)
 end
 
 @Docile.doc """
-Get the descendents of a node.
+Get the descendants of a node.
 
 **Parameters:**
 
-* `x`: The PhyNode to get the descendents of.
+* `x`: The PhyNode to get the descendants of.
 
 """ ->
-function descendents(x::PhyNode)
+function descendants(x::PhyNode)
   if haschildren(x)
     return collect(PhyNode, DepthFirst(x))
   else
@@ -356,13 +356,13 @@ function descendents(x::PhyNode)
 end
 
 @Docile.doc """
-Get the terminal descendents of a node. i.e. Nodes that are leaves, which have the input node as an ancestor.
+Get the terminal descendants of a node. i.e. Nodes that are leaves, which have the input node as an ancestor.
 
 **Parameters:**
 
-* `x`: The PhyNode to get ther terminal descendents of.
+* `x`: The PhyNode to get ther terminal descendants of.
 """ ->
-function terminaldescendents(x::PhyNode)
+function terminaldescendants(x::PhyNode)
   return searchall(DepthFirst(x), isleaf)
 end
 
@@ -376,7 +376,7 @@ Test whether a node is ancesteral to one or more other nodes.
 * `nodes`: An array of `PhyNode`s that the test node must be ancestral to.
 """ ->
 function isancestral(posanc::PhyNode, nodes::Vector{PhyNode})
-  desc = descendents(posanc)
+  desc = descendants(posanc)
   return all([in(node, desc) for node in nodes])
 end
 
