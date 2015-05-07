@@ -25,7 +25,6 @@ export
   children, siblings, parent, isroot, isunlinked, islinked, isinternal,
   ispreterminal, issemipreterminal, countchildren, descendents,
   terminaldescendents, isancestral, mrca, name!, branchlength!,
-  removeparent_unsafe!, parent_unsafe!, addchild_unsafe!, removechild_unsafe!,
   graft!, prune!, prunegraft!, delete!, detach!, isequal, distanceof,
 
   # Phylogeny and associated methods
