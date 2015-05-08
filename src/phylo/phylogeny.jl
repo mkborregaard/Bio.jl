@@ -136,7 +136,7 @@ Find the node that is furthest from the root of a tree.
 """ ->
 function furthestfromroot(tree::Phylogeny)
   distances = distance(tree)
-  return maxindict(distances, x -> maximum(x) .== x)
+  return maxindict(distances.annotations)
 end
 
 @Docile.doc """
