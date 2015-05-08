@@ -431,7 +431,7 @@ Find the distance of each node from the root.
 * `tree`: The Phylogeny to measure.
 """ ->
 function distance(tree::Phylogeny)
-  distances::TreeAnnotations{Float64} = TreeAnnotations{Float64}(tree)
+  distances = TreeAnnotations(tree, Float64)
   function updatedistances(node::PhyNode, currentdist::Float64)
     distances[node] = currentdist
     for child in children(node)
@@ -449,7 +449,7 @@ Find the depth of each node from the root.
 * `tree`: The Phylogeny to measure.
 """ ->
 function depth(tree::Phylogeny)
-  depths::TreeAnnotations{Int} = TreeAnnotations{Int}(tree)
+  depths = TreeAnnotations(tree, Int)
   function updatedepths(node::PhyNode, currentdepth::Int)
     depths[node] = currentdepth
     for child in children(node)
