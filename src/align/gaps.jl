@@ -23,8 +23,6 @@ type ArrayGaps <: Gaps
   end
 end
 
-
-
 function unclippedLength(x::ArrayGaps)
   return x.sourceEndPos + x.sourceUnclippedEndPos
 end
@@ -56,7 +54,6 @@ function viewPosition(x::ArrayGaps, position::Int)
     currentBlockSize, nextBlock = next(x.array, nextBlock)
   end
 end
-
 
 function sourcePosition(x::ArrayGaps, position::Int)
   # Initialise iteration through the data array.
@@ -123,6 +120,17 @@ function Base.>=(a::GapAnchor, b::GapAnchor)
   return a.gapPos >= b.gapPos || a.seqPos > b.seqPos
 end
 
+# Sorting gap anchors by their sequence space position.
+function sortSeqPos(a::GapAnchor, b::GapAnchor)
+  return a.seqPos < b.seqPos
+end
+
+# Sorting gap anchors by their gap space position.
+function sortGapPos(a::GapAnchor, b::GapAnchor)
+  return a.gapPos < b.gapPos
+end
+
+
 type AnchorGaps <: Gaps
   source
   anchors::Vector{GapAnchor}
@@ -143,7 +151,30 @@ type AnchorGaps <: Gaps
   end
 end
 
-function clearGaps(x::AnchorGaps)
+function upperBound{T}(array::Vector{T}, first::Int, last::Int, value::T, comp = x -> value < x)
+  count::Int = last - first
+  idx::Int = 0
+  step::Int = 0
+  while count > 0
+    idx = first
+    step = Int(round(count / 2))
+    idx += step
+    if !comp(array[idx])
+      idx += 1
+      first = idx
+      count -= step + 1
+    else
+      count = step
+    end
+  end
+  return first
+end
+
+function upperBoundGapAnchor()
+
+end
+
+function clearGaps!(x::AnchorGaps)
   x.anchors = GapAnchor[]
   x.cutBegin = 0
   x.cutEnd = 0
