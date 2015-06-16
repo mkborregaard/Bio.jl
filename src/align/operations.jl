@@ -82,7 +82,3 @@ function show(io::IO, op::Operation)
         write(io, convert(Char, op))
     end
 end
-
-
-
-

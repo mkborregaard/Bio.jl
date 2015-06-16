@@ -8,4 +8,5 @@ import Base: convert, getindex, show, length, start, next, done, copy, reverse,
 
 include("operations.jl")
 
+
 end
