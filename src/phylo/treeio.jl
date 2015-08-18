@@ -2,57 +2,22 @@
 # IO phylogenies stored in various formats #
 #==========================================#
 
-# Ben J. Ward 2015
-
-@Docile.doc """
-Tokenizer type that is responsible for splitting a string into token according to a
-regex specification. The regex specification is stored in `dict`.
-
-**Fields:**
-
-* `dict`:      A Dictionary of String keys and Regex values.
-* `tokenizer`: A regex that is generated from the specification.
-""" ->
-type Tokenizer
-  dict::Dict{String, Regex}
-  tokenizer::Regex
-  """
-  Inner constructor for Tokenizers. Accepts a vector of String, Regex
-  tuples that makes the token specifications.
-
-  **Parameters:**
-
-  * `x`: An array of ASCIIString, Regex tuples. 
-
-  **Returns:** Instance of `Tokenizer`
-  """
-  function Tokenizer(x::Array{Tuple{ASCIIString, Regex}, 1})
-    dictvalues = [i[2] for i in x]
-    stringvalues = String[i.pattern for i in dictvalues]
-    combinedstring = join(stringvalues, "|")
-    finalstring = "($combinedstring)"
-    return new([i => j for (i, j) in x], Regex(finalstring))
-  end
-end
-
-
-# 2). Methods for parsing newick format strings into phylogenies.
-
-# Exception types.
+# Exception types
+# ----------------
 
 @Docile.doc """
 A simple Exception type that is thrown by newick related functions when an error occurs.
 
 **Fields:**
 
-* `msg`: A `String` containing the message to print to screen with `showerror`. 
+* `msg`: A `String` containing the message to print to screen with `showerror`.
 """ ->
 type NewickException <: Exception
   msg::String
 end
 
-@Docile.doc """ 
-Basic function that prints NewickExceptions to screen. 
+@Docile.doc """
+Basic function that prints NewickExceptions to screen.
 """ ->
 Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
 
@@ -69,7 +34,7 @@ end
 @Docile.doc """
 Makes a new clade when building a tree from a newick string.
 
-This method is used in the `parsenewick` method to take car of linking a 
+This method is used in the `parsenewick` method to take car of linking a
 newly created node to its parent on creation.
 
 **Parameters:**
@@ -96,13 +61,13 @@ Finishes the processing of the current clade in the newick file.
 **Returns:** The parent `PhyNode` of the `PhyNode` provided as the `node` parameter.
 """ ->
 function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
-  # Check if the node has a name, and if values are not confidence, and there are no conf 
-  # values in values or comments, and confience is not known, 
+  # Check if the node has a name, and if values are not confidence, and there are no conf
+  # values in values or comments, and confience is not known,
   if name(node) != "" && !(valuesareconf || commentsareconf) && !confisknown(node) && haschildren(node)
     confidence!(node, parseconfidence(name(node)))
     if confisknown(node)
       name!(node, "")
-    end 
+    end
   end
   if hasparent(node)
     parent = node.parent
@@ -154,7 +119,7 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
   tokenizer::Tokenizer = Tokenizer(definition)
   # Convet the newick string into a series of tokens than can be considered in turn and understood.
   tokens = tokenizestring(strip(newickstring), tokenizer)
-  # Create the first clade, i.e. the root and set the variable that points to the current clade 
+  # Create the first clade, i.e. the root and set the variable that points to the current clade
   # to the root.
   root = PhyNode("Root")
   phy = Phylogeny("", root, true, true)
@@ -184,7 +149,7 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
       enteringbl = false
       leftpcount += 1
     elseif token == ","
-      # If the current clade is the root, it means the external parentheses are missing. 
+      # If the current clade is the root, it means the external parentheses are missing.
       if current === root
         root = makenewclade()
         name!(root, "Root")
@@ -325,11 +290,11 @@ function informationmaker(plain::Bool, blconfidence::Bool, blonly::Bool,
     #If plain is selected, a plain newick string is to be made
     makeinfostring(node, terminal = false) = "$(comment(node))"
   elseif blconfidence
-    # Branchlengths are support values. Therefore you want to ignore 
+    # Branchlengths are support values. Therefore you want to ignore
     # the actual branchlengths, instead writing out the confidence to the string.
     function makeinfostring(node, terminal = false)
       if terminal
-        # Terminal branches by definition, have 100% support as they are what 
+        # Terminal branches by definition, have 100% support as they are what
         # is observed in nature.
         out = ":$(maximumconf)$(comment(node))"
       else
@@ -357,7 +322,7 @@ end
 function newickstring(blconfidence = false, blonly = false, plain = false,
   plainnewick = true, ladderize = nothing, maximumconf = 1.0, confSF = "1.2f",
   formatbl = "1.5f")
-  
+
   if blconfidence || blonly
     plain = false
   end
@@ -365,7 +330,3 @@ function newickstring(blconfidence = false, blonly = false, plain = false,
   infostring = informationmaker(plain, blconfidence, blonly,
     maximumconf, formatconf, formatbl)
 end
-
-
-
-
