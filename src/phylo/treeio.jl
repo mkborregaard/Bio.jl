@@ -261,27 +261,6 @@ end
 # end
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Newick writing functionality...
 
 function informationmaker(plain::Bool, blconfidence::Bool, blonly::Bool,
