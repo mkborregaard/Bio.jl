@@ -89,10 +89,6 @@ function parseconfidence(text::String)
   end
 end
 
-function tokenizestring(s::String, t::Tokenizer)
-  return matchall(t.tokenizer, s)
-end
-
 # Method for parsing a Newick formatted string.
 
 @Docile.doc """
@@ -112,10 +108,14 @@ by a floating point value that may be a branch length, or clade support value.
 """ ->
 function parsenewick(newickstring::String, commentsareconf::Bool = false, valuesareconf::Bool = false)
   # Create a definition of the tokens that appear in a newick string, and the meanings of them.
-  definition::Array{Tuple{ASCIIString, Regex}, 1} = [ ("open paren", r"\("), ("close paren", r"\)"),
-  ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"), ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"),
-  ("comma", r"\,"), ("comment", r"\[(\\.|[^\]])*\]"), ("quoted node label", r"\'(\\.|[^\'])*\'"),
-  ("semicolon", r"\;"), ("newline", r"\n")]
+  definition::Vector{Tuple{ASCIIString, Regex}} = [("open paren", r"\("),
+                                                   ("close paren", r"\)"),
+                                                   ("unquoted node label", r"[^\s\(\)\[\]\'\:\;\,]+"),
+                                                   ("edge length", r"\:[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?"),
+                                                   ("comma", r"\,"),
+                                                   ("comment", r"\[(\\.|[^\]])*\]"),
+                                                   ("quoted node label", r"\'(\\.|[^\'])*\'"),
+                                                   ("semicolon", r"\;"), ("newline", r"\n")]
   tokenizer::Tokenizer = Tokenizer(definition)
   # Convet the newick string into a series of tokens than can be considered in turn and understood.
   tokens = tokenizestring(strip(newickstring), tokenizer)
