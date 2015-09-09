@@ -9,5 +9,6 @@ include("seq/Seq.jl")
 include("intervals/Intervals.jl")
 include("align/Align.jl")
 include("annotations.jl")
+include("tools/tools.jl")
 
 end # module Bio
