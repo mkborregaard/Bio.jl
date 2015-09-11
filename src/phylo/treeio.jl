@@ -5,33 +5,33 @@
 # Exception types
 # ----------------
 
-@doc """
+"""
 A simple Exception type that is thrown by newick related functions when an error occurs.
 
 **Fields:**
 
 * `msg`: A `String` containing the message to print to screen with `showerror`.
-""" ->
+"""
 type NewickException <: Exception
     msg::String
 end
 
-@doc """
+"""
 Basic function that prints NewickExceptions to screen.
-""" ->
+"""
 Base.showerror(io::IO, e::NewickException) = print(io, "Error parsing newick string: ", e.msg)
 
 # Internal methods used by newick string parser method.
 
-@doc """
+"""
 Makes a new clade when building a tree from a newick string.
 This method of the function accepts no parameters and returns an empty `PhyNode`.
-""" ->
+"""
 function makenewclade()
   return PhyNode()
 end
 
-@doc """
+"""
 Makes a new clade when building a tree from a newick string.
 
 This method is used in the `parsenewick` method to take car of linking a
@@ -42,14 +42,14 @@ newly created node to its parent on creation.
 * `parent`: The parent of the to-be-created PhyNode.
 
 **Returns:** A reference to the newly created `PhyNode`.
-""" ->
+"""
 function makenewclade(parent::PhyNode)
     newclade = PhyNode()
     graft!(parent, newclade)
     return newclade
 end
 
-@doc """
+"""
 Finishes the processing of the current clade in the newick file.
 
 **Parameters:**
@@ -59,7 +59,7 @@ Finishes the processing of the current clade in the newick file.
 * `commentsareconf`: `Bool` that specifies if comments are confidence values.
 
 **Returns:** The parent `PhyNode` of the `PhyNode` provided as the `node` parameter.
-""" ->
+"""
 function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
     # Check if the node has a name, and if values are not confidence, and there are no conf
     # values in values or comments, and confience is not known,
@@ -77,10 +77,10 @@ function processclade(node::PhyNode, valuesareconf::Bool, commentsareconf::Bool)
     end
 end
 
-@doc """
+"""
 Parses confidence values from string - if this is not possible,
 -1.0 is returned, which is the value for 'unknown' in `Phylo`.
-""" ->
+"""
 function parseconfidence(text::String)
     try
         return float(text)
@@ -91,7 +91,7 @@ end
 
 # Method for parsing a Newick formatted string.
 
-@doc """
+"""
 Build a `Phylogeny` from a String formatted as a Newick string.
 
 Newick strings are of the form `(((A,B),C),D);`.
@@ -105,7 +105,7 @@ by a floating point value that may be a branch length, or clade support value.
 * `valuessareconf`: `Bool` value indicating if values (usually branchlengths) provide clade support values.
 
 **Returns:** A `Phylogeny` constructed from the string.
-""" ->
+"""
 function parsenewick(newickstring::String, commentsareconf::Bool = false, valuesareconf::Bool = false)
   # Create a definition of the tokens that appear in a newick string, and the meanings of them.
     definition::Vector{Tuple{ASCIIString, Regex}} = [("open paren", r"\("),

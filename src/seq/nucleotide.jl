@@ -385,9 +385,9 @@ function copy!{T}(seq::NucleotideSequence{T}, strdata::Vector{UInt8},
 end
 
 
-@Docile.doc """
+"""
 Construct a nucleotide sequence by concatenating other sequences.
-""" ->
+"""
 function NucleotideSequence{T<:Nucleotide}(chunks::NucleotideSequence{T}...)
     seqlen = 0
     for chunk in chunks
@@ -443,9 +443,9 @@ function immutable!(seq::NucleotideSequence)
 end
 
 
-@Docile.doc """
+"""
 Construct a nucleotide sequence by repeating another sequences.
-""" ->
+"""
 function repeat{T<:Nucleotide}(chunk::NucleotideSequence{T}, n::Integer)
     seqlen = n * length(chunk)
 
@@ -468,7 +468,7 @@ end
 
 
 
-@Docile.doc """
+"""
 Copy `src` to `dest` starting at position `pos`.
 
 This is unsafe in the following ways:

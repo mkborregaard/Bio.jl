@@ -9,7 +9,7 @@ export Tokenizer, tokenizestring
 # ========================
 
 
-@Docile.doc """
+"""
 Tokenizer type that is responsible for splitting a string into token according to a
 regex specification. The regex specification is stored in `dict`.
 
@@ -17,7 +17,7 @@ regex specification. The regex specification is stored in `dict`.
 
 * `dict`:      A Dictionary of String keys and Regex values.
 * `tokenizer`: A regex that is generated from the specification.
-""" ->
+"""
 type Tokenizer
     dict::Dict{String, Regex}
     tokenizer::Regex
