@@ -13,7 +13,7 @@ typealias NodeAnnotations{T} Dict{PhyNode, T}
 TreeAnnotations: A type to allow the assignment of data to clades of a phylogeny.
 """
 type TreeAnnotations{T}
-    x::Phylogeny
+    phylogeny::Phylogeny
     annotations::NodeAnnotations{T}
 end
 
@@ -35,5 +35,6 @@ end
 Add or set an annotation to be associated with a clade / node by the TreeAnnotations object.
 """
 function Base.setindex!{T}(x::TreeAnnotations{T}, item::T, clade::PhyNode)
+    # Should add code here to make sure that clade elected is indeed part of the tree.
     x.annotations[clade] = item
 end
