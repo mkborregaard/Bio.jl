@@ -258,7 +258,7 @@ Get the parent of a node.
 """
 function parent(x::PhyNode)
     if parentisself(x)
-        println("Node does not have a parent. It is self referential.")
+        warn("Node does not have a parent. It is self referential.")
     end
     return x.parent
 end
