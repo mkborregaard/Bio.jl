@@ -21,12 +21,6 @@ A `BreathFirst` phylogeny iterator contains:
 """
 immutable BreadthFirst <: PhylogenyIterator
     start::PhyNode
-    function BreadthFirst(start::PhyNode)
-        if isempty(start)
-            error("Node provided to start iteration is empty!")
-        end
-        return new(start)
-    end
 end
 
 typealias BreadthFirstState Queue{Deque{PhyNode}}
@@ -90,12 +84,6 @@ A `DepthFirst` phylogeny iterator contains:
 """
 immutable DepthFirst <: PhylogenyIterator
     start::PhyNode
-    function DepthFirst(x::PhyNode)
-        if isempty(x)
-            error("Node provided to start iteration is empty!")
-        end
-        return new(x)
-    end
 end
 
 """
@@ -159,12 +147,6 @@ A `Tip2Root` phylogeny iterator contains:
 """
 immutable Tip2Root <: PhylogenyIterator
     start::PhyNode
-    function Tip2Root(x::PhyNode)
-        if isempty(x)
-            error("Node provided to start iteration is empty!")
-        end
-        return new(x)
-    end
 end
 
 typealias Tip2RootState Tuple{PhyNode, Bool}
