@@ -1,8 +1,3 @@
-module Tokenizer
-
-using Base.Intrinsics
-
-export Tokenizer, tokenizestring
 
 # ========================
 # A Tokenizer for Strings
@@ -60,7 +55,4 @@ function tokenize(s::String, t::Tokenizer)
         lastpos = mat.offset + length(mat.match) - 1
     end
     return out
-end
-
-
 end
