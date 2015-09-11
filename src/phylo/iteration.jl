@@ -230,30 +230,4 @@ that matches a given condition.
 * `it`: One of any type of `PhylogenyIterator`. This dictates the order in which nodes will be searched.
 * `condition`: A `Function` that accepts a `PhyNode` as the first and only argument, and returns a Bool.
 """
-function Base.search{T <: PhylogenyIterator}(it::T, condition::Function)
-    for i = it
-        # I feel like the function should catch occasions where the provided condition does not return a Bool.
-        if condition(i)
-            return i
-        end
-    end
-end
-
-"""
-Iterate over a `Phylogeny` and return an array of references to all `PhyNode`s
-that match a given condition.
-
-**Parameters:**
-* `it`: One of any type of `PhylogenyIterator`. This dictates the order in which nodes will be searched.
-* `condition`: A `Function` that accepts a `PhyNode` as the first and only argument, and returns a Bool.
-"""
-function searchall{T <: PhylogenyIterator}(it::T, condition::Function)
-    matches::Array{PhyNode, 1} = PhyNode[]
-    for i = it
-        # I feel like the function should catch occasions where the provided condition does not return a Bool.
-        if condition(i)
-            push!(matches, i)
-        end
-    end
-    return matches
-end
+Base.search{T <: PhylogenyIterator}(it::T, condition::Function) = first(filter(condition, it))
