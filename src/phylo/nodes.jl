@@ -31,8 +31,12 @@ type PhyNode
     * `branchlength`: The branch length of the node from its parent (optional).
                       Defaults to `-1.0`, indicating an unknown branch length.
 
-    * `ext`:          An array of zero or more PhyExtensions (optional). Defaults to an empty
-                      array, i.e. `[]`, indicating there are no extensions.
+    * `confidence`:   A Floating point value that can represent confidence for that clade (optional).
+                      Such confidences are usually Maximum Likelihood values or Bootstrap
+                      values.
+
+    * `children`:     A Vector containing references to the PhyNodes that are children of this node (optional).
+                      Default to an empty vector.
 
     * `parent`:       The parent node (optional). Defaults to a self-reference, indicating
                       the node has no parent.
