@@ -17,6 +17,8 @@ import Base: getindex, setindex!, length, start, next, done, isempty, isequal, p
 
 import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 
+import Bio.FileFormat
+
 export
 
   # PhyNode and associated methods
