@@ -650,5 +650,16 @@ If all branch lengths are unknown, the tree is a cladogram, and it is still usef
 """
 function distanceof(x::PhyNode)
     bl = branchlength(x)
-    return bl == -1.0 ? eps() : bl
+    if b1 == -1.0
+        error("Branch length is unknown.")
+    end
+    return bl
+end
+
+function distanceof(x::PhyNode, replace_unknown::Float64 = eps())
+    b1 = branchlength(x)
+    if b1 == -1.0
+        return replace_unknown
+    end
+    return b1
 end
