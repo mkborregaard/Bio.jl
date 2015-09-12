@@ -70,6 +70,36 @@ type PhyNode
     end
 end
 
+
+"""
+Create a PhyNode.
+PhyNodes represent nodes in a phylogenetic tree. All arguments are optional
+when creating PhyNodes:
+
+**Example:**
+one = PhyNode()
+two = PhyNode(name = "two", branchlength = 1.0, parent = one)
+
+**Parameters:**
+* `name`:         The name of the node (optional). Defaults to an empty string, indicating
+                  the node has no name.
+
+* `branchlength`: A floating point value representing the branch length of the
+                  node from its parent (optional). Because branch lengths can be
+                  not applicable (cladograms), or not known.
+                  The value is Nullable, and is null by default.
+                  If it is negative, it will be treated as NA or unknown (null).
+
+* `confidence`:   Floating point value that can represent confidence for that clade (optional).
+                  Such confidences are usually Maximum Likelihood values or Bootstrap
+                  values. If it is negative, it will be treated as NA or unknown (null).
+
+* `children`:     A Vector containing references to the PhyNodes that are children of this node (optional).
+                  Default to an empty vector.
+
+* `parent`:       The parent node (optional). Defaults to a self-reference, indicating
+                  the node has no parent.
+"""
 function PhyNode(name::String = "",
                  branchlength::Float64 = -1.0,
                  confidence::Float64 = -1.0,
