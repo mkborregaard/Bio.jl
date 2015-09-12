@@ -70,6 +70,18 @@ type PhyNode
     end
 end
 
+function PhyNode(name::String = "",
+                 branchlength::Float64 = -1.0,
+                 confidence::Float64 = -1.0,
+                 children::Vector{PhyNode} = PhyNode[],
+                 parent = nothing)
+
+    bl = branchlength < 0 ? Nullable{Float64}() : Nullable{Float64}(branchlength)
+    conf = confidence < 0 ? Nullable{Float64}() : Nullable{Float64}(confidence)
+
+    return PhyNode(name, bl, conf, children, parent)
+end
+
 
 
 # Basic methods, accessing and manipulating fields of individual nodes

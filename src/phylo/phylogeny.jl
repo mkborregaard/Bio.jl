@@ -17,6 +17,7 @@ type Phylogeny
     Phylogeny() = new("", PhyNode(), false, true)
 end
 
+
 """
 Create a Phylogeny with a name, root node, and set whether it is rooted and whether
 it is re-rootable.
@@ -36,6 +37,7 @@ function Phylogeny(name::String, root::PhyNode, rooted::Bool, rerootable::Bool)
     return x
 end
 
+
 """
 Test whether a phylogeny is empty.
 
@@ -45,6 +47,7 @@ Test whether a phylogeny is empty.
 function isempty(x::Phylogeny)
     return isempty(x.root)
 end
+
 
 """
 Set the name of a Phylogeny
@@ -56,6 +59,7 @@ Set the name of a Phylogeny
 function name!(x::Phylogeny, name::String)
     x.name = name
 end
+
 
 """
 Test whether a Phylogeny is rooted.
@@ -78,6 +82,7 @@ function isrerootable(x::Phylogeny)
     return x.rerootable
 end
 
+
 """
 Get the root node of a Phylogeny.
 
@@ -87,6 +92,7 @@ Get the root node of a Phylogeny.
 function root(x::Phylogeny)
     return x.root
 end
+
 
 """
 Test whether a given node is in a given tree.
@@ -99,6 +105,7 @@ function isintree(tree::Phylogeny, clade::PhyNode)
     s = search(BreadthFirst(tree), x -> x === clade)
     return typeof(s) == PhyNode
 end
+
 
 """
 Root a tree at the midpoint between the two most distant taxa.
@@ -113,6 +120,7 @@ function root!(tree::Phylogeny, newbl::Float64 = -1.0)
     root!(tree, midpoint, newbl)
 end
 
+
 """
 Find the maximum branch length in a dictionary mapping nodes to their branch lengths.
 
@@ -126,6 +134,7 @@ function maxindict(dictionary::Dict)
     return keyvalpairs[matches][1]
 end
 
+
 """
 Find the node that is furthest from the root of a tree.
 
@@ -136,6 +145,7 @@ function furthestfromroot(tree::Phylogeny)
     distances = distance(tree)
     return maxindict(distances.annotations)
 end
+
 
 """
 Find the leaf that is furthest from a given node in a tree.
@@ -148,6 +158,7 @@ function furthestleaf(tree::Phylogeny, node::PhyNode)
     distances = Dict{PhyNode, Float64}([i => distance(tree, node, i) for i in terminaldescendents(root(tree))])
     return maxindict(distances)
 end
+
 
 """
 Find the midpoint of a tree.
@@ -173,6 +184,7 @@ function findmidpoint(tree::Phylogeny)
     return current
 end
 
+
 """
 Root a tree using a given array of nodes as the outgroup, and optionally setting the branch length.
 
@@ -187,6 +199,7 @@ function root!(tree::Phylogeny,
     o = mrca(outgroup)
     root!(tree, o, newbl)
 end
+
 
 """
 Root a tree using a given node as the outgroup, and optionally setting the branch length,
@@ -278,6 +291,7 @@ function root!(tree::Phylogeny, outgroup::PhyNode, newbl::Float64 = -1.0)
     tree.rooted = true
 end
 
+
 # This is probably unnecessary given root puts the rooted flag to true.
 # perhaps and unroot! method is more appropriate.
 """
@@ -290,6 +304,7 @@ function unroot!(x::Phylogeny)
     x.rooted = false
 end
 
+
 """
 Set whether a tree is re-rootable.
 
@@ -301,6 +316,7 @@ function rerootable!(x::Phylogeny, rerootable::Bool)
     x.rerootable = rerootable
 end
 
+
 """
 Get the terminal nodes of a phylogeny.
 
@@ -310,6 +326,7 @@ Get the terminal nodes of a phylogeny.
 function terminals(x::Phylogeny)
     return terminaldescendents(x.root)
 end
+
 
 """
 Get one or more nodes by name.
@@ -321,6 +338,7 @@ Get one or more nodes by name.
 function getindex(tree::Phylogeny, names::Array{String, 1})
   return searchall(DepthFirst(tree), x -> in(name(x), names))
 end
+
 
 """
 Get one node by name.
@@ -337,6 +355,7 @@ function getindex(tree::Phylogeny, name::String)
     end
     error("No Node in phylogeny by specified name.")
 end
+
 
 """
 Generate an index mapping names to nodes
@@ -355,6 +374,7 @@ function generateindex(tree::Phylogeny)
     end
     return output
 end
+
 
 """
 Find the shortest path between two nodes in a tree.
@@ -375,6 +395,7 @@ function pathbetween(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
     filter!((x) -> !in(x, inter), p2)
     return [p1, inter[1], reverse(p2)]
 end
+
 
 """
 Find the distance between two nodes in a tree.
@@ -397,6 +418,7 @@ function distance(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
     return sum(distanceof, p)
 end
 
+
 """
 Find the number of edges in the shortest path between two nodes in a tree.
 
@@ -410,6 +432,7 @@ function depth(tree::Phylogeny, n1::PhyNode, n2::PhyNode)
     return length(p) == 1 ? 0 : length(p) - 1
 end
 
+
 """
 Find the distance between a node and the root of a tree.
 
@@ -421,6 +444,7 @@ function distance(tree::Phylogeny, n1::PhyNode)
     p = Tip2Root(n1)
     return sum(getbranchlength, p)
 end
+
 
 """
 Find the distance of each node from the root.
@@ -440,6 +464,7 @@ function distance(tree::Phylogeny)
     return distances
 end
 
+
 """
 Find the depth of each node from the root.
 
@@ -458,6 +483,7 @@ function depth(tree::Phylogeny)
     return depths
 end
 
+
 """
 Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
 This function sets the root of the phylogeny object to an empty node, as the root, and so the entire structure of the tree,
@@ -472,6 +498,7 @@ function graft!(parent::PhyNode, child::Phylogeny)
     root_unsafe!(child, PhyNode())
 end
 
+
 """
 Graft a Phylogeny to the node of another tree, creates a parent-child relationship between the input node, and the root of the input phylogeny.
 
@@ -484,6 +511,7 @@ function graft!(parent::PhyNode, child::Phylogeny, bl::Float64)
     branchlength!(root(child), bl)
     graft!(parent, child)
 end
+
 
 """
 Set the root field of a Phylogeny variable.
