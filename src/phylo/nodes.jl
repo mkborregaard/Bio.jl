@@ -335,7 +335,7 @@ Set the confidence of the node.
 * `x`:    The PhyNode to set the confidence of.
 * `conf`: The value of the confidence to set. In this case nothing / na / null.
 """
-function confidence!(x::PhyNode, conf::nothing)
+function confidence!(x::PhyNode, conf::Nothing)
     x.confidence = Nullable{Float64}()
 end
 
