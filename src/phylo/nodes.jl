@@ -231,7 +231,7 @@ Set the branchlength of a PhyNode.
 
 * `bl`: The branchlength to give the PhyNode, in this case nothing.
 """
-function branchlength!(x::PhyNode, bl::nothing)
+function branchlength!(x::PhyNode, bl::Nothing)
     x.branchlength = Nullable{Float64}()
 end
 
