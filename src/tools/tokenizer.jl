@@ -51,7 +51,7 @@ function tokenize(s::String, t::Tokenizer)
         if mat.offset > lastpos + 1
             push!(failiures, str[lastpos + 1 : mat.offset - 1])
         end
-        push!(tokens, mat.match)
+        push!(out.tokens, mat.match)
         lastpos = mat.offset + length(mat.match) - 1
     end
     return out
