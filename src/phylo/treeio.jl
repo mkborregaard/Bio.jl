@@ -118,7 +118,8 @@ function parsenewick(newickstring::String, commentsareconf::Bool = false, values
                                                     ("semicolon", r"\;"), ("newline", r"\n")]
     tokenizer::Tokenizer = Tokenizer(definition)
     # Convet the newick string into a series of tokens than can be considered in turn and understood.
-    tokens = tokenize(strip(newickstring), tokenizer).tokens
+    result = tokenize(strip(newickstring), tokenizer)
+    tokens = result.tokens
     # Create the first clade, i.e. the root and set the variable that points to the current clade
     # to the root.
     root = PhyNode("Root")
