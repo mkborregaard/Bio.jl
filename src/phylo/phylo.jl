@@ -22,7 +22,7 @@ import Bio.FileFormat
 
 export
 
-  # PhyNode and associated methods
+  # PhyNodes and associated methods
   PhyNode, blisknown, confisknown, confidence, confidence!, isempty,
   name, branchlength, isleaf, haschildren, haschild, parentisself, hasparent,
   children, siblings, parent, isroot, isunlinked, islinked, isinternal,
@@ -37,7 +37,10 @@ export
 
   # PhylogenyIterator and associated methods
   PhylogenyIterator, DepthFirst, BreadthFirst, Tip2Root,
-  getmrca, hasextensions, getroot, pathbetween
+  getmrca, hasextensions, getroot, pathbetween,
+
+  # File and format IO
+  @newick_str, parsenewick, readnewick
 
 include("nodes.jl")
 include("phylogeny.jl")
