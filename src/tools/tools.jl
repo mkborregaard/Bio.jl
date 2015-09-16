@@ -2,7 +2,7 @@ module Tools
 
 using Base.Intrinsics
 
-export Tokenizer, tokenizestring
+export Tokenizer, tokenize
 
 include("tokenizer.jl")
 
