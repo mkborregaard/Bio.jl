@@ -12,7 +12,7 @@ using Base.Intrinsics
 
 using LightXML: XMLElement, get_elements_by_tagname, attribute
 
-using Bio.Tools.Tokenizer
+using Bio.Tools: Tokenizer, tokenize
 
 import Base: getindex, setindex!, length, start, next, done, isempty, isequal, parent, delete!, search
 
