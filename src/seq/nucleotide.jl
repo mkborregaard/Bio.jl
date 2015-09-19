@@ -320,9 +320,7 @@ end
 
 
 """
-`NucleotideSequence(chunks::NucleotideSequence...)`
-
-Construct a nucleotide sequence by concatenating the given sequences
+Construct a nucleotide sequence by concatenating other sequences.
 """
 function NucleotideSequence{T<:Nucleotide}(chunks::NucleotideSequence{T}...)
     seqlen = 0
@@ -394,9 +392,7 @@ end
 
 
 """
-`repeat(chunk::NucleotideSequence, n)`
-
-Construct a nucleotide sequence by repeating another sequence `n` times
+Construct a nucleotide sequence by repeating another sequences.
 """
 function repeat{T<:Nucleotide}(chunk::NucleotideSequence{T}, n::Integer)
     seqlen = n * length(chunk)
@@ -418,6 +414,7 @@ end
 
 "Repeat nucleotide sequences"
 (^){T}(chunk::NucleotideSequence{T}, n::Integer) = repeat(chunk, n::Integer)
+
 
 
 """
@@ -1678,5 +1675,3 @@ function show{T, K}(io::IO, counts::KmerCounts{T, K})
         println(io, "  ", s, " => ", counts.data[x])
     end
 end
-
-

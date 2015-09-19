@@ -1,0 +1,15 @@
+site_name: Bio.jl
+
+site_description: Bio.jl The Bioinformatics framework for the Julia language.
+
+repo_url: https://github.com/BioJulia/Bio.jl/
+
+use_directory_urls: false
+
+pages:
+- [index.md, Ind]
+- [installing.md, User Guide, Installation]
+- [phylo.md, API, Phylo]
+- [LICENSE.md, About, License]
+
+markdown_extensions: [codehilite]

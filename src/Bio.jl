@@ -7,8 +7,9 @@ abstract FileFormat
 
 include("bufferedreader.jl")
 include("ragel.jl")
-
 include("seq/seq.jl")
 include("intervals/intervals.jl")
+include("tools/tools.jl")
+include("phylo/phylo.jl")
 
-end # module
+end
