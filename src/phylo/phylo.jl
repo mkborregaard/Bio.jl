@@ -20,7 +20,7 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 
 import Bio.FileFormat
 
-import Colors: @str_colorant
+import Colors: @colorant_str
 
 import Compose: compose, context, line, linewidth, stroke, text, UnitBox
 
