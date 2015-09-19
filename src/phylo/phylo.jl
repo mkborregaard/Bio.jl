@@ -20,6 +20,10 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 
 import Bio.FileFormat
 
+import Colors: @str_colorant
+
+import Compose: compose, context, line, linewidth, stroke, text, UnitBox
+
 export
 
   # PhyNodes and associated methods
@@ -33,7 +37,7 @@ export
   # Phylogeny and associated methods
   Phylogeny, isrooted, isrerootable, root!,
   setrerootable!, graft!, prune!, pruneregraft!, search,
-  searchall, generateindex,
+  searchall, generateindex, phyplot,
 
   # PhylogenyIterator and associated methods
   PhylogenyIterator, DepthFirst, BreadthFirst, Tip2Root,
@@ -47,5 +51,6 @@ include("phylogeny.jl")
 include("treeio.jl")
 include("iteration.jl")
 include("annotation.jl")
+include("phyplot.jl")
 
 end # module Phylo
