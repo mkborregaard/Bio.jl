@@ -2,7 +2,7 @@ function compose_segments(x1::Vector{AbstractFloat}, y1::Vector{AbstractFloat}, 
     [[(x1[i], y1[i]), (x2[i], y2[i])] for i in 1:length(x1)]
 end
 
-function phyplot(phy::Bio.Phylo.Phylogeny; line_width = 0.2, font_size = 2, show_tips = 30)
+function phyplot(phy::Phylogeny; line_width = 0.2, font_size = 2, show_tips = 30)
     x, y, parx, descy, tip = findxy(phy)
 
     horizontal_lines = compose_segments(x, y, parx, y)
@@ -25,7 +25,7 @@ function compose_segments(x1::AbstractFloat, y1::AbstractFloat, x2::AbstractFloa
     [(x1[i], y1[i]), (x2[i], y2[i])]
 end
 
-function phyplot2(phy::Bio.Phylo.Phylogeny; line_width = 0.2, font_size = 2, show_tips = 30)
+function phyplot2(phy::Phylogeny; line_width = 0.2, font_size = 2, show_tips = 30)
     x, y = findxy2(phy)
     horizontal_lines = [compose_segments(x[node], y[node], x[parent(node)], y[node]) for node in keys(x)]
     vertical_lines = [compose_segments(x[node], y[children(node)[1]], x[node], y[children(node)[end]]) for node in keys(x)]
@@ -42,10 +42,10 @@ function phyplot2(phy::Bio.Phylo.Phylogeny; line_width = 0.2, font_size = 2, sho
 end
 
 
-function findxy2(phy::Bio.Phylo.Phylogeny)
+function findxy2(phy::Phylogeny)
     height = [tip => i for (i, tip) in enumerate(termdec(phy))]
 
-    function loc2(clade::Bio.Phylo.PhyNode)
+    function loc2(clade::PhyNode)
         if !in(clade, height)
             for subclade in children(clade)
                 loc2(subclade)
@@ -68,7 +68,7 @@ function findxy2(phy::Bio.Phylo.Phylogeny)
 end
 
 
-function findxy(phy::Bio.Phylo.Phylogeny)
+function findxy(phy::Phylogeny)
     seen_tips = Vector{Int}(0)
     is_tip = Vector{Bool}(0)
     y_position = Vector{AbstractFloat}(0)
@@ -77,7 +77,7 @@ function findxy(phy::Bio.Phylo.Phylogeny)
     nodenum = (i = 0; for j in DepthFirst(phy) i += 1 end; i)
     desc_ypos = zeros(nodenum, 2) #replace magic number!
 
-    function _loc(node::Bio.Phylo.PhyNode, parentx::AbstractFloat)
+    function _loc(node::PhyNode, parentx::AbstractFloat)
         xpos =  parentx + branchlength(node, 0.)
         if isleaf(node)
             ypos = sum(seen_tips)
@@ -103,12 +103,12 @@ function findxy(phy::Bio.Phylo.Phylogeny)
     x_position, y_position, parent_xpos, desc_ypos, is_tip
 end
 
-function termdec(phy::Bio.Phylo.Phylogeny)
+function termdec(phy::Phylogeny)
     termdec(phy.root)
 end
 
-function termdec(node::Bio.Phylo.PhyNode) #replacements for terminaldescendents which isn't working
-    ret = Array{Bio.Phylo.PhyNode, 1}(0)
+function termdec(node::PhyNode) #replacements for terminaldescendents which isn't working
+    ret = Array{PhyNode, 1}(0)
     for i in DepthFirst(node)
         if isleaf(i)
             push!(ret, i)
