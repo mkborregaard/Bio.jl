@@ -8,6 +8,10 @@ module Phylo
 
 using Docile
 
+using Colors
+
+using Compose
+
 using Base.Intrinsics
 
 using LightXML: XMLElement, get_elements_by_tagname, attribute
@@ -19,10 +23,6 @@ import Base: getindex, setindex!, length, start, next, done, isempty, isequal, p
 import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 
 import Bio.FileFormat
-
-import Colors: @colorant_str
-
-import Compose: compose, context, line, linewidth, stroke, text, UnitBox
 
 export
 
