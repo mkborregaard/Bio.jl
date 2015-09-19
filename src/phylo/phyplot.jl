@@ -1,4 +1,4 @@
-function compose_segments(x1::Vector{AbstractFloat}, y1::Vector{AbstractFloat}, x2::Vector{AbstractFloat}, y2::Vector{AbstractFloat})
+function compose_segments(x1::Vector{Float64}, y1::Vector{Float64}, x2::Vector{Float64}, y2::Vector{Float64})
     [[(x1[i], y1[i]), (x2[i], y2[i])] for i in 1:length(x1)]
 end
 
@@ -21,7 +21,7 @@ function phyplot(phy::Phylogeny; line_width = 0.2, font_size = 2, show_tips = 30
 
 end
 
-function compose_segments(x1::AbstractFloat, y1::AbstractFloat, x2::AbstractFloat, y2::AbstractFloat)
+function compose_segments(x1::Float64, y1::Float64, x2::Float64, y2::Float64)
     [(x1[i], y1[i]), (x2[i], y2[i])]
 end
 
@@ -71,13 +71,13 @@ end
 function findxy(phy::Phylogeny)
     seen_tips = Vector{Int}(0)
     is_tip = Vector{Bool}(0)
-    y_position = Vector{AbstractFloat}(0)
-    x_position = Vector{AbstractFloat}(0)
-    parent_xpos = Vector{AbstractFloat}(0)
+    y_position = Vector{Float64}(0)
+    x_position = Vector{Float64}(0)
+    parent_xpos = Vector{Float64}(0)
     nodenum = (i = 0; for j in DepthFirst(phy) i += 1 end; i)
     desc_ypos = zeros(nodenum, 2) #replace magic number!
 
-    function _loc(node::PhyNode, parentx::AbstractFloat)
+    function _loc(node::PhyNode, parentx::Float64)
         xpos =  parentx + branchlength(node, 0.)
         if isleaf(node)
             ypos = sum(seen_tips)
