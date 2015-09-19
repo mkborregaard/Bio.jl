@@ -2,7 +2,7 @@ function compose_segments(x1::Vector{Float64}, y1::Vector{Float64}, x2::Vector{F
     [[(x1[i], y1[i]), (x2[i], y2[i])] for i in 1:length(x1)]
 end
 
-function phyplot(phy::Phylogeny; line_width = 0.2, font_size = 2, show_tips = 30)
+function phyplot(phy::Phylogeny; line_width = 0.2, font_size = 1, show_tips = 50)
     x, y, parx, descy, tip = findxy(phy)
 
     horizontal_lines = compose_segments(x, y, parx, y)
