@@ -615,18 +615,18 @@ end
 
 
 """
-Test whether two PhyNodes are equal. Specifically, test whether all three of `branchlength`, `name` and `extensions` are equal.
-
+Test whether two PhyNodes are equal.
 **Parameters:**
 
 * `x`: The left PhyNode to compare.
 
 * `y`: The right PhyNode to compare.
 """
+# I have changed the way this works to avoid the nullable type issue
 function isequal(x::PhyNode, y::PhyNode)
-    bl = x.branchlength == y.branchlength
-    n = x.name == y.name
-    return all([bl, n])
+    ch = x.children == y.children
+    pa = x.parent == y.parent
+    return all([ch, pa])
 end
 
 

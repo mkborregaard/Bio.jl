@@ -13,8 +13,9 @@ type Phylogeny
     root::PhyNode
     rooted::Bool
     rerootable::Bool
+    annotations::Dict{Symbol, Any}
 
-    Phylogeny() = new("", PhyNode(), false, true)
+    Phylogeny() = new("", PhyNode(), false, true, Dict{Symbol, Any}())
 end
 
 

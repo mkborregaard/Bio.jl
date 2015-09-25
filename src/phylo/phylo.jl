@@ -40,7 +40,10 @@ export
   getmrca, hasextensions, getroot, pathbetween,
 
   # File and format IO
-  @newick_str, parsenewick, readnewick
+  @newick_str, parsenewick, readnewick,
+
+  # Annotations and methods
+  Nodecoverage, setindex!, getindex, setannotations!, getannotations
 
 include("nodes.jl")
 include("phylogeny.jl")
