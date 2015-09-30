@@ -9,6 +9,26 @@ are aliased as Nodeannotations{T}.
 """
 typealias Nodeannotations{T} Dict{PhyNode, T}
 
+"""
+I want to remove this from the code...
+"""
+
+type TreeAnnotations{T}
+    phylogeny::Phylogeny
+    annotations::NodeAnnotations{T}
+end
+
+"""
+Construct a TreeAnnotations object which contains no annotations yet.
+"""
+function TreeAnnotations{T}(x::Phylogeny, ::Type{T})
+    return TreeAnnotations(x, NodeAnnotations{T}())
+end
+
+"""
+... down to here
+"""
+
 
 function getannotations(x::Phylogeny, name::Symbol)
     x.annotations[name]
