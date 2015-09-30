@@ -5,9 +5,9 @@
 # Ben J. Ward 2015.
 """
 A type-alias: Dictionaries with keys of type `PhyNode` and values of type `T`
-are aliased as Nodeannotations{T}.
+are aliased as NodeAnnotations{T}.
 """
-typealias Nodeannotations{T} Dict{PhyNode, T}
+typealias NodeAnnotations{T} Dict{PhyNode, T}
 
 """
 I want to remove this from the code...
@@ -34,7 +34,7 @@ function getannotations(x::Phylogeny, name::Symbol)
     x.annotations[name]
 end
 
-function setannotations!{T}(x::Phylogeny, name::Symbol, ann::Nodeannotations{T})
+function setannotations!{T}(x::Phylogeny, name::Symbol, ann::NodeAnnotations{T})
     filter!((k, v) -> in(k, descendents(x.root)), ann)
     x.annotations[name] = ann #
 end
@@ -42,7 +42,7 @@ end
 @enum Nodecoverage tipsandnodes=1 tipsonly=2 nodesonly=3
 
 # a version of setannotations that supplies a default value to all nodes
-function setannotations!{T}(x::Phylogeny, name::Symbol, ann::Nodeannotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
+function setannotations!{T}(x::Phylogeny, name::Symbol, ann::NodeAnnotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
     if cover == tipsandnodes
         targetnodes = descendents(x.root)
     elseif cover == tipsonly
@@ -68,7 +68,7 @@ function getannotations{T}(x::Phylogeny, name::Symbol, ::Type{T})
    end
 
    ret = x.annotations[name]
-   if !isa(ret, Nodeannotations{T})
+   if !isa(ret, NodeAnnotations{T})
        error("$name is of type $(typeof(ret))")
    end
    ret
@@ -84,12 +84,12 @@ function getindex(x::Phylogeny, name::Symbol)
 end
 
 
-function setindex!{T}(x::Phylogeny, name::Symbol, annotation::Nodeannotations{T})
+function setindex!{T}(x::Phylogeny, name::Symbol, annotation::NodeAnnotations{T})
     setannotations!(x, name, annotation)
 end
 
 
-function setindex!{T}(x::Phylogeny, name::Symbol, ann::Nodeannotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
+function setindex!{T}(x::Phylogeny, name::Symbol, ann::NodeAnnotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
     setannotations(x, name, ann, default, cover)
 end
 
