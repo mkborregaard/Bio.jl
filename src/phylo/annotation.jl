@@ -22,7 +22,7 @@ end
 @enum Nodecoverage tipsandnodes=1 tipsonly=2 nodesonly=3
 
 # a version of setannotations that supplies a default value to all nodes
-function setannotations!{T}(x::Phylogeny, name::Symbol, ann::Nodeannotations{T}, default::T, cover::Nodecoverage = tipsandnodes )
+function setannotations!{T}(x::Phylogeny, name::Symbol, ann::Nodeannotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
     if cover == tipsandnodes
         targetnodes = descendents(x.root)
     elseif cover == tipsonly
@@ -69,7 +69,7 @@ function setindex!{T}(x::Phylogeny, name::Symbol, annotation::Nodeannotations{T}
 end
 
 
-function setindex!(x::Phylogeny, name::Symbol, ann::Nodeannotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
+function setindex!{T}(x::Phylogeny, name::Symbol, ann::Nodeannotations{T}, default::T, cover::Nodecoverage = tipsandnodes)
     setannotations(x, name, ann, default, cover)
 end
 

@@ -1,6 +1,3 @@
-function compose_segments(x1::Vector{Float64}, y1::Vector{Float64}, x2::Vector{Float64}, y2::Vector{Float64})
-    [[(x1[i], y1[i]), (x2[i], y2[i])] for i in 1:length(x1)]
-end
 
 #TODO branch colors given as a PhyNode to colorant dict. Default black. vertical lines divided in two, so they can share color with descendant and be in same context. Line joins between horizontal and vertical lines. Italic speciesnames. More flexible scaling of names and linewidths. Nodelabels with symbols. Edgelabels with e.g. confidence. Radial plot. Names in different context from plot.
 
@@ -39,8 +36,16 @@ function phyplot(phy::Phylogeny; line_width = 0.2, font_size = 1, show_tips = 50
         error("Undefinded type!")
 end
 
-type NodePlot
-# A placeholder for an object that will be part of PhyloPlot and determine the plotting of nodes
+@enum nodesym circle=1 square=2 rectangle=3
+
+type NodeFormat{C <: Colorant, S <: AbstractString}
+    fill::Nodeannotations{C}
+    stroke::Nodeannotations{C}
+    strokewidth::Nodeannotations{measure}
+    label_above::Nodeannotations{S}
+    label_below::Nodeannotations{S}
+    symbol::nodesym
+    symbol_size::Nodeannotations{Float64}
 end
 
 type PhyloPlot {C <: Colorant, S <: AbstractString}
