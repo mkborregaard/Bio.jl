@@ -624,9 +624,22 @@ Test whether two PhyNodes are equal.
 """
 # I have changed the way this works to avoid the nullable type issue
 function isequal(x::PhyNode, y::PhyNode)
-    ch = x.children == y.children
-    pa = x.parent == y.parent
-    return all([ch, pa])
+  if length(x.children) > 0
+    return(x.children == y.children)
+  end
+  if parentisself(x)
+    if parentisself(y)
+      return(true)
+    else
+      return(false)
+    end
+  end
+
+  if(isequal(parent(x), parent(y)))
+    return find(x, parent(x).children) == find(y, parent(y).children)
+  end
+  
+  return false
 end
 
 

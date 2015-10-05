@@ -1,38 +1,38 @@
 
 #TODO branch colors given as a PhyNode to colorant dict. Default black. vertical lines divided in two, so they can share color with descendant and be in same context. Line joins between horizontal and vertical lines. Italic speciesnames. More flexible scaling of names and linewidths. Nodelabels with symbols. Edgelabels with e.g. confidence. Radial plot. Names in different context from plot.
 
-@enum nodesym circle=1 square=2 rectangle=3
+@enum nodesym circle=1 square=2 rect=3
 @enum textpos auto=1 alignright=2 alignleft=3 above=4
 
 type NodeFormat{C <: Colorant, S <: AbstractString}
-    fill::Nodeannotations{C}
-    stroke::Nodeannotations{C}
-    strokewidth::Nodeannotations{measure}
-    label_above::Nodeannotations{S}
-    label_below::Nodeannotations{S}
+    fill::NodeAnnotations{C}
+    stroke::NodeAnnotations{C}
+    strokewidth::NodeAnnotations{Measure}
+    label_above::NodeAnnotations{S}
+    label_below::NodeAnnotations{S}
     symbol::nodesym
-    symbol_size::Nodeannotations{Float64}
+    symbol_size::NodeAnnotations{Float64}
     align_label_above::textpos
     align_label_below::textpos
 end
 
 type EdgeFormat{C <: Colorant}
     line_width::Float64
-    line_color::Nodeannotations{C}
+    line_color::NodeAnnotations{C}
 end
 
 type TipFormat{C <: Colorant, S <: AbstractString}
-    labels::Nodeannotations{S}
+    labels::NodeAnnotations{S}
     alignment::textpos
     font_size::Float64
     symbol::nodesym
-    symbol_stroke::Nodeannotations{C}
+    symbol_stroke::NodeAnnotations{C}
 
 
 
-type PhyloPlot {C <: Colorant, S <: AbstractString}
-    x::Nodeannotations{Float64}
-    y::Nodeannotations{Float64} #or is this a Dict? Better, I think
+type PhyloPlot{C <: Colorant, S <: AbstractString}
+    x::NodeAnnotations{Float64}
+    y::NodeAnnotations{Float64} #or is this a Dict? Better, I think
     TipFormat{C, S}
     EdgeFormat{C, S}
     NodeFormat{C, S}
@@ -44,7 +44,7 @@ function compose_segments(x1::Float64, y1::Float64, x2::Float64, y2::Float64)
 end
 
 function phyplot(phy::Phylogeny; edges::EdgeFormat = EdgeFormat(), nodes::NodeFormat = NodeFormat(), tips::TipFormat = TipFormat()) #replace with a kwargs sloop like in GadFly
-    x, y = findxy2(phy)
+    x, y = findxy(phy)
     horizontal_lines = [compose_segments(x[node], y[node], x[parent(node)], y[node]) for node in keys(x)]
     vertical_lines1 = [compose_segments(x[node], y[children(node)[1]], x[node], y[node]) for node in keys(x)]
     vertical_lines2 = [compose_segments(x[node], y[node], x[node], y[children(node)[end]]) for node in keys(x)]
@@ -83,7 +83,7 @@ function findxy(phy::Phylogeny)
 
     loc(phy.root)
 
-    depth = Nodeannotations(phy.root => 0)
+    depth = NodeAnnotations(phy.root => 0)
     for(clade in DepthFirst(phy))
         if !parentisself
             depth[clade] = depth[parent(clade)] + branchlength(clade)

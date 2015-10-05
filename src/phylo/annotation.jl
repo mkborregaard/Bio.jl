@@ -3,15 +3,19 @@
 #========================================================#
 
 # Ben J. Ward 2015.
+
 """
 A type-alias: Dictionaries with keys of type `PhyNode` and values of type `T`
 are aliased as NodeAnnotations{T}.
 """
+
+
 typealias NodeAnnotations{T} Dict{PhyNode, T}
 
 """
 I want to remove this from the code...
 """
+
 
 type TreeAnnotations{T}
     phylogeny::Phylogeny
@@ -21,6 +25,8 @@ end
 """
 Construct a TreeAnnotations object which contains no annotations yet.
 """
+
+
 function TreeAnnotations{T}(x::Phylogeny, ::Type{T})
     return TreeAnnotations(x, NodeAnnotations{T}())
 end
