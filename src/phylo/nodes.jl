@@ -636,9 +636,9 @@ function isequal(x::PhyNode, y::PhyNode)
   end
 
   if(isequal(parent(x), parent(y)))
-    return find(x, parent(x).children) == find(y, parent(y).children)
+    return findin(parent(x).children, x) == findin(parent(y).children, y)
   end
-  
+
   return false
 end
 
