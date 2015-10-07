@@ -624,22 +624,14 @@ Test whether two PhyNodes are equal.
 """
 # I have changed the way this works to avoid the nullable type issue
 function isequal(x::PhyNode, y::PhyNode)
-  if length(x.children) > 0
-    return(x.children == y.children)
-  end
-  if parentisself(x)
-    if parentisself(y)
-      return(true)
-    else
-      return(false)
+    if isleaf(x)
+        if !isleaf(y)
+            return false
+        end
+        return name(x) == name(y)
     end
-  end
 
-  if(isequal(parent(x), parent(y)))
-    return findin(parent(x).children, x) == findin(parent(y).children, y)
-  end
-
-  return false
+    return(children(x) == children(y)) ##the recursive call is expensive
 end
 
 
