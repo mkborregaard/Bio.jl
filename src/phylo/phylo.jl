@@ -47,8 +47,9 @@ export
 
 include("nodes.jl")
 include("phylogeny.jl")
+include("annotation.jl")
 include("treeio.jl")
 include("iteration.jl")
-include("annotation.jl")
+
 
 end # module Phylo
