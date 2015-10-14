@@ -20,6 +20,10 @@ import DataStructures: Queue, enqueue!, dequeue!, Stack, Queue, Deque
 
 import Bio.FileFormat
 
+import Compose: HCenter, VCenter, HRight, HLeft, compose, context, line, curve, UnitBox, stroke, text, linewidth, fontsize, Rotation, HAlignment, VAlignment, h, w
+
+import Colors: Colorant, @colorant_str
+
 export
 
   # PhyNodes and associated methods
@@ -40,12 +44,16 @@ export
   getmrca, hasextensions, getroot, pathbetween,
 
   # File and format IO
-  @newick_str, parsenewick, readnewick
+  @newick_str, parsenewick, readnewick,
+
+  # Plotting functionality
+  phyplot, NodeFormat, EdgeFormat, TipFormat, fan, phylogram
 
 include("nodes.jl")
 include("phylogeny.jl")
 include("treeio.jl")
 include("iteration.jl")
 include("annotation.jl")
+include("phyplot.jl")
 
 end # module Phylo
