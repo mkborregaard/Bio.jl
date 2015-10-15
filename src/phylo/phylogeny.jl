@@ -557,5 +557,4 @@ Create a ladderized copy of a phylogeny. Note that this only works for rooted tr
 function ladderize(x::Phylogeny)
     ret = deepcopy(x)
     ladderize!(ret)
-    ret
 end
