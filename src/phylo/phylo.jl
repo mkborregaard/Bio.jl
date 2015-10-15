@@ -37,7 +37,7 @@ export
   # Phylogeny and associated methods
   Phylogeny, isrooted, isrerootable, root!,
   setrerootable!, graft!, prune!, pruneregraft!, search,
-  searchall, generateindex, ladderize!, ladderize,
+  searchall, generateindex,
 
   # PhylogenyIterator and associated methods
   PhylogenyIterator, DepthFirst, BreadthFirst, Tip2Root,
