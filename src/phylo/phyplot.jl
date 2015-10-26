@@ -47,64 +47,6 @@ function termdec(node::PhyNode) #replacements for terminaldescendents which isn'
     ret
 end
 
-function phyplot(phy::Phylogeny, plot_type::plottype=phylogram; edges::EdgeFormat = EdgeFormat(), nodes::NodeFormat = NodeFormat(), tips::TipFormat = TipFormat(), rootbranch::Bool = (plot_type == fan)) #replace with a kwargs sloop like in GadFly
-
-    function findxy(phy::Phylogeny)
-        height = [tip => float(i) for (i, tip) in enumerate(termdec(phy))]
-
-        function loc(clade::PhyNode)
-            if !in(clade, keys(height))
-                for subclade in children(clade)
-                    loc(subclade)
-                end
-            end
-            if !isleaf(clade)
-                ch_heights = [height[child] for child in children(clade)]
-                height[clade] = (maximum(ch_heights) + minimum(ch_heights)) / 2.
-            end
-        end
-        loc(phy.root)
-
-        depth = NodeAnnotations{Float64}(phy.root => 0)
-        for(clade in DepthFirst(phy))
-            if !parentisself(clade)
-                depth[clade] = depth[parent(clade)] + branchlength(clade, 1.)
-            end
-        end
-        depth, height
-    end
-
-    function compose_segments(x1::Float64, y1::Float64, x2::Float64, y2::Float64)
-        [(x1, y1), (x2, y2)]
-    end
-
-    function process_edges!(ed::EdgeFormat, x::Phylogeny)
-        if isa(ed.line_color, Colorant)
-            col::Colorant = ed.line_color
-            ed.line_color = [node => col for node in DepthFirst(phy)]
-        end
-    end
-
-    process_edges!(edges, phy)
-
-    x, y = findxy(phy)
-
-    if rootbranch
-        for key in keys(x)
-            x[key] += maximum(values(x)) * 0.05
-        end
-    end
-
-    internals = setdiff(keys(x), termdec(phy))
-    horizontal_lines = [compose_segments(x[node], y[node], parentisself(node) ? 0. : x[parent(node)], y[node]) for node in keys(x)]
-    vertical_lines1 = [compose_segments(x[node], y[children(node)[1]], x[node], y[node]) for node in internals]
-    vertical_lines2 = [compose_segments(x[node], y[node], x[node], y[children(node)[end]]) for node in internals]
-    horiz_color = [edges.line_color[node] for node in keys(x)]
-    vert1_color = [edges.line_color[children(node)[1]] for node in internals]
-    vert2_color = [edges.line_color[children(node)[2]] for node in internals]
-
-    phyplot_intern(Val{plot_type}, x, y, horizontal_lines, vertical_lines1, vertical_lines2, horiz_color, vert1_color, vert2_color, edges, tips, termdec(phy))
-end
 
 function phyplot(phy::Phylogeny, plot_type::plottype=phylogram; edges::EdgeFormat = EdgeFormat(), nodes::NodeFormat = NodeFormat(), tips::TipFormat = TipFormat(), rootbranch::Bool = (plot_type == fan)) #replace with a kwargs sloop like in GadFly
 
@@ -277,7 +219,7 @@ function phyplot_intern(::Type{Val{fan}}, x, y, horizontal_lines, vertical_lines
         push!(rots, Rotation(rot, point))
     end
 
-    compose(context(0,0,h > w ? w : h, h > w ? w : h, units = UnitBox(-1.6, -1.6, 3.2, 3.2)),
+    compose(context(0,0, min(h, w), min(h, w), units = UnitBox(-1.6, -1.6, 3.2, 3.2)),
         elements...,
         text(pointx, pointy, txts, haligns, valigns, rots),
     fontsize(minimum([3, tips.font_size * 200/length(terminals)])),  linewidth(edges.line_width * 0.2)
