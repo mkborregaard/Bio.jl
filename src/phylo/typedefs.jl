@@ -215,96 +215,102 @@ function setRerootable!(x::Phylogeny, rerootable::Bool)
 end
 
 
-# Depth first search of the tree - this will return a reference to the first match it comes across in a depth first manner.
-function searchDF(Phylogeny::Phylogeny, Condition::Function)
-  stack::Stack = Stack(PhyNode)
-  push!(stack, Phylogeny.Root)
-  while length(stack) > 0
-    current::PhyNode = pop!(stack)
-    println("Looking at node $(getName(current))")
-    if Condition(current)
-      return current
-    else
-      for i in current.Children
-        push!(stack, i)
-      end
+
+
+function search(traverser::TreeTraverser, condition::Function)
+  while true
+    println("Looking at node $(getName(getCurrent(traverser)))")
+    if condition(getCurrent(traverser))
+      return getCurrent(traverser)
     end
+    if hasReachedEnd(traverser)
+      break
+    end
+    next!(traverser)
   end
 end
 
-# Breadth first search of the tree - this will return a reference to the first match it comes across in a breadth first manner.
-function searchBF(Phylogeny::Phylogeny, Condition::Function)
-  queue::Queue = Queue(PhyNode)
-  enqueue!(queue, Phylogeny.Root)
-  while length(queue) != 0
-    current::PhyNode = dequeue!(queue)
-    println("Looking at node $(getName(current))")
-    if Condition(current)
-      return current
-    else
-      for i in current.Children
-        enqueue!(queue, i)
-      end
-    end
-  end
-end
-
-# Like searchDF, but returns all matches of a tree - so it does not terminate when one match is found, rather it will search ALL nodes in DF manner and return ALL matches.
-function searchAllDF(Phylogeny::Phylogeny, Condition::Function)
-  stack::Stack = Stack(PhyNode)
+function searchAll(traverser::TreeTraverser, condition::Function)
   matches::Array{PhyNode, 1} = PhyNode[]
-  push!(stack, Phylogeny.Root)
-  while length(stack) > 0
-    current::PhyNode = pop!(stack)
-    println("Looking at node $(getName(current))")
-    if Condition(current)
-      push!(matches, current)
+  while true
+    println("Looking at node $(getName(getCurrent(traverser)))")
+    if condition(getCurrent(traverser))
+      push!(matches, getCurrent(traverser))
     end
-    for i in current.Children
-      push!(stack, i)
+    if hasReachedEnd(traverser)
+      break
     end
+    next!(traverser)
   end
   return matches
 end
 
-function searchAllBF(Phylogeny::Phylogeny, Condition::Function)
-  queue::Queue = Queue(PhyNode)
-  matches::Array{PhyNode, 1} = PhyNode[]
-  enqueue!(queue, Phylogeny.Root)
-  while length(queue) != 0
-    current::PhyNode = dequeue!(queue)
-    println("Looking at node $(getName(current))")
-    if Condition(current)
-      push!(matches, current)
-    else
-      for i in current.Children
-        enqueue!(queue, i)
-      end
-    end
-  end
-  return matches
-end
 
+# The traverser types help a coder with traversing a tree according to a breadth first or a depth first manner. 
+# An example of their use is in the searching methods.
 abstract TreeTraverser
+
+type TraverserCore
+  Start::PhyNode
+  Behind::Stack
+  History::Array{PhyNode, 1}
+  Current::PhyNode
+end
 
 type TraverserDF <: TreeTraverser
 	Ahead::Stack
-	Start::PhyNode
-	Behind::Stack
-	History::Stack
-	Current::PhyNode
-	TraverserDF(tree::Phylogeny) = (x = new(Stack(PhyNode), tree.Root, Stack(PhyNode), tree.Root); for i in x.Current.Children push!(x.Stack, i)
+	Core::TraverserCore
+	function TraverserDF(tree::Phylogeny)
+    x = new(Stack(PhyNode), TraverserCore(tree.Root, Stack(PhyNode), PhyNode[], tree.Root))
+    for i in x.Core.Current.Children
+      push!(x.Ahead, i)
+    end
+    return x
+  end
 end
 
-function next!(x::TraverseDF)
-  push!(x.Behind, x.Current)
-  x.Current = pop!(x.Ahead)
-  for i in x.Current.Children
+type TraverserBF <: TreeTraverser
+  Ahead::Queue
+  Core::TraverserCore
+  function TraverserBF(tree::Phylogeny)
+    x = new(Queue(PhyNode), TraverserCore(tree.Root, Stack(PhyNode), PhyNode[], tree.Root))
+    for i in x.Core.Current.Children
+      enqueue!(x.Ahead, i)
+    end
+    return x
+  end
+end
+
+function next!(x::TraverserDF)
+  push!(x.Core.Behind, x.Core.Current)
+  x.Core.Current = pop!(x.Ahead)
+  for i in x.Core.Current.Children
   	push!(x.Ahead, i)
   end
 end
 
-function at(x::TraverseDF)
-  return x.Current
+function next!(x::TraverserBF)
+  push!(x.Core.Behind, x.Core.Current)
+  x.Core.Current = dequeue!(x.Ahead)
+  for i in x.Core.Current.Children
+    enqueue!(x.Ahead, i)
+  end
 end
+
+function getCurrent(x::TreeTraverser)
+  return x.Core.Current
+end
+
+function upNext(x::TreeTraverser)
+  return x.Ahead
+end
+
+function getHistory(x::TreeTraverser)
+  return x.Core.History
+end
+
+function hasReachedEnd(x::TreeTraverser)
+  length(x.Ahead) > 0 ? false : true
+end
+
 
