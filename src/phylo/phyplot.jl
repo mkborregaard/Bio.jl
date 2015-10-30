@@ -219,11 +219,7 @@ function phyplot_intern(::Type{Val{fan}}, x, y, horizontal_lines, vertical_lines
         push!(rots, Rotation(rot, point))
     end
 
-<<<<<<< Updated upstream
     compose(context(0,0, min(h, w), min(h, w), units = UnitBox(-1.6, -1.6, 3.2, 3.2)),
-=======
-    compose(context(0,0, min(w, h), min(w, h), units = UnitBox(-1.6, -1.6, 3.2, 3.2)),
->>>>>>> Stashed changes
         elements...,
         text(pointx, pointy, txts, haligns, valigns, rots),
     fontsize(minimum([3, tips.font_size * 200/length(terminals)])),  linewidth(edges.line_width * 0.2)
